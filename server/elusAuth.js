@@ -8,6 +8,9 @@ const findUserCookSession = (cook, sessionSigned) =>{
     }
     return id;
 }
+const VK = (req, res, user) =>{
+    console.log(req.body)
+}
 const findUserCookPosts = (cook, Posts) =>{
     let id = -1; 
     let arr = Posts.map(v=>v)
@@ -41,7 +44,7 @@ const getBoolCookfromResp = (res, cook)=>{
     
 */
 
-const Logout = (req, res, model, onlineFlag = 'online',blocked = true)=>{
+const Logout = (req, res, model, onlineFlag = 'online',blocked = false)=>{
     let id = -1;
     for(let y = 0; y < session.signed.length; y++){
         if(session.signed[y] == req.cookies.key) id = y;
@@ -226,5 +229,6 @@ getBoolCookfromResp : getBoolCookfromResp,
 findUserCookPosts : findUserCookPosts,
 findUserCookSession : findUserCookSession,
 SignUP : SignUP,
-Login : Login
+Login : Login,
+VK : VK
 }

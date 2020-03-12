@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from 'react-dom'
-import { MDBInput, MDBBtn, MDBCard, MDBCardBody } from 'mdbreact';
 import axios from 'axios';
+import { MDBInput, MDBBtn, MDBCard, MDBCardBody } from 'mdbreact';
 import { BrowserRouter as Router,
   Redirect } from "react-router-dom";
 import Message from './peref/message'
@@ -43,7 +43,7 @@ class Signin extends Component {
     console.log(this.state.vkUrl)
     axios({
       method: 'POST',
-      url: '/signvk',
+      url: '/signin',
       data: {
         email: this.state.vkProf.id,
         id: this.state.vkProf.id,
@@ -54,7 +54,6 @@ class Signin extends Component {
   }
   subme = (e) => {
     e.preventDefault()
-    console.log('a')
     axios({
       method: 'POST',
       url: '/signin',
@@ -84,7 +83,7 @@ class Signin extends Component {
   }
 
   handleChange = (e) => {
-    this.setState({[e.target.name]: e.target.value},()=>console.log(this.state.email+'AND'+this.state.pass))
+    this.setState({[e.target.name]: e.target.value},e=>e)
   }
   render(){
     const vkStyle = {

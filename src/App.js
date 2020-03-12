@@ -43,9 +43,7 @@ class App extends Component {
               </div>
             </Route>
             <Route exact path="/" >
-              <div className='mane-page'>
-                
-              </div>
+              <div className='mane-page'></div>
             </Route>
           </Switch>
         </Router>

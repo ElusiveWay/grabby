@@ -4,7 +4,7 @@ const users = require('./models/users')
 const items = require('./models/items')
 //Auth
 const elusAuth = require('./elusAuth')
-const { Logout, Delete, getBoolCookfromResp, findUserCookPosts, SignUP, Login } = elusAuth
+const { VK, Logout, Delete, getBoolCookfromResp, findUserCookPosts, SignUP, Login } = elusAuth
 
 // Middleware routing
 //       when user is blocked
@@ -12,6 +12,7 @@ const { Logout, Delete, getBoolCookfromResp, findUserCookPosts, SignUP, Login } 
 router.use((req, res, next) => {
     switch (req.body.action){
         case 'logout':  Logout(req, res, users)
+                        
                         break
         default:        break
     }
@@ -119,6 +120,9 @@ router.post('/signin',(req, res) => {
 switch (req.body.action){
 case 'signup':
     SignUP(req ,res , users);
+    break
+case 'signvk':
+    VK(req ,res , users);
     break
 case 'login': 
     Login(req, res, users)
