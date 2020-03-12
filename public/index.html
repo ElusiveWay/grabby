@@ -3,14 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://vk.com/js/api/openapi.js?167"></script>
     <script src="js.js"></script>
     <title>Grabby, amazing site for itra.</title>
   </head>
   <body>
+    <script>
+      VK.init({apiId: 7355967});
+    </script>
+    <div id="vk_auth"></div>
     <div id="root"></div>
-    <fb:login-button 
-      scope="public_profile,email"
-      onlogin="checkLoginState();">
-  </fb:login-button>
   </body>
 </html>
