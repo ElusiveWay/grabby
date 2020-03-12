@@ -61,7 +61,7 @@ class Signup extends Component {
             <MDBCard style={{margin:'75px', width : '400px', height : '500px', minHeigth : "300px"}}>
               <MDBCardBody>
               <form onSubmit={ this.subme }>
-                  <p className="h4 text-center py-4">Sign in</p>
+                  <p className="h4 text-center py-4">Sign up</p>
                   <div className="grey-text">
                     <MDBInput
                       label="Your name"
