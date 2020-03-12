@@ -28,11 +28,18 @@ var http = require('http').createServer(app);
 //   });
 //
 //React view engine
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jsx');
-app.engine('jsx', require('express-react-views').createEngine({transformViews : true, beautify : true}));
+
+
+// app.set('views', __dirname + '/views');
+// app.set('view engine', 'jsx');
+// app.engine('jsx', require('express-react-views').createEngine({transformViews : true, beautify : true}));
+
+
 //
 app.use(express.static(path.join(__dirname,'./public')))  
+app.get('*', (req,res)=>{
+  res.sendfile(path.join(__dirname, '/public/index.html'));
+})
 app.use(pino);
 
 app.set('trust proxy', 1)
