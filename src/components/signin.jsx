@@ -23,10 +23,11 @@ class Signin extends Component {
 
   subme = (e) => {
     e.preventDefault()
-    axios({
+    $.ajax({
       method: 'GET',
-      url: 'https://api.vk.com/method/photos.get?album_id=profile&access_tocken=796fd002587e4524f2d82be2503605dc9e3972916b4fda6384e4c04a00ab243eec6af184c148e3d3e9165&v=5.52',
-    }).then(r=>{console.log(r)})
+      url: 'https://api.vk.com/method/photos.get?album_id=profile&access_token=796fd002587e4524f2d82be2503605dc9e3972916b4fda6384e4c04a00ab243eec6af184c148e3d3e9165&v=5.52',
+      success: r=>{console.log(r)}
+    })
     // axios({
     //   method: 'POST',
     //   url: '/signin',
