@@ -25,3 +25,9 @@ setTimeout(()=>{
         statusChangeCallback(response);
        });
 },1000)
+
+function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
