@@ -3,7 +3,9 @@ import './App.css'
 import Signup from './components/signup'
 import Signin from './components/signin'
 import Mainbar from './components/mainbar'
-import Message from './components/peref/message';
+import Message from './components/peref/message'
+import io from 'socket.io-client'
+import * as $ from 'jquery'
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,6 +13,24 @@ import {
   Link
 } from "react-router-dom";
 
+const socket = io();
+
+setInterval(()=>{
+   socket.emit('sync',{cookies : global.document.cookie}) 
+   $.ajax({
+     method: 'POST',
+     url: '/sync',
+     success: r=>{
+       global.__key = r.key
+     }
+   })
+  },2000)
+socket.on('sync',msg=>{
+    global.__signed = msg.sess
+    console.log(global.__signed)
+    console.log(global.__user)
+    console.log(global.__key)
+  })
 
 class App extends Component {
   constructor(props) {

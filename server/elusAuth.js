@@ -8,9 +8,7 @@ const findUserCookSession = (cook, sessionSigned) =>{
     }
     return id;
 }
-const VK = (req, res, user) =>{
-    console.log(req.body)
-}
+
 const findUserCookPosts = (cook, Posts) =>{
     let id = -1; 
     let arr = Posts.map(v=>v)
@@ -147,6 +145,35 @@ const Login = (req, res, model, okRedir='/', erRedir='/signin')=>{
     }).catch(e=>{
         res.send('neok')
     })
+}
+/* 
+    VK
+
+    IN:
+
+    req is request from form with inputs[name = name & email & pass] 
+    model = signup model, 
+    obj = object of user properties for db
+    onlineFlag = name of bool in data base 'online' status
+    model.email must exist
+
+    OUT:
+
+    res.cookie.key = id              if valid
+    res.cookie.invalid  = true       if invalid
+    okRedir = page when u r loged in
+    erRedir = page when u r put invalid 
+
+*/
+const VK = (req, res, model) =>{
+    model.find({email: req.body.email}).then(p=>{
+        if (p.length){
+            Login(req, res, model)
+        } else {
+            SignUP(req ,res , model);
+        }
+    })
+
 }
 /* 
     SIGNUP

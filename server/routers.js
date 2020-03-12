@@ -4,7 +4,7 @@ const users = require('./models/users')
 const items = require('./models/items')
 //Auth
 const elusAuth = require('./elusAuth')
-const { VK, Logout, Delete, getBoolCookfromResp, findUserCookPosts, SignUP, Login } = elusAuth
+const { VK, Logout, Delete, getBoolCookfromResp,findUserCookSession , findUserCookPosts, SignUP, Login } = elusAuth
 
 // Middleware routing
 //       when user is blocked
@@ -21,7 +21,6 @@ router.use((req, res, next) => {
     }
     if (req.cookies.key){
         users.find({}).then(posts=>{
-            console.log('inside find')
             let useriko = posts[findUserCookPosts(req.cookies.key, posts)]
             if (useriko.isBlocked == true) {
                 Logout(req, res, users)
@@ -131,5 +130,13 @@ default: res.end
             break
 }
 })
-
+router.post('/sync',(req,res)=>{
+    let b = (findUserCookSession(req.cookies.key,session.signed)==-1)?false:true,
+        i = req.cookies.key
+    if (!b) {
+        res.cookie('key', '')
+        i = ''
+    }
+    res.send({key : i})
+})
 module.exports = router;

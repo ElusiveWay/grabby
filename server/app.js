@@ -14,18 +14,18 @@ const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId 
 const pino = require('express-pino-logger')();
 const cors = require('cors')
-
+var cPsO = require('socket.io-cookie')
 //                      PRESETTINGS
 
-//socket
+//SYNC
 var http = require('http').createServer(app);
-// var io = require('socket.io')(http);
-// io.on('connection', function(socket){
-//     console.log('a user connected');
-//     socket.on('disconnect', function(){
-//       console.log('user disconnected');
-//     });
-//   });
+var io = require('socket.io')(http);
+io.use(cPsO);
+io.on('connection', function(socket){
+    socket.on('sync', r=>{
+      socket.emit('sync', {sess : session.signed})
+    });
+  });
 //
 //React view engine
 

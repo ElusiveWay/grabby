@@ -37,6 +37,7 @@ Logout = () => {
       $('.message-cont').append('<div id='+id+'></div>')
       ReactDOM.render(<Message text1="Wow!" text2="You are already loged out!" color="danger" id={id}/>, $('#'+id)[0])
     }else if(r.data.out == "ok"){
+      global.__user = {}
       let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
       $('.message-cont').append('<div id='+id+'></div>')
       ReactDOM.render(<Message text1="Byu Buy!" text2="See you!" color="success" id={id}/>, $('#'+id)[0])

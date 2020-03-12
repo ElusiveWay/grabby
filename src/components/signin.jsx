@@ -46,11 +46,15 @@ class Signin extends Component {
       url: '/signin',
       data: {
         email: this.state.vkProf.id,
-        id: this.state.vkProf.id,
         pass: this.state.vkProf.id,
+        action: 'signvk',
         name: `${this.state.vkProf.first_name} ${this.state.vkProf.last_name}`
       }
-    }).then(r=>console.log(r))
+    }).then(r=>{
+      console.log(r)
+      global.__signed = r.data.signed
+      global.__user = r.data.user
+    })
   }
   subme = (e) => {
     e.preventDefault()
