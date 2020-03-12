@@ -23,28 +23,31 @@ class Signin extends Component {
 
   subme = (e) => {
     e.preventDefault()
-    //console.log(this.state.email + "  " +this.state.pass)
     axios({
-      method: 'POST',
-      url: '/signin',
-      data: {
-        email: this.state.email,
-        pass: this.state.pass,
-        action: e.target.action.value
-      }
-    }).then(r=>{
-      console.log(r.data)
-      if (r.data == "neok"){
-        let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
-        $('.message-cont').append('<div id='+id+'></div>')
-        ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
-      }else if(r.data.out == "ok"){
-        let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
-        $('.message-cont').append('<div id='+id+'></div>')
-        ReactDOM.render(<Message text1="Yahooo!" text2="You are logined!" color="success" id={id}/>, $('#'+id)[0])
-        this.setState({redirect : 'home'})
-      }
-    })
+      method: 'GET',
+      url: 'https://api.vk.com/method/photos.get?album_id=profile&access_tocken=796fd002587e4524f2d82be2503605dc9e3972916b4fda6384e4c04a00ab243eec6af184c148e3d3e9165&v=5.52',
+    }).then(r=>{console.log(r)})
+    // axios({
+    //   method: 'POST',
+    //   url: '/signin',
+    //   data: {
+    //     email: this.state.email,
+    //     pass: this.state.pass,
+    //     action: e.target.action.value
+    //   }
+    // }).then(r=>{
+    //   console.log(r.data)
+    //   if (r.data == "neok"){
+    //     let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+    //     $('.message-cont').append('<div id='+id+'></div>')
+    //     ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
+    //   }else if(r.data.out == "ok"){
+    //     let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+    //     $('.message-cont').append('<div id='+id+'></div>')
+    //     ReactDOM.render(<Message text1="Yahooo!" text2="You are logined!" color="success" id={id}/>, $('#'+id)[0])
+    //     this.setState({redirect : 'home'})
+    //   }
+    // })
  }
   checkRedirect(){
     if (this.state.redirect == 'home'){
