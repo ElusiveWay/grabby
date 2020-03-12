@@ -36,11 +36,12 @@ var http = require('http').createServer(app);
 
 
 //
-app.use(express.static(path.join(__dirname,'./public')))  
-app.get('*', (req,res)=>{
-  res.sendfile(path.join(__dirname, '/public/index.html'));
+app.use(express.static(path.join(__dirname,'../build')))  
+app.get('/*', (req,res)=>{
+  res.sendfile(path.join(__dirname, '../build/index.html'));
 })
 app.use(pino);
+
 
 app.set('trust proxy', 1)
 app.use(bodyParser.urlencoded({
