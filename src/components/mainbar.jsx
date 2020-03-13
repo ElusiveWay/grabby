@@ -12,10 +12,9 @@ import * as $ from 'jquery'
 class Mainbar extends Component {
 state = {
   isOpen: false,
-  signed: [],
-  cookKey: '',
-  signed: '',
-  user: {}
+  signed: global.__signed,
+  cookKey: global.__key,
+  user: global.__user
 };
 
 toggleCollapse = () => {
@@ -45,7 +44,49 @@ Logout = () => {
     }
   })
 }
+ShowAdmin = () =>{ 
+  if (this.state.user.isAdmin === true){
+    return(
+      <MDBNavItem style={{marginRight:'30px'}}>  
+      <MDBNavLink to="/admin"><strong>Admin panel</strong></MDBNavLink>          
+      </MDBNavItem>
+      )
+  }
+  else{
+    
+  }
+}
+ShowProfile = () =>{
+  if (this.state.user.isAdmin !== undefined){
+    return (
+      <MDBNavItem>  
+        <MDBNavLink style={(this.state.user.id)} to="/user">Profile</MDBNavLink>          
+      </MDBNavItem> 
+        ) 
+  }
+}
+ShowLogout = () =>{
+  if (this.state.user.isAdmin !== undefined){
+    return (
+      <MDBNavItem style={{marginLeft:'30px'}}>
+      <MDBBtn style={{padding: '8px',margin:'0',lineHeight: '1.5',color:'white',boxShadow:'unset',width:'auto',height:'100%'}}color="transparent" onClick={this.Logout}><strong>Log out</strong></MDBBtn>  
+      </MDBNavItem>
+        ) 
+  }
+}
+ShowSignin = () =>{
+  if (this.state.user.isAdmin === undefined){
+    return (
+      <MDBNavItem>
+      <MDBNavLink to="/signin">Sign</MDBNavLink>          
+      </MDBNavItem>
+        ) 
+  }
+}
 render() {
+  setTimeout(()=>{
+    this.setState({signed : global.__signed, cookKey : global.__key, user : global.__user})
+  },100)
   return (
       <MDBNavbar  color="blue" dark expand="md">
         <MDBNavbarBrand>
@@ -60,19 +101,13 @@ render() {
             <MDBNavItem>
             <MDBNavLink to="/collect">Collections</MDBNavLink>  
             </MDBNavItem>
-            <MDBNavItem>  
-            <MDBNavLink to="/user">Profile</MDBNavLink>          
-            </MDBNavItem>
-            <MDBNavItem>  
-            <MDBNavLink to="/signin">Sign</MDBNavLink>          
-            </MDBNavItem>
-            <MDBNavItem>
+           { this.ShowProfile() }
+           { this.ShowSignin() }
+            <MDBNavItem>.      
             </MDBNavItem>
           </MDBNavbarNav>
           <MDBNavbarNav right>
-            <MDBNavItem style={{marginRight:'30px'}}>  
-            <MDBNavLink to="/admin"><strong>Admin panel</strong></MDBNavLink>          
-            </MDBNavItem>
+            { this.ShowAdmin() }
             <MDBNavItem>
               <MDBFormInline waves>
                 <div className="md-form my-0">
@@ -80,9 +115,7 @@ render() {
                 </div>
               </MDBFormInline>
             </MDBNavItem>
-            <MDBNavItem style={{marginLeft:'30px'}}>
-            <MDBBtn style={{padding: '8px',margin:'0',lineHeight: '1.5',color:'white',boxShadow:'unset',width:'auto',height:'100%'}}color="transparent" onClick={this.Logout}><strong>Log out</strong></MDBBtn>  
-            </MDBNavItem>
+            { this.ShowLogout() }
           </MDBNavbarNav>
         </MDBCollapse>
       </MDBNavbar>

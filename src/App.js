@@ -15,8 +15,14 @@ import {
 
 const socket = io();
 
+global.__signed = []
+global.__user = {}
+global.__key = ''
+
+//sync
 setInterval(()=>{
-   socket.emit('sync',{cookies : global.document.cookie}) 
+  if (!global.__signed.length && !global.__key) global.__user = {}
+   socket.emit('sync',{cookies : global.__key, user : global.__user}) 
    $.ajax({
      method: 'POST',
      url: '/sync',
@@ -27,11 +33,12 @@ setInterval(()=>{
   },2000)
 socket.on('sync',msg=>{
     global.__signed = msg.sess
-    console.log(global.__signed)
-    console.log(global.__user)
-    console.log(global.__key)
+    if (msg.user!==undefined) global.__user = msg.user
+    // console.log(global.__signed)
+    // console.log(global.__user)
+    // console.log(global.__key)  
   })
-
+// 
 class App extends Component {
   constructor(props) {
     super(props);
@@ -42,6 +49,15 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  componentDidMount() {
+    fetch('/api/home') 
+     .then(response => response.json())
+     .then(res => {
+       global.__user = res.user
+       global.__signed = res.signed
+       global.__key = res.key
+     });
+ }
   handleChange(event) {
     this.setState({ name: event.target.value });
   }

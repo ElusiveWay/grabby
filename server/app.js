@@ -11,19 +11,31 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const fs = require('fs')
 const mongoose = require('mongoose')
+mongoose.set('debug',false);
 const ObjectId = mongoose.Types.ObjectId 
 const pino = require('express-pino-logger')();
 const cors = require('cors')
+const users = require('./models/users')
 var cPsO = require('socket.io-cookie')
 //                      PRESETTINGS
 
 //SYNC
+
+//
 var http = require('http').createServer(app);
-var io = require('socket.io')(http);
-io.use(cPsO);
+var io = require('socket.io')(http, {cookie : false});
 io.on('connection', function(socket){
-    socket.on('sync', r=>{
-      socket.emit('sync', {sess : session.signed})
+    socket.on('sync', async (r)=>{
+      if (session.signed.some(v=>v==r.cookies)) {
+            let usr
+            await users.find({_id : r.cookies }).then( p=>{
+            usr = p[0]}).catch(e=>socket.emit('sync', {sess : session.signed}))
+            socket.emit('sync', {sess : session.signed , user : usr})
+      }
+      else{
+          socket.emit('sync', {sess : session.signed})
+
+      }
     });
   });
 //
@@ -37,10 +49,7 @@ io.on('connection', function(socket){
 
 //
 app.use(express.static(path.join(__dirname,'../build')))  
-app.get('/*', (req,res)=>{
-  res.sendfile(path.join(__dirname, '../build/index.html'));
-})
-app.use(pino);
+
 
 
 app.set('trust proxy', 1)
@@ -63,7 +72,22 @@ app.use(session({
 //Render main page, try to find users in DB 
     global.session = session
     session.signed = []
-
+//
+//REACT ROUTING
+app.get('/api/home', (req, res) => {
+  let usr
+  if (req.cookies.key && session.signed.some(v=>v==req.cookies.key)){
+      users.find({_id : req.cookies.key}).then(p=>{
+      usr = p[0]
+      res.json({ user: usr || {}, signed : session.signed , key : req.cookies.key });
+    })
+  }
+  
+});
+app.get('/*', (req,res)=>{
+  res.sendfile(path.join(__dirname, '../build/index.html'));
+})
+app.use(pino);
 
 //                      PRESETTINGS END
 //routing pages

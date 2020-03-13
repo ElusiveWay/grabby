@@ -140,10 +140,10 @@ const Login = (req, res, model, okRedir='/', erRedir='/signin')=>{
         }
         else{
             res.cookie('invalid','true')
-            res.send('neok') //data
+            res.send({out: 'neok', action: 'login'}) //data
         }
     }).catch(e=>{
-        res.send('neok')
+        res.send({out: 'neok', action: 'login'})
     })
 }
 /* 

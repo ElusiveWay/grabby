@@ -46,6 +46,8 @@ class Signup extends Component {
         $('.message-cont').append('<div id='+id+'></div>')
         ReactDOM.render(<Message text1="Yahooo!" text2="Now you are our member!" color="success" id={id}/>, $('#'+id)[0])
         this.setState({redirect : 'home'})
+        global.__signed = r.data.signed
+        global.__user = r.data.user
       }
     })
  }

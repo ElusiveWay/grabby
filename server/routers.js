@@ -130,13 +130,14 @@ default: res.end
             break
 }
 })
-router.post('/sync',(req,res)=>{
+router.post('/sync',async (req,res)=>{
     let b = (findUserCookSession(req.cookies.key,session.signed)==-1)?false:true,
         i = req.cookies.key
     if (!b) {
-        res.cookie('key', '')
-        i = ''
+        Logout(req,res,users)
     }
-    res.send({key : i})
+    else{
+        res.send({key : i})
+    }
 })
 module.exports = router;
