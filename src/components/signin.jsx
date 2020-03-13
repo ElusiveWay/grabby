@@ -25,7 +25,7 @@ class Signin extends Component {
   getVK = (e) => {
   $.ajax({
         method: 'GET',
-        url: `https://oauth.vk.com/authorize?client_id=7356046&display=page&scope=4&redirect_uri=${window.location.origin}/signin/vk&scope=photos,email&response_type=token&v=5.52`,
+        url: `https://oauth.vk.com/authorize?client_id=7356046&display=page&scope=4&redirect_uri=http://${window.location.host}/signin/vk&scope=photos,email&response_type=token&v=5.52`,
         dataType: 'JSONP',
         success: (r)=>{
           console.log('ok')
