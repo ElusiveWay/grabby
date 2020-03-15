@@ -26,6 +26,9 @@ class Signup extends Component {
   }
   subme = (e) => {
     e.preventDefault()
+    if (global.__canAjax == true){
+    global.__canAjax = false
+    setTimeout(()=>{global.__canAjax = true},500)
     axios({
       method: 'POST',
       url: '/signin',
@@ -50,6 +53,7 @@ class Signup extends Component {
         global.__user = r.data.user
       }
     })
+    }
  }
 
   
@@ -62,7 +66,7 @@ class Signup extends Component {
 
             <MDBCard style={{margin:'75px', width : '400px', height : '500px', minHeigth : "300px"}}>
               <MDBCardBody>
-              <form onSubmit={ this.subme }>
+              <form style={{color:'#2196f3'}} onSubmit={ this.subme }>
                   <p className="h4 text-center py-4">Sign up</p>
                   <div className="grey-text">
                     <MDBInput

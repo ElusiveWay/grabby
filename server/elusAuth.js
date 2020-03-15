@@ -3,8 +3,10 @@ const findUserCookSession = (cook, sessionSigned) =>{
     let id = -1; 
     let arr = sessionSigned.map(v=>v)
     for (let i=0; i < arr.length; i++){
-        if (cook.toString() == arr[i].toString())
-            id  = i;
+        if (arr[i] !== undefined && cook !== undefined){
+            if (cook.toString() == arr[i].toString())
+                id  = i;
+        }
     }
     return id;
 }
@@ -13,8 +15,10 @@ const findUserCookPosts = (cook, Posts) =>{
     let id = -1; 
     let arr = Posts.map(v=>v)
     for (let i=0; i < arr.length; i++){
-        if (cook.toString() == arr[i]._id.toString())
-            id  = i;
+        if (arr[i] !== undefined && cook !== undefined){
+            if (cook.toString() == arr[i]._id.toString())
+                id  = i;
+            }
     }
     return id;
 }
@@ -200,6 +204,7 @@ const SignUP = (req, res, model, onlineFlag = onlineStr, okRedir='/', erRedir='/
         name: name,
         email: email,
         pass : pass,
+        img : req.body.img || '',
         [''+onlineStr] : false,
         isAdmin: false,
         isBlocked : false

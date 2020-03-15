@@ -35,6 +35,7 @@ Logout = () => {
       let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
       $('.message-cont').append('<div id='+id+'></div>')
       ReactDOM.render(<Message text1="Wow!" text2="You are already loged out!" color="danger" id={id}/>, $('#'+id)[0])
+      window.location.reload()
     }else if(r.data.out == "ok"){
       global.__user = {}
       let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
@@ -60,7 +61,7 @@ ShowProfile = () =>{
   if (this.state.user.isAdmin !== undefined){
     return (
       <MDBNavItem>  
-        <MDBNavLink style={(this.state.user.id)} to="/user">Profile</MDBNavLink>          
+        <MDBNavLink style={(this.state.user.id)} to="/profile">Profile</MDBNavLink>          
       </MDBNavItem> 
         ) 
   }
@@ -78,7 +79,7 @@ ShowSignin = () =>{
   if (this.state.user.isAdmin === undefined){
     return (
       <MDBNavItem>
-      <MDBNavLink to="/signin">Sign</MDBNavLink>          
+      <MDBNavLink exact to="/signin">Sign</MDBNavLink>          
       </MDBNavItem>
         ) 
   }
@@ -88,7 +89,7 @@ render() {
     this.setState({signed : global.__signed, cookKey : global.__key, user : global.__user})
   },100)
   return (
-      <MDBNavbar  color="blue" dark expand="md">
+      <MDBNavbar  style={{backgroundColor: '#ff5e5e'}}color="" dark expand="md">
         <MDBNavbarBrand>
           <strong className="white-text">Grabby</strong>
         </MDBNavbarBrand>
@@ -103,7 +104,7 @@ render() {
             </MDBNavItem>
            { this.ShowProfile() }
            { this.ShowSignin() }
-            <MDBNavItem>.      
+            <MDBNavItem>   
             </MDBNavItem>
           </MDBNavbarNav>
           <MDBNavbarNav right>

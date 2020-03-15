@@ -16,7 +16,7 @@ const ObjectId = mongoose.Types.ObjectId
 const pino = require('express-pino-logger')();
 const cors = require('cors')
 const users = require('./models/users')
-var cPsO = require('socket.io-cookie')
+const request = require('request');
 //                      PRESETTINGS
 
 //SYNC
@@ -47,19 +47,16 @@ io.on('connection', function(socket){
 // app.engine('jsx', require('express-react-views').createEngine({transformViews : true, beautify : true}));
 
 
-//
 app.use(express.static(path.join(__dirname,'../build')))  
 
 
+//Session + cookie initialization
 
 app.set('trust proxy', 1)
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json())
-
-
-//Session + cookie initialization
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 app.use(cookieParser())
@@ -74,6 +71,32 @@ app.use(session({
     session.signed = []
 //
 //REACT ROUTING
+app.use(cors())
+
+
+app.post('/sigvk', (req,res2)=>{
+    request(req.body.url, function (err, res, data) {res2.send(data)});
+})
+app.post('/siggoo', (req,res2)=>{
+    const uri = req.body.url
+    const options = {
+      url: uri, 
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded'
+      }
+    };
+    request(options, function (error, res, boby) {
+      if (error) {res2.send('nope')}
+      else{
+        request(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${JSON.parse(boby).access_token}`, function (err, res, data) {
+          if (err) {res2.send('nope')}
+          else{res2.send(data)}
+        })
+      }
+    });
+})
+
 app.get('/api/home', (req, res) => {
   let usr
   if (req.cookies.key && session.signed.some(v=>v==req.cookies.key)){

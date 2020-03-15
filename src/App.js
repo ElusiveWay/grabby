@@ -3,8 +3,12 @@ import './App.css'
 import Signup from './components/signup'
 import Signin from './components/signin'
 import Mainbar from './components/mainbar'
+import ItemCreator from './components/createitem'
 import Message from './components/peref/message'
+import Collections from './components/collections/collectionsBox'
+import Footbar from './components/footbar'
 import io from 'socket.io-client'
+import Task from './components/task'
 import * as $ from 'jquery'
 import {
   BrowserRouter as Router,
@@ -18,6 +22,7 @@ const socket = io();
 global.__signed = []
 global.__user = {}
 global.__key = ''
+global.__canAjax = true
 
 //sync
 setInterval(()=>{
@@ -78,11 +83,25 @@ class App extends Component {
                 <Signin/>
               </div>
             </Route>
+            <Route path="/profile">
+              <div className="profile-page">
+                <ItemCreator/>
+              </div>
+            </Route>
             <Route exact path="/" >
-              <div className='mane-page'></div>
+              <div className='mane-page'>
+                  <Collections />
+              </div>
+            </Route>
+            <Route exact path="/collect" >
+                <Collections />
+            </Route>
+            <Route exact path="/admin" >
+                <Task />
             </Route>
           </Switch>
         </Router>
+        <Footbar></Footbar>
       </div>
     );
   }

@@ -1,5 +1,18 @@
-.sign-page{
+#root{
+	display: flex;
+	flex-direction: column;
+    min-height: calc(100vh);
+    overflow: hidden;
+}
+body,html{
+    height: auto;
+    width: 100%;
     position: absolute;
+    background-color: #eeffee;  
+    font-family: 'Lato', sans-serif;
+}
+
+.sign-page{
     width:100%;
     height: 90%;
     display: flex;
