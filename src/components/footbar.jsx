@@ -23,9 +23,9 @@ render() {
             <MDBNavItem>.      
             </MDBNavItem>
           </MDBNavbarNav>
-          <MDBNavbarNav right>
+          <MDBNavbarNav >
           </MDBNavbarNav>
-          <MDBNavbarBrand right>
+          <MDBNavbarBrand >
           <strong className="white-text">by Uladzislau Kaminski</strong>
         </MDBNavbarBrand>
         </MDBCollapse>

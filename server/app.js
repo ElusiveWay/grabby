@@ -16,29 +16,11 @@ const ObjectId = mongoose.Types.ObjectId
 const pino = require('express-pino-logger')();
 const cors = require('cors')
 const users = require('./models/users')
+const collection = require('./models/collection')
 const request = require('request');
 //                      PRESETTINGS
 
-//SYNC
 
-//
-var http = require('http').createServer(app);
-var io = require('socket.io')(http, {cookie : false});
-io.on('connection', function(socket){
-    socket.on('sync', async (r)=>{
-      if (session.signed.some(v=>v==r.cookies)) {
-            let usr
-            await users.find({_id : r.cookies }).then( p=>{
-            usr = p[0]}).catch(e=>socket.emit('sync', {sess : session.signed}))
-            socket.emit('sync', {sess : session.signed , user : usr})
-      }
-      else{
-          socket.emit('sync', {sess : session.signed})
-
-      }
-    });
-  });
-//
 //React view engine
 
 
@@ -121,5 +103,61 @@ app.use('/', signinRoute);
 // io.on('connection', function(socket){
 //     //socket inside
 // });
+//SYNC
+//SOCKET
+//
+global.__canOrCant = true
+var http = require('http').createServer(app);
+var io = require('socket.io')(http, {cookie : false});
+io.on('connection', function(socket){
+    socket.on('get-collections',(r)=>{
+        console.log(r)
+        collection.find({email : r.email}).then(r=>{
+            let arra = r.map(v=>v).reverse()
+            socket.emit('get-collections',{respa : 'ok', data : arra})
+        }).catch(()=>{
+          socket.emit('add-collection',{respa : 'error : database error', data : []})
+          return false
+        })
+    })
+    socket.on('add-collection', async (r)=>{
+        if (['Brodiags','Alcohol','Cats','Weapon','Motos'].every(v=>v!=r.type)){
+          socket.emit('add-collection',{respa : 'error : type not found'})
+          return false
+        }
+        let exist = false
+        await collection.find({name : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''), email : r.email}).then(r=>{
+          if (r.length > 0) exist = true;
+        })
+        if (exist==true){
+          socket.emit('add-collection',{respa : 'error : already exist'})
+          return false
+        }
+        await collection.create({
+            author : r.author,
+            email : r.email,
+            name : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''),
+            descript : r.descript.replace(/\s+/g, ' '),
+            comment : r.comment.replace(/\s+/g, ' '),
+            type : r.type,
+            img : r.img,
+            adds : r.adds
+        }).catch(()=>{
+          socket.emit('add-collection',{respa : 'error : database error'})
+          return false
+        })
+        socket.emit('add-collection',{respa : 'ok', data : r})
+      // if (session.signed.some(v=>v==r.cookies)) {
+      //       let usr
+      //       await users.find({_id : r.cookies }).then( p=>{
+      //       usr = p[0]}).catch(e=>socket.emit('sync', {sess : session.signed}))
+      //       socket.emit('sync', {sess : session.signed , user : usr})
+      // }
+      // else{
+      //     socket.emit('sync', {sess : session.signed})
 
+      // }
+    });
+  });
+//
 module.exports = http

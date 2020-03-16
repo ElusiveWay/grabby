@@ -37,34 +37,6 @@ router.use((req, res, next) => {
 
 //Route main page
 
-
-router.get('/',(req, res) => {
-    //  <Frontend key
-    
-    if(session.signed.some(v=>v==req.cookies.key)){
-        res.cookie('unsigned','false',e=>e)
-    }
-    else{
-        res.cookie('unsigned','true',e=>e)
-    }
-    //  Frontend key/>
-    users.find({}).then(posts=>{
-            let yds = -1 
-            for(let y = 0; y < posts.length; y++){
-                if(posts[y]['_id'] == req.cookies.key) {
-                    yds = y
-                    break
-                } 
-            }
-            let currUser = (yds === -1)?'guest':posts[yds]
-            res.render('index', {users : posts, user : currUser, signed : session.signed, unsigned : getBoolCookfromResp(res, 'unsigned')})
-            res.end()
-    }).catch(e=>{
-            res.render('index', {users : [], user : 'guest', signed : session.signed, unsigned : getBoolCookfromResp(res, 'unsigned')})
-            res.end()
-    })
-})
-
 router.post('/',(req, res) => {
     
 users.find({}).then(posts=>{
@@ -91,28 +63,6 @@ users.find({}).then(posts=>{
 
 //Route SIGNIN\UP page
 
-router.get('/signin',(req, res) => {
-    if(session.signed.some(v=>v==req.cookies.key)){
-        res.cookie('unsigned','false',e=>e)
-    }
-    else{ 
-        res.cookie('unsigned','true',e=>e)
-    }
-if (req.cookies.invalid == 'true') {
-    res.cookie('invalid','')
-    res.render('signin',{ display: true, blocked : false, unsigned : getBoolCookfromResp(res, 'unsigned')})
-}
-else{
-    if (req.cookies.blocked == 'true'){
-        res.cookie('blocked','')
-        res.render('signin',{ display: false, blocked : true, unsigned : getBoolCookfromResp(res, 'unsigned') })
-    }
-    else{
-        res.render('signin',{ display: false, blocked : false, unsigned : getBoolCookfromResp(res, 'unsigned') })
-    }
-}
-
-})
 //Post method used to add user to DB + start session like new user
 router.post('/signin',(req, res) => { 
     console.log(req.body)
@@ -127,7 +77,7 @@ case 'login':
     Login(req, res, users)
     break
 default: res.end
-            break
+        break
 }
 })
 router.post('/sync',async (req,res)=>{
@@ -137,7 +87,11 @@ router.post('/sync',async (req,res)=>{
         Logout(req,res,users)
     }
     else{
+        res.cookie('key', req.cookies.key)
         res.send({key : i})
     }
 })
+
+
+
 module.exports = router;

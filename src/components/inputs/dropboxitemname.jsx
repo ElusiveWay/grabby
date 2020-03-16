@@ -5,14 +5,20 @@ import { MDBContainer, MDBInputGroup, MDBDropdown, MDBDropdownToggle, MDBIcon, M
 class DropboxInput extends React.Component {
     constructor(props){
         super(props)
+        this.state = {
+          drop: ''
+        }
     }
 componentDidMount(){
   ReactDOM.findDOMNode(this).getElementsByClassName('disabledInput')[0].disabled = this.props.disabled
-  global.document.getElementById(this.aidi).value = this.props.arr[0]
+  this.setState({drop : this.props.arr[0]}, ()=>{})
+  global.document.getElementById(this.aidi).name = this.props.name
+  global.document.getElementById(this.aidi).value = this.state.drop
 }
 aidi = [new Date+Math.random()].toLocaleString().replace(/\D/g,"")
 switchState(e){
-    global.document.getElementById(this.aidi).value = e.target.innerText
+  this.setState({drop : e.target.innerText}, ()=>{})
+    global.document.getElementById(this.aidi).value = this.state.drop
 }
 
 render() {
@@ -22,14 +28,15 @@ render() {
           className="disabledInput"  
           id = {this.aidi}
           style = {{marginBottom:'0 !important'}}
-          value = "Books "
           containerClassName="mb-3"
+          value = {this.state.drop}
           append={
-            <MDBDropdown>
+            <MDBDropdown dropup>
               <MDBDropdownToggle
                 color="default"
                 size="md"
                 className="m-0 px-3 z-depth-0"
+                value = {this.state.drop}
               >
                 {this.props.named} <MDBIcon icon="caret-down" className="ml-1" />
               </MDBDropdownToggle>

@@ -201,9 +201,9 @@ const VK = (req, res, model) =>{
 const SignUP = (req, res, model, onlineFlag = onlineStr, okRedir='/', erRedir='/signin')=>{
     let {email, pass, name} = req.body;
     const prototypeModule = {
-        name: name,
-        email: email,
-        pass : pass,
+        name: name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''),
+        email: email.replace(/\s+/g, ''),
+        pass : pass.replace(/\s+/g, ''),
         img : req.body.img || '',
         [''+onlineStr] : false,
         isAdmin: false,
@@ -229,7 +229,7 @@ const SignUP = (req, res, model, onlineFlag = onlineStr, okRedir='/', erRedir='/
         })
     }
     let f3 = function(Moldel){
-        return Moldel.find({email: email}).then(posts=>{
+        return Moldel.find({email: email.replace(/\s+/g, '')}).then(posts=>{
             if (posts.length) exist = true;
         })
     }

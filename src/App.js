@@ -5,6 +5,7 @@ import Signin from './components/signin'
 import Mainbar from './components/mainbar'
 import ItemCreator from './components/createitem'
 import Message from './components/peref/message'
+import 'bootstrap'
 import Collections from './components/collections/collectionsBox'
 import Footbar from './components/footbar'
 import io from 'socket.io-client'
@@ -39,9 +40,6 @@ setInterval(()=>{
 socket.on('sync',msg=>{
     global.__signed = msg.sess
     if (msg.user!==undefined) global.__user = msg.user
-    // console.log(global.__signed)
-    // console.log(global.__user)
-    // console.log(global.__key)  
   })
 // 
 class App extends Component {
