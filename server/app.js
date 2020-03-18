@@ -16,6 +16,7 @@ const ObjectId = mongoose.Types.ObjectId
 const pino = require('express-pino-logger')();
 const cors = require('cors')
 const users = require('./models/users')
+const items = require('./models/items')
 const collection = require('./models/collection')
 const request = require('request');
 //                      PRESETTINGS
@@ -46,7 +47,7 @@ app.use(session({
     resave : true,
     saveUninitialized : true,
     secret: 'keyboardCat',
-    cookie : {maxAge: 1200000,secure: true}
+    cookie : {maxAge: 1200000,secure: false}
   }));
 //Render main page, try to find users in DB 
     global.session = session
@@ -108,8 +109,16 @@ app.use('/', signinRoute);
 //
 global.__canOrCant = true
 var http = require('http').createServer(app);
-var io = require('socket.io')(http, {cookie : false});
+var io = require('socket.io')(http);
 io.on('connection', function(socket){
+  socket.on ('getAllData', ()=>{
+    collection.find({}).then(r=>{
+      users.find({online : 'true'}).then(r3=>{
+        let ar = r3.map(v=>v.name)
+        items.find({}).then(r2=>socket.emit('getAllData',{collections: r, items : r2, signed : session.signed, online : ar}))
+      })
+    })
+  })
     socket.on('get-collections',(r)=>{
         console.log(r)
         collection.find({email : r.email}).then(r=>{
@@ -119,6 +128,18 @@ io.on('connection', function(socket){
           socket.emit('add-collection',{respa : 'error : database error', data : []})
           return false
         })
+    })
+    socket.on ('sync', async r=>{
+      if (session.signed.some(v=>v==r.cookies)) {
+            let usr
+            await users.find({_id : r.cookies }).then( p=>{
+            usr = p[0]}).catch(e=>socket.emit('sync', {sess : session.signed , user : {}}))
+            socket.emit('sync', {sess : session.signed , user : usr})
+      }
+      else{
+          socket.emit('sync', {sess : session.signed, user : {}})
+
+      }
     })
     socket.on('add-collection', async (r)=>{
         if (['Brodiags','Alcohol','Cats','Weapon','Motos'].every(v=>v!=r.type)){
@@ -147,16 +168,7 @@ io.on('connection', function(socket){
           return false
         })
         socket.emit('add-collection',{respa : 'ok', data : r})
-      // if (session.signed.some(v=>v==r.cookies)) {
-      //       let usr
-      //       await users.find({_id : r.cookies }).then( p=>{
-      //       usr = p[0]}).catch(e=>socket.emit('sync', {sess : session.signed}))
-      //       socket.emit('sync', {sess : session.signed , user : usr})
-      // }
-      // else{
-      //     socket.emit('sync', {sess : session.signed})
 
-      // }
     });
   });
 //

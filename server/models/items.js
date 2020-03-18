@@ -2,34 +2,49 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-        title: {
+        name: {
             type: String,
             required: true
         },
-        body: {
+        description: {
             type: String,
             required: true
+        },
+        img: {
+            type: String,
+            required: false
         },
         id: {
             type: String,
-            required: true
+            required: false
         },
-        user: {
+        email: {
             type: String,
             required: true
         },
-        color: {
+        collect: {
             type: String,
             required:true
         },
-        x: {
+        type: {
             type: Number,
-            required: true
+            required: false
         },
-        y: {
+        likes: {
             type: Number,
-            required: true
+            required: false
+        },
+        add: {
+            type: String,
+            required: false
+        },
+        tags: {
+            type: String,
+            required: false
+        },
+        comments: {
+            type: String,
+            required: false
         }
-
     })
 module.exports = mongoose.model('im-items', schema)

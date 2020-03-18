@@ -32,6 +32,7 @@ class Signup extends Component {
     axios({
       method: 'POST',
       url: '/signin',
+      withCredentials : true,
       data: {
         email: this.state.email,
         pass: this.state.pass,

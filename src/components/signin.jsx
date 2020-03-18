@@ -33,6 +33,7 @@ class Signin extends Component {
     axios({
       method: 'POST',
       url: '/signin',
+      withCredentials : true,
       data: {
         email: this.state.email,
         pass: this.state.pass,
@@ -151,6 +152,7 @@ class Signin extends Component {
           f1().then((v)=>{
             axios({
               method: 'POST',
+              withCredentials : true,
               url: '/signin',
               data: {
                 email: this.state.vkProf.id,

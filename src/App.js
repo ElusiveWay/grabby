@@ -4,6 +4,7 @@ import Signup from './components/signup'
 import Signin from './components/signin'
 import Mainbar from './components/mainbar'
 import ItemCreator from './components/createitem'
+import ImageUpload from './components/inputs/Imageupload'
 import Message from './components/peref/message'
 import 'bootstrap'
 import Collections from './components/collections/collectionsBox'
@@ -24,22 +25,12 @@ global.__signed = []
 global.__user = {}
 global.__key = ''
 global.__canAjax = true
-
+global.__canAjaxSync = true
+global.__canEmitSync = true
 //sync
-setInterval(()=>{
-  if (!global.__signed.length && !global.__key) global.__user = {}
-   socket.emit('sync',{cookies : global.__key, user : global.__user}) 
-   $.ajax({
-     method: 'POST',
-     url: '/sync',
-     success: r=>{
-       global.__key = r.key
-     }
-   })
-  },2000)
-socket.on('sync',msg=>{
-    global.__signed = msg.sess
-    if (msg.user!==undefined) global.__user = msg.user
+socket.on('getAllData',msg=>{
+    global.__canEmitSync = true
+    global.__mainData = msg
   })
 // 
 class App extends Component {
@@ -60,6 +51,27 @@ class App extends Component {
        global.__signed = res.signed
        global.__key = res.key
      });
+     this.int = setInterval(()=>{
+      if (!global.__signed.length && !global.__key) global.__user = {}
+      if (global.__canEmitSync == true){
+        global.__canEmitSync = false
+        socket.emit('getAllData')
+      } 
+      if(global.__canAjaxSync == true){ 
+        global.__canAjaxSync = false
+        $.ajax({
+         method: 'POST',
+         url: '/sync',
+         success: r=>{
+           global.__key = r.key
+           global.__canAjaxSync = true
+         },
+         error : e=>global.__canAjaxSync = true
+       })}
+      },500)
+ }
+ componentWillUnmount(){
+   clearInterval(this.int)
  }
   handleChange(event) {
     this.setState({ name: event.target.value });
@@ -95,7 +107,7 @@ class App extends Component {
                 <Collections />
             </Route>
             <Route exact path="/admin" >
-                <Task />
+                <ImageUpload />
             </Route>
           </Switch>
         </Router>

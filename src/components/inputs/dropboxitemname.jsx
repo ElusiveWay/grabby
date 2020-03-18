@@ -20,12 +20,14 @@ switchState(e){
   this.setState({drop : e.target.innerText}, ()=>{})
     global.document.getElementById(this.aidi).value = this.state.drop
 }
-
+changeState(obj){
+  this.setState(obj)
+}
 render() {
     return (
       <MDBContainer style={this.props.style}>
         <MDBInputGroup
-          className="disabledInput"  
+          className={(this.props.class!==undefined)?`${this.props.class} disabledInput`:"disabledInput"}
           id = {this.aidi}
           style = {{marginBottom:'0 !important'}}
           containerClassName="mb-3"

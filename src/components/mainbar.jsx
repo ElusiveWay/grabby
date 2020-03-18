@@ -84,8 +84,11 @@ ShowSignin = () =>{
         ) 
   }
 }
+componentWillUnmount(){
+  clearTimeout(this.timout)
+}
 render() {
-  setTimeout(()=>{
+  this.timout = setTimeout(()=>{
     this.setState({signed : global.__signed, cookKey : global.__key, user : global.__user})
   },100)
   return (

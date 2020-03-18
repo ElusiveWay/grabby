@@ -65,7 +65,7 @@ const Logout = (req, res, model, onlineFlag = 'online',blocked = false)=>{
             res.send({out: 'ok', action: 'logout'})
         }
         else{
-            //res.cookie('key', '') ////TYT
+            res.cookie('key', '')
             if(blocked!=true){
                 res.cookie('blocked', '')
             }

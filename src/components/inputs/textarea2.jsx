@@ -7,14 +7,10 @@ class TextareaPage2 extends React.Component {
     constructor(props){
         super(props)
     }
-componentDidMount(){
-    ReactDOM.findDOMNode(this).style.display = 'inline-block'
-    ReactDOM.findDOMNode(this).style.width = 'calc(50% - 20px)'
-    ReactDOM.findDOMNode(this).style.margin = '20px 10px'
-}
+
 render(){
     return (
-        <div className="input-group">
+        <div style={{display: 'inline-block',width: 'calc(50% - 20px)', margin: '20px 10px'}} className="input-group">
             <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon">
                 {this.props.nm}
