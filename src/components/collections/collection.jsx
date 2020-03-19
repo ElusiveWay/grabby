@@ -1,16 +1,23 @@
 import React, {Component} from 'react'
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
-
+import io from 'socket.io-client'
+const socket = io()
 
 class Collection extends Component {
     constructor(props){
       super(props)
       this.state = {
-
+        liked : true
       }
+      this.likeHandler = this.likeHandler.bind(this)
     }
     width = "100%"
     style = {
+        description:{
+            maxHeight: '12em',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+        },
         container :{
              width: this.width,
              margin: '20px 0px'
@@ -20,6 +27,16 @@ class Collection extends Component {
             width: (this.props.bg===undefined)?'unset':'100%'
         }
     }
+    likeHandler(){
+        if (Object.keys(global.__user).length == 0) return
+        if (JSON.parse(this.props.likes).some((v)=>v==(global.__user.email))){
+            socket.emit('remove-like',global.__user.email)
+        }
+        else{
+            socket.emit('add-like',global.__user.email)
+        }
+        socket.on('like', r=>console.log(r))  
+    } 
     render(){
         return (
             <div style={{display:'flex'}}>
@@ -29,12 +46,18 @@ class Collection extends Component {
                     <MDBCardImage style={this.style.image} src={this.props.bg} className="img-fluid" waves />
                 </div>
                 <MDBCardBody>
-                <MDBCardTitle>Card title</MDBCardTitle>
-                <MDBCardText>
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card&apos;s content.
+                <MDBCardTitle>{this.props.name}</MDBCardTitle>
+                <MDBCardText style={this.style.description}>
+                    {this.props.description}
                 </MDBCardText>
-                <MDBBtn href="#">Open</MDBBtn>
+                <MDBBtn style={{padding: '0.84rem 1.44rem'}}>Open</MDBBtn>
+                <MDBBtn onClick={this.likeHandler} style={{
+                    backgroundColor: 'rgba(255, 160, 160, 1)',
+                    padding: '0.84rem 1rem',
+                    float: 'right',
+                    color: 'white'
+            
+                }} color=""><i className={(this.props.likes)?"fas fa-heart":"far fa-heart"}></i> Likes :<span className="likes">{JSON.parse(this.props.likes).length}</span></MDBBtn>
                 </MDBCardBody>
             </MDBCard> 
             </div>

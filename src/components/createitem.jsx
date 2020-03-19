@@ -1,8 +1,6 @@
 import React from "react"
-import File from './inputs/file'
 import DropboxInput from './inputs/dropboxitemname'
 import Text from './inputs/text'
-import TextareaPage from './inputs/textarea'
 import {Route,Link, Redirect} from 'react-router-dom'
 import TextareaPage2 from './inputs/textarea2'
 import ProfileBox from './profilebox'
@@ -14,7 +12,9 @@ import DropdownBtn from './dropdown'
 import io from 'socket.io-client'
 import * as $ from 'jquery'
 import 'bootstrap'
+import SocketIOFileUpload from 'socketio-file-upload'
 import {MDBBtn} from 'mdbreact'
+import {Image, Video, Transformation, CloudinaryContext} from 'cloudinary-react'
 const socket = io()
 class ItemCreator extends React.Component {
     constructor(props){
@@ -28,7 +28,8 @@ class ItemCreator extends React.Component {
             addsForItemCreation : [],
             chosenForItem : '',
             tegState : [],
-            addsOutState : []
+            addsOutState : [],
+            file2 : ''
         }
         this.refItemDropbox2 = React.createRef()
         this.refItemDropbox1 = React.createRef()
@@ -197,7 +198,9 @@ componentDidMount(){
         }
      },100)
 }
-
+returnMeVar(vari){
+    this.setState({file2 : vari})
+}
 componentWillUnmount(){
     clearInterval(this.interval)
 }
@@ -219,7 +222,7 @@ subFormColl = (e) => {
             descript : e.target.col_descript.value,
             comment : e.target.col_comment.value,
             type : e.target.col_type.value,
-            img : e.target.col_img.value,
+            img : this.state.file2,
             adds : JSON.stringify(array)
         })
     socket.on('add-collection',(r)=>{
@@ -232,6 +235,35 @@ subFormColl = (e) => {
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The collection is added!" color="success" id={id}/>, $('#'+id)[0])
             this.setState({redirect : 'profile'})
+          }
+    })
+}
+subFormItems = (e) => {
+    e.preventDefault()
+    if(global.__user.email === undefined) return false;
+    socket.emit('add-item',{
+        author : JSON.stringify(global.__user),
+        email : global.__user.email,
+        name : e.target.item_name.value,
+        description : e.target.item_descript.value,
+        type : this.state.chosenForItem,
+        collect: document.getElementsByClassName('addinpdropiq2')[0].value,
+        img : this.state.file2,
+        add : JSON.stringify(this.state.addsOutState),
+        tags : JSON.stringify(this.state.tegState)
+    })
+    socket.on('add-item',(r)=>{
+        if (r.respa != "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Oops!" text2="Something went wrong!" color="danger" id={id}/>, $('#'+id)[0])
+            console.log(r)
+          }else if(r.respa == "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Yeah!" text2="The item is added to collection!" color="success" id={id}/>, $('#'+id)[0])
+            console.log(r)
+            //this.setState({redirect : 'profile'})
           }
     })
 }
@@ -290,7 +322,7 @@ render(){
                     <h1 style={this.style.h1}>Add new Collection</h1>
                     <Text name="col_name" required nm="Name of collection*" />
                     <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
-                    <ImageUpload name="col_img" />
+                    <ImageUpload func={this.returnMeVar.bind(this)} name="col_img" />
                     <Text name="col_comment" nm="Author comment" />
                     <span style={{marginBottom:'30px',display:'inline-block',textAlign:'center',width:'50%'}}>Choose collection type:</span>
                     <DropboxInput name="col_type" disabled arr={this.state.types}  named='Collection type' style={this.style.dropboxinp2} />
@@ -302,12 +334,12 @@ render(){
             </Route>
             <Route exact path="/profile/addi" >
             <section style={this.style.section} className="addItemSect">
-                <form style={this.style.formItem}>
+                <form onSubmit={this.subFormItems} style={this.style.formItem}>
                     <Link style={{float:'right'}} to="/profile">Back</Link>
                     <h1 style={this.style.h1}>Add new Item to Collection</h1>
                     <Text name="item_name" required nm="Name of Item*" />
                     <TextareaPage2 name="item_descript" required style={this.style.description2} nm="Description*" />
-                    <ImageUpload name="item_img" />
+                    <ImageUpload func={this.returnMeVar.bind(this)} name="item_img" />
                     <Text name='addTegPlsIWanna'nm="Add teg" />   
                     <div style={{marginBottom:'30px'}} name="МАССИВ ТЕГОВ">
                         <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`)}} className="teg add">Add</div> 
@@ -392,7 +424,7 @@ class Collection extends React.Component{
     constructor(props){
         super(props)
     }
-    style={
+    style={ 
         collect:{
             container:{
                 width: '100%',
@@ -402,8 +434,7 @@ class Collection extends React.Component{
                 height: 'auto',
                 borderRadius: '10px',
                 backgroundColor:'transparent',
-                //boxShadow: '0 0 10px gray',
-                color: '#dc3545'
+                color: '#000231'
             },
             image:{
                 display:(this.props.data.img=='')?'none':'flex',
@@ -428,7 +459,7 @@ class Collection extends React.Component{
                 margin: '0',
                 position:'absolute',
                 width:'17%',
-                backgroundColor:'#e9ecef',
+                backgroundColor:'#f8f9fa',
                 justifyContent: 'center',
                 alignItems:'center'
             },
@@ -441,10 +472,12 @@ class Collection extends React.Component{
                 width:'17%',
                 padding: '0',
                 margin: '0',
-                backgroundColor:'#e9ecef',
+                backgroundColor:'#f8f9fa',
                 justifyContent: 'center',
                 alignItems:'center',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                color: 'rgb(220, 53, 69)',
+                fontWeight: '600'
             },
             desc:{
                 display:'flex',
@@ -456,7 +489,7 @@ class Collection extends React.Component{
                 position:'absolute',
                 width:(this.props.data.img=='')?'80%':'52%',
                 boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)',
-                backgroundColor:'#e9ecef',
+                backgroundColor:'#f8f9fa',
                 justifyContent: 'center',
                 alignItems: 'space-around',
                 overflow:'hidden',

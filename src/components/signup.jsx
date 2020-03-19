@@ -65,7 +65,7 @@ class Signup extends Component {
   render(){
     return (
 
-            <MDBCard style={{margin:'75px', width : '400px', height : '500px', minHeigth : "300px"}}>
+            <MDBCard style={{margin:'20px', width : '400px', height : 'auto', minHeigth : "300px"}}>
               <MDBCardBody>
               <form style={{color:'#2196f3'}} onSubmit={ this.subme }>
                   <p className="h4 text-center py-4">Sign up</p>

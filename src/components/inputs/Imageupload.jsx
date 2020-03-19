@@ -14,10 +14,10 @@ class ImageUpload extends React.Component {
 
   _handleImageChange(e) {
     e.preventDefault();
-
+    console.log(e.target.files[0])
     let reader = new FileReader();
     let file = e.target.files[0];
-
+    this.props.func(file)
     reader.onloadend = () => {
       this.setState({
         file: file,

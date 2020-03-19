@@ -19,9 +19,25 @@ const users = require('./models/users')
 const items = require('./models/items')
 const collection = require('./models/collection')
 const request = require('request');
+var cloudinary = require('cloudinary').v2;
+
 //                      PRESETTINGS
 
-
+ //uppload from fileBuffer
+ cloudinary.config({ 
+  cloud_name: 'dete2z5hu', 
+  api_key: '899217872126318', 
+  api_secret: '90i6qUElzHDe4f-RRTbH3feJgMo' 
+});
+//and promisse
+function uploadToCloudinary(image) {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream((err, url) => {
+      if (err) return reject(err)
+      return resolve(url)
+    }).end(image)
+  });
+} 
 //React view engine
 
 
@@ -111,6 +127,7 @@ global.__canOrCant = true
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 io.on('connection', function(socket){
+
   socket.on ('getAllData', ()=>{
     collection.find({}).then(r=>{
       users.find({online : 'true'}).then(r3=>{
@@ -141,6 +158,12 @@ io.on('connection', function(socket){
 
       }
     })
+    // socket.on('add-like', async(r)=>{
+    //   socket.emit('like',r)
+    // })
+    // socket.on('remove-like', async(r)=>{
+    //   socket.emit('like',r)
+    // })
     socket.on('add-collection', async (r)=>{
         if (['Brodiags','Alcohol','Cats','Weapon','Motos'].every(v=>v!=r.type)){
           socket.emit('add-collection',{respa : 'error : type not found'})
@@ -154,6 +177,10 @@ io.on('connection', function(socket){
           socket.emit('add-collection',{respa : 'error : already exist'})
           return false
         }
+        let img5 = ''
+        if(r.img instanceof Buffer == true){
+          await uploadToCloudinary(r.img).then(r=> img5=r.url)
+        }
         await collection.create({
             author : r.author,
             email : r.email,
@@ -161,7 +188,7 @@ io.on('connection', function(socket){
             descript : r.descript.replace(/\s+/g, ' '),
             comment : r.comment.replace(/\s+/g, ' '),
             type : r.type,
-            img : r.img,
+            img : img5,
             adds : r.adds
         }).catch(()=>{
           socket.emit('add-collection',{respa : 'error : database error'})
@@ -169,6 +196,51 @@ io.on('connection', function(socket){
         })
         socket.emit('add-collection',{respa : 'ok', data : r})
 
+    });
+    socket.on('add-item', async (r)=>{
+        //проверки при которых прерываемся
+        if (['Brodiags','Alcohol','Cats','Weapon','Motos'].every(v=>v!=r.type)){
+          socket.emit('add-item',{respa : 'error : type not found'})
+          return false
+        }
+        let exist = false
+        await items.find({name : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''), email : r.email, collect : r.collect}).then(r=>{
+          if (r.length > 0) exist = true;
+        })
+        if (exist==true){
+          socket.emit('add-item',{respa : 'error : already exist'})
+          return false
+        }
+        let exist2 = false
+        await collection.find({name : r.collect, email : r.email}).then(r=>{
+          if (r.length = 0) exist = true2;
+        })
+        if (exist2==true){
+          socket.emit('add-item',{respa : 'error : collection not found'})
+          return false
+        }
+        //
+        let img5 = ''
+        if(r.img instanceof Buffer == true){
+          await uploadToCloudinary(r.img).then(r=> img5=r.url)
+        }
+        await items.create({
+            author : r.author,
+            email : r.email,
+            name : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''),
+            description : r.description.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''),
+            type : r.type,
+            collect: r.collect,
+            img : img5,
+            add : r.add,
+            tags : r.tags,
+            likes : '[]',
+            comments :'[]'
+        }).catch(()=>{
+          socket.emit('add-item',{respa : 'error : database error'})
+          return false
+        })
+        socket.emit('add-item',{respa : 'ok', data : r})
     });
   });
 //

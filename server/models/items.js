@@ -18,20 +18,24 @@ const schema = new Schema({
             type: String,
             required: false
         },
-        email: {
-            type: String,
-            required: true
-        },
         collect: {
             type: String,
             required:true
         },
         type: {
-            type: Number,
+            type: String,
+            required: false
+        },
+        author: {
+            type: String,
+            required: false
+        },
+        email: {
+            type: String,
             required: false
         },
         likes: {
-            type: Number,
+            type: String,
             required: false
         },
         add: {
