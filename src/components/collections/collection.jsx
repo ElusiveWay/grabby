@@ -1,14 +1,19 @@
 import React, {Component} from 'react'
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
-import io from 'socket.io-client'
-const socket = io()
+import ReactDOM from 'react-dom'
+import axios from 'axios'
+import Message from '../peref/message'
+import * as $ from 'jquery'
+
 
 class Collection extends Component {
     constructor(props){
       super(props)
       this.state = {
-        liked : true
+        liked : true,
+        iCanRequest : true
       }
+      this.iCanChangeState = true
       this.likeHandler = this.likeHandler.bind(this)
     }
     width = "100%"
@@ -28,14 +33,29 @@ class Collection extends Component {
         }
     }
     likeHandler(){
-        if (Object.keys(global.__user).length == 0) return
-        if (JSON.parse(this.props.likes).some((v)=>v==(global.__user.email))){
-            socket.emit('remove-like',global.__user.email)
+        if (Object.keys(global.__user).length == 0) {
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Oops!" text2="Login first!" color="danger" id={id}/>, $('#'+id)[0])
+            return
         }
-        else{
-            socket.emit('add-like',global.__user.email)
+        if (this.state.iCanRequest === true) {
+            this.setState({iCanRequest : false},()=>{
+                axios({
+                    method: 'POST',
+                    url: '/like',
+                    data: {
+                        liker: global.__user.email,
+                        itemId: this.props.data._id
+                    }
+                    }).then(r=>{
+                        ReactDOM.findDOMNode(this).getElementsByClassName('iconqa')[0].className = (r.data.some(v=>v==global.__user.email))?"fas fa-heart iconqa":"far fa-heart iconqa"
+                        ReactDOM.findDOMNode(this).getElementsByClassName('__darova_v1_')[0].innerText = r.data.length
+                        this.setState({iCanRequest : true})
+                    }).catch(e=> this.setState({iCanRequest : true}))  
+            })
         }
-        socket.on('like', r=>console.log(r))  
+        
     } 
     render(){
         return (
@@ -51,13 +71,13 @@ class Collection extends Component {
                     {this.props.description}
                 </MDBCardText>
                 <MDBBtn style={{padding: '0.84rem 1.44rem'}}>Open</MDBBtn>
-                <MDBBtn onClick={this.likeHandler} style={{
+                <MDBBtn onClick={()=>this.likeHandler()} style={{
                     backgroundColor: 'rgba(255, 160, 160, 1)',
                     padding: '0.84rem 1rem',
                     float: 'right',
                     color: 'white'
             
-                }} color=""><i className={(this.props.likes)?"fas fa-heart":"far fa-heart"}></i> Likes :<span className="likes">{JSON.parse(this.props.likes).length}</span></MDBBtn>
+                }} color=""><i className={(JSON.parse(this.props.likes).some(v=>v==global.__user.email))?"fas fa-heart iconqa":"far fa-heart iconqa"}></i> Likes :<span className="likes __darova_v1_">{JSON.parse(this.props.likes).length}</span></MDBBtn>
                 </MDBCardBody>
             </MDBCard> 
             </div>

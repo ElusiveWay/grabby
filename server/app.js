@@ -72,6 +72,20 @@ app.use(session({
 //REACT ROUTING
 app.use(cors())
 
+app.post('/like', async(req,res)=>{
+  await items.find({_id : req.body.itemId}).then(async r2=>{
+    let likes = JSON.parse(r2[0].likes).map(v=>v)
+    if (likes.some(w=>w==req.body.liker)){
+      likes.splice(likes.indexOf(req.body.liker),1)
+      await items.update({_id : req.body.itemId},{likes : JSON.stringify(likes)},e=>e).then(l=>res.send(likes))
+    }
+    else{
+      likes.push(req.body.liker)
+      await items.update({_id : req.body.itemId},{likes : JSON.stringify(likes)},e=>e).then(l=>res.send(likes))
+    }
+  })
+})
+
 
 app.post('/sigvk', (req,res2)=>{
     request(req.body.url, function (err, res, data) {res2.send(data)});
@@ -158,12 +172,7 @@ io.on('connection', function(socket){
 
       }
     })
-    // socket.on('add-like', async(r)=>{
-    //   socket.emit('like',r)
-    // })
-    // socket.on('remove-like', async(r)=>{
-    //   socket.emit('like',r)
-    // })
+
     socket.on('add-collection', async (r)=>{
         if (['Brodiags','Alcohol','Cats','Weapon','Motos'].every(v=>v!=r.type)){
           socket.emit('add-collection',{respa : 'error : type not found'})

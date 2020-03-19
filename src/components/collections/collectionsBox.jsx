@@ -44,7 +44,7 @@ class Collections extends Component {
           columns.push(
           <div className="__freeColumn_v1_" style={this.styles.collectionsBox}>
                  {this.state.show.map((v,i)=>{
-                     if (i%this.state.flexColumns == k) return <Collection likes={v.likes} name={v.name} description={v.description} bg={v.img}/>
+                     if (i%this.state.flexColumns == k) return <Collection data={v} likes={v.likes} name={v.name} description={v.description} bg={v.img}/>
                  })}
           </div>
           )

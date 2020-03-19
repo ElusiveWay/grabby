@@ -92,7 +92,7 @@ render() {
     this.setState({signed : global.__signed, cookKey : global.__key, user : global.__user})
   },100)
   return (
-      <MDBNavbar  style={{backgroundColor: '#ff5e5e'}}color="" dark expand="md">
+      <MDBNavbar  style={{backgroundColor: 'rgba(251, 127, 127, 1)'}}color="" dark expand="md">
         <MDBNavbarBrand>
           <strong className="white-text">Grabby</strong>
         </MDBNavbarBrand>
