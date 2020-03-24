@@ -40,12 +40,6 @@ function uploadToCloudinary(image) {
 } 
 //React view engine
 
-
-// app.set('views', __dirname + '/views');
-// app.set('view engine', 'jsx');
-// app.engine('jsx', require('express-react-views').createEngine({transformViews : true, beautify : true}));
-
-
 app.use(express.static(path.join(__dirname,'../build')))  
 
 
@@ -63,7 +57,7 @@ app.use(session({
     resave : true,
     saveUninitialized : true,
     secret: 'keyboardCat',
-    cookie : {maxAge: 1200000,secure: false}
+    cookie : {maxAge: 1200000,secure: true}
   }));
 //Render main page, try to find users in DB 
     global.session = session
@@ -73,6 +67,7 @@ app.use(session({
 app.use(cors())
 
 app.post('/like', async(req,res)=>{
+  if (session.signed.every(v=>v!=req.body.likerId)){return}
   await items.find({_id : req.body.itemId}).then(async r2=>{
     let likes = JSON.parse(r2[0].likes).map(v=>v)
     if (likes.some(w=>w==req.body.liker)){
@@ -108,6 +103,46 @@ app.post('/siggoo', (req,res2)=>{
         })
       }
     });
+})
+app.post('/addComment', async (req,res)=>{
+    if (session.signed.some(v=>v==req.cookies.key)){
+      let arr = JSON.parse(req.body.itemCom)
+      arr.push(req.body)
+      await items.update({_id : req.body.itemId},{comments : JSON.stringify(arr)},e=>e).then(r=>{
+        res.send('ok')
+      }).catch(e=>res.send('db error'))
+    }
+    else{
+      res.send('login first')
+    }
+    
+})
+app.post('/deleteComment', async (req,res)=>{
+  // delete: global.__deleteCommentsData,
+  // user: global.__user
+  //comment : commens[index]
+  //global.__deleteCommentsData = {new : newComments, item : myItem. commens[index]}
+  //                   likerId: global.__user._id,
+  //                   likerName: global.__user.name,
+  //                   liker: global.__user.email,
+  //                   itemId: myItem._id,
+  //                   itemCom: (myItem.comments===undefined)?'[]':myItem.comments,
+  //                   titl: e.target.titla.value,
+  //                   tex: e.target.texta.value,
+  //                   img: global.__user.img
+
+    if (session.signed.some(v=>v==req.cookies.key)){
+      let commentsField = JSON.stringify(req.body.delete.new)
+      if (req.cookies.key != req.body.delete.comment.likerId) {
+        res.send('not owner')
+        return
+      }
+      await items.update({_id : req.body.delete.comment.itemId},{comments : commentsField},e=>e).then(r=>res.send('ok')).catch(e=>res.send('db error'))
+    }
+    else{
+      res.send('login first')
+    }
+    
 })
 
 app.get('/api/home', (req, res) => {
@@ -188,7 +223,7 @@ io.on('connection', function(socket){
         }
         let img5 = ''
         if(r.img instanceof Buffer == true){
-          await uploadToCloudinary(r.img).then(r=> img5=r.url)
+          await uploadToCloudinary(r.img).then(r=> img5=r.url).catch(e=>console.log('cant download'))
         }
         await collection.create({
             author : r.author,
@@ -231,7 +266,7 @@ io.on('connection', function(socket){
         //
         let img5 = ''
         if(r.img instanceof Buffer == true){
-          await uploadToCloudinary(r.img).then(r=> img5=r.url)
+          await uploadToCloudinary(r.img).then(r=> img5=r.url).catch(e=>console.log('cant download'))
         }
         await items.create({
             author : r.author,

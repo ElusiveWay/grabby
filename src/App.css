@@ -1,11 +1,12 @@
 #root{
+    margin-top: 42px;
 	display: flex;
 	flex-direction: column;
     min-height: calc(100vh);
     position: absolute;
     height: auto;
     width: 100%;
-    background-color:#ecfdec;
+    background-color:#fafffa;
 }
 .App{
     background-color:transparent;

@@ -35,7 +35,8 @@ render() {
           append={
             <MDBDropdown dropup>
               <MDBDropdownToggle
-                color="default"
+                color=""
+                style={{backgroundColor:"#7ab0b4",color:'white'}}
                 size="md"
                 className="m-0 px-3 z-depth-0"
                 value = {this.state.drop}

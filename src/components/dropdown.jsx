@@ -25,7 +25,7 @@ class DropdownBtn extends Component{
           global.document.getElementsByClassName('additionalInputs')[0].appendChild(elem)
           let str = `<div style='width:100%;margin: 30px 0% 0px' class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <button class="btn btn-primary btn-md m-0 px-3 py-2 z-depth-0 dropdown-toggle" type="button"
+                                    <button style="background-color:rgb(122, 176, 180) !important"  class="btn btn-primary btn-md m-0 px-3 py-2 z-depth-0 dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${name}</button>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" onclick='$("#${id}").remove()'>Delete</a>
@@ -50,7 +50,7 @@ render(){
       <div style={this.style} name={this.props.name}>
         <div style={{display:'flex',justifyContent:'center'}}>
             <MDBDropdown placement='right' >
-            <MDBDropdownToggle caret color='' style={{color:'white',backgroundColor:'rgb(255, 94, 94)'}}>
+            <MDBDropdownToggle caret color='' style={{color:'white',backgroundColor:'rgb(135, 134, 197)'}}>
                 Click to add some new property for your collection
             </MDBDropdownToggle>
             <MDBDropdownMenu  basic>

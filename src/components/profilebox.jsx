@@ -9,17 +9,10 @@ class ProfileBox extends Component {
       clearInterval(this.inter)  
     }
     componentDidMount(){
-        this.inter = setInterval(()=>this.updatera(), 20)
+        this.inter = setInterval(()=>this.updatera(), 1)
     }
     updatera(){
-        if (window.scrollY > 88 && ReactDOM.findDOMNode(this).style.position !== 'fixed'){
-            ReactDOM.findDOMNode(this).style.position = 'fixed'
-        }
-        else{
-            if (window.scrollY <= 88 && ReactDOM.findDOMNode(this).style.position !== 'relative'){
-                ReactDOM.findDOMNode(this).style.position = 'relative'
-            }
-        }
+            ReactDOM.findDOMNode(this).style.marginTop = window.scrollY+'px'
     }
 
 
@@ -87,7 +80,8 @@ class ProfileBox extends Component {
                             color: '#495057',
                             position: 'relative',
                             fontSize : '16px',
-                            transition:'.2s',
+                            transition: '0.3s',
+                            marginTop:'0px',
                             top:'20px'
                         },
                         status:{
@@ -112,7 +106,7 @@ class ProfileBox extends Component {
                 <div style={this.style.profile.name} className="profile-name"><span style={this.style.span}>{this.props.data.name}</span></div>
                 <div style={this.style.profile.online} className="profile-online"><span style={this.style.span}><b style={{color:'green',fontWeight:'600'}}>{this.props.data.online}</b></span></div>
                 <div style={this.style.profile.views} className="profile-views"><span style={this.style.span}>{this.props.data.views}</span></div>
-                <div style={this.style.profile.status} className="profile-status"><span style={this.style.span}><i style={{color:'rgb(220, 53, 69)',fontWeight:'900'}}>{this.props.data.status}</i></span></div>
+                <div style={this.style.profile.status} className="profile-status"><span style={this.style.span}><i style={{color:'rgb(135, 134, 197)',fontWeight:'900'}}>{this.props.data.status}</i></span></div>
             </div>
         )
     }

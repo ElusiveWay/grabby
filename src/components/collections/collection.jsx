@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
-import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
+import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBNavLink } from 'mdbreact';
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import Message from '../peref/message'
 import * as $ from 'jquery'
+import { Link } from 'react-router-dom';
 
 
 class Collection extends Component {
@@ -45,6 +46,7 @@ class Collection extends Component {
                     method: 'POST',
                     url: '/like',
                     data: {
+                        likerId: global.__user._id,
                         liker: global.__user.email,
                         itemId: this.props.data._id
                     }
@@ -70,9 +72,9 @@ class Collection extends Component {
                 <MDBCardText style={this.style.description}>
                     {this.props.description}
                 </MDBCardText>
-                <MDBBtn style={{padding: '0.84rem 1.44rem'}}>Open</MDBBtn>
+                <Link to={`/items/${this.props.data._id}`}><MDBBtn style={{color:'white',backgroundColor:'#7ab0b4'}} color=''>Open</MDBBtn></Link>
                 <MDBBtn onClick={()=>this.likeHandler()} style={{
-                    backgroundColor: 'rgba(255, 160, 160, 1)',
+                    backgroundColor: '#8786c5',
                     padding: '0.84rem 1rem',
                     float: 'right',
                     color: 'white'

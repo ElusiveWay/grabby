@@ -38,14 +38,16 @@ class ItemCreator extends React.Component {
                 zIndex:'0',
                 margin:'0px 70% 50px',
                 display:'block',
-                width:'20%'
+                width:'20%',
+                color:'white',
+                backgroundColor:'#7ab0b4'
             },
             section:{
                 
             },
             h1:{
                 marginBottom:'50px',
-                color : 'rgb(255, 94, 94)'
+                color : 'rgb(135, 134, 197)'
             },
             formColl:{
                 width:'66%',
@@ -74,7 +76,7 @@ class ItemCreator extends React.Component {
             container:{
                 width:'100%',
                 boxSizing: 'content-box',
-                backgroundColor: '#ecfdec',
+                backgroundColor: '#fafffa',
                 padding: '30px',
                 //margin: '30px auto',
                 minHeight: '500px',
@@ -283,7 +285,7 @@ render(){
          <div style={this.style.container}>
              <style dangerouslySetInnerHTML={{__html: `
                     .teg { 
-                        background: #ff5e5e; 
+                        background: #7ab0b4; 
                         width: auto;
                         border-radius:24px;
                         height: 24px;
@@ -294,9 +296,11 @@ render(){
                         line-height:1.3;
                         margin:2px;
                         transition:0.3s;
+                        color:white;
                     }
                     .teg.add{
-                        background: lightgreen;
+                        color:white;
+                        background: #7a93b4;
                     }
                     .teg.add:before{
                         content:''
@@ -318,7 +322,7 @@ render(){
              <Route exact path="/profile/addc" >
              <section style={this.style.section} className="addCollectSect">
                 <form onSubmit={this.subFormColl} style={this.style.formColl}>
-                    <Link style={{float:'right'}} to="/profile">Back</Link>
+                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to="/profile">Back</Link>
                     <h1 style={this.style.h1}>Add new Collection</h1>
                     <Text name="col_name" required nm="Name of collection*" />
                     <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
@@ -328,14 +332,14 @@ render(){
                     <DropboxInput name="col_type" disabled arr={this.state.types}  named='Collection type' style={this.style.dropboxinp2} />
                     <DropdownBtn name="col_adds" color=""/>
                     <hr style={this.style.hr}/>
-                    <MDBBtn style={this.style.submit} type="submit">OK</MDBBtn>
+                    <MDBBtn style={this.style.submit}color="" type="submit">OK</MDBBtn>
                 </form>
              </section>
             </Route>
             <Route exact path="/profile/addi" >
             <section style={this.style.section} className="addItemSect">
                 <form onSubmit={this.subFormItems} style={this.style.formItem}>
-                    <Link style={{float:'right'}} to="/profile">Back</Link>
+                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to="/profile">Back</Link>
                     <h1 style={this.style.h1}>Add new Item to Collection</h1>
                     <Text name="item_name" required nm="Name of Item*" />
                     <TextareaPage2 name="item_descript" required style={this.style.description2} nm="Description*" />
@@ -356,7 +360,7 @@ render(){
                                     padding: '0 20px',
                                     borderRadius: '10px',
                                     border: '1px solid #ced4da',
-                                    color: 'rgb(220, 53, 69)',
+                                    color: '#7a93b4',
                                     display: (this.state.addsForItemCreation.length)?'block':'none'
                                 }}>
                     {this.state.addsForItemCreation.map((v,i,a)=>{
@@ -396,19 +400,19 @@ render(){
                     
                     
                     <hr style={this.style.hr}/>
-                    <MDBBtn style={this.style.submit} type="submit">OK</MDBBtn>
+                    <MDBBtn style={this.style.submit} color=""type="submit">OK</MDBBtn>
                 </form>
              </section>
             </Route>
             <Route exact path="/profile" >
             <section style={this.style.section} className="sectionsPage">
                 <form style={this.style.formPage}>
-                    <Link style={{float:'right'}} to="/profile/addc">Add collection</Link>
-                    <Link style={{float:'right'}}to="/profile/addi">Add item|</Link>
-                    <h1 style={this.style.h1}>Collections page</h1>
+                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to="/profile/addc">Add collection</Link>
+                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}}to="/profile/addi">Add item|</Link>
+                    <h1 style={{marginBottom:'15px',color:'#747373',paddingBottom:'5px',display:'inline-block',borderBottom:'1px solid #74737333'}}>Collections:</h1>
                     <div style={{display: 'flex', flexWrap:'nowrap',flexDirection:'column-reverse'}}className="collectionsBox">
                         {this.state.collections.map((v,i,a)=>{
-                            return (<Collection data={this.state.collections[i]} />)
+                            return (<Collection iterator={i} data={this.state.collections[i]} />)
                         })}
                     </div>
                 </form>
@@ -476,7 +480,7 @@ class Collection extends React.Component{
                 justifyContent: 'center',
                 alignItems:'center',
                 cursor: 'pointer',
-                color: 'rgb(220, 53, 69)',
+                color: 'rgb(135, 134, 197)',
                 fontWeight: '600'
             },
             desc:{
@@ -499,16 +503,43 @@ class Collection extends React.Component{
     }
     
     render(){
+        
              return ( 
-                    <div>
-                        <hr/>
-                        <h2 style={{color:'#0c7ff2'}}>{this.props.data.name}</h2>
-                        <div style={this.style.collect.container}>
-                            <div style={this.style.collect.image}></div>   
-                            <div style={this.style.collect.type}><span style={{color:'green'}}>{this.props.data.type}</span></div>   
-                            <div style={this.style.collect.desc}><span className='spanDesc'>{this.props.data.descript}</span></div>   
-                            <div className="btn"style={this.style.collect.open}><span>Open</span></div>  
-                        </div> 
+                 
+                <div className="cardOfCollections card mb-3" style={{cursor:'pointer',minHeight:'300px',width: "100%"}}>
+                        <style dangerouslySetInnerHTML={{__html: `
+                        .cardOfCollections{
+                            justifyContent:center;
+                            display:flex;
+                            transition: .3s;
+                            margin-top:20px;
+                        }
+                        .cardOfCollections:hover{
+                            box-shadow: 0 0 15px #3d495a;
+                        }
+                        .myCollll{
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        @media all and (min-width:768px){
+                            .myRoww{
+                                flex:1;
+                            }
+                        }
+                        `}}/>
+                        <img src='' onError={()=>window.scrollTo(0,0)}/>
+                        <div className="myRoww row no-gutters">
+                            {this.props.iterator%2==0 && <div className="col-md-4" style={{display:`${(this.props.data.img=='')?'none':'block'}`,backgroundSize:'cover',backgroundPosition:'center center',backgroundImage: `url(${this.props.data.img})`}}></div>}
+                            <div className="myCollll col-md-8">
+                            <div className="card-body">
+                                <h5 className="card-title">{this.props.data.name}</h5>
+                                <p className="card-text">{(this.props.data.descript.length > 470)?this.props.data.descript.slice(0,470)+'...':this.props.data.descript}</p>
+                                <p className="card-text"><small className="text-muted">{this.props.data.type}</small></p>
+                            </div>
+                            </div>
+                            {this.props.iterator%2==1 && <div className="col-md-4" style={{display:`${(this.props.data.img=='')?'none':'block'}`,backgroundSize:'cover',backgroundPosition:'center center',backgroundImage: `url(${this.props.data.img})`}}></div>}
+                        </div>
                     </div>
                     )
                 }

@@ -5,10 +5,13 @@ import Signin from './components/signin'
 import Mainbar from './components/mainbar'
 import ItemCreator from './components/createitem'
 import ImageUpload from './components/inputs/Imageupload'
+import Modal from './components/modal'
 import Message from './components/peref/message'
 import 'bootstrap'
 import Collections from './components/collections/collectionsBox'
 import Footbar from './components/footbar'
+import ItemPage from './components/itempage'
+import CollectionPage from './components/collectionpage'
 import io from 'socket.io-client'
 import Task from './components/task'
 import * as $ from 'jquery'
@@ -109,9 +112,12 @@ class App extends Component {
             <Route exact path="/admin" >
                 <ImageUpload />
             </Route>
+            <Route path="/items/:id" children={<ItemPage/>} />
+            <Route path="/collections/:id" children={<CollectionPage/>} />
           </Switch>
         </Router>
         <Footbar></Footbar>
+        <Modal action={global.__modalAction}title='Comment deleting' target="commentDeleterModal" text='Are you sure about this?'></Modal>
       </div>
     );
   }

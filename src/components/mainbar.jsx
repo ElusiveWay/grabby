@@ -92,7 +92,7 @@ render() {
     this.setState({signed : global.__signed, cookKey : global.__key, user : global.__user})
   },100)
   return (
-      <MDBNavbar  style={{backgroundColor: 'rgba(251, 127, 127, 1)'}}color="" dark expand="md">
+      <MDBNavbar  style={{width:'100%',top:'0',zIndex:'10000',position:'fixed',backgroundColor: 'rgba(9, 56, 117, 0.54)'}}color="" dark expand="md">
         <MDBNavbarBrand>
           <strong className="white-text">Grabby</strong>
         </MDBNavbarBrand>
@@ -115,7 +115,7 @@ render() {
             <MDBNavItem>
               <MDBFormInline waves>
                 <div className="md-form my-0">
-                  <input style={{float:'right'}}className="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" />
+                  <input style={{float:'right'}}className="form-control mr-sm-2" type="text" placeholder="    Search" aria-label="Search" />
                 </div>
               </MDBFormInline>
             </MDBNavItem>
