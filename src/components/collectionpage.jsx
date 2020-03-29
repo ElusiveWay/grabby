@@ -1,8 +1,9 @@
 import React,{Component, useEffect, useState} from 'react'
 import { useParams } from "react-router-dom";
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
-
+import ModalOk from './modalok'
 import {Link} from 'react-router-dom'
+import AmazingTable from './amazingTable';
 
 const CollectionPage = () => {
     let [colItem, setCol] = useState({})
@@ -10,14 +11,15 @@ const CollectionPage = () => {
     let [adds, setAdds] = useState([])
     let [toggler, setToggler] = useState(true)
     let [isUser, setUser] = useState(false)
+    let [contStyle, setContStyle] = useState({})
+    let [modalInner, setModal] = useState(<div>Loading...</div>)
     let width = 80
     let height = 90
     let stoper = 999
     let { id } = useParams();
 
-    const parseBeauty = (str,type) => {
+    
 
-    }
     useEffect(() => {
         //
         const interval = setInterval(() => {
@@ -25,6 +27,7 @@ const CollectionPage = () => {
                 setCol((global.__mainData)?global.__mainData.collections.filter(k=>k._id==id)[0]:{})
                 setAdds((colItem)?JSON.parse(colItem.adds):[])
                 setAuthor((colItem)?JSON.parse(colItem.author):{})
+                setContStyle((global.document && global.document.querySelectorAll('.__cont_ainer_').length!==0)?window.getComputedStyle(global.document.querySelector('.__cont_ainer_')):{})
         }, 50);
     
         return () => clearInterval(interval);
@@ -34,10 +37,17 @@ const CollectionPage = () => {
         <div style={{display:'flex'}}>
             <img src='' onError={()=>window.scrollTo(0,0)}/>
             <style dangerouslySetInnerHTML={{__html: `
+                .tagpre:before{
+                    content:'#';
+                }
+                .modalInnerator{
+                    word-wrap:break-word;
+                }
                 .__cont_ainer_ > *{
                     margin:0 3vw;
                 }
                 .__cont_ainer_{
+                    overflow:hidden;
                     position: relative;
                     display: ${(colItem._id)?'table':'none'};
                     width: ${width}vw;
@@ -107,30 +117,46 @@ const CollectionPage = () => {
                     font-size:24px;
                 }
                 .linkToUser:hover{
-                    color: #b47a93;
+                    color: #b47a93 !important;
                 }
                 .linkToUser{
                     color:black;
                     transition:.2s;
+                    cursor:pointer;
                 }
                 table.table th, table.table td{
-                    font-size:.9vw;
-                    max-width:5vw;
+                    font-size:15px;
                     overflow: hidden;
+                    max-width:500px;
                     text-overflow:ellipsis;
                     white-space:pre;
+                }
+                table.table th:first-child, table.table td:first-child{
+                    position:fixed !important;
+                    border-right:1px solid #dee2e6;
+                    background: white;
+                    width:190px;
+                }
+                table.table tbody tr:nth-child(odd) th:first-child, table.table tbody tr:nth-child(odd) td:first-child{
+                    background: #f2f2f2;
+                }
+                table.table th:nth-child(2):before, table.table td:nth-child(2):before{
+                    content:'';
+                    display:inline-block;
+                    width:190px;
+                    height:100%;
                 }
             `}}/>
             <MDBCard className="__cont_ainer_">
                 <img src={colItem.img}className="__ima_ge__"/>
                 <h1 className="__ti_tle__">{colItem.name}</h1>
-                <hr className="__h_r_"/>
-                {colItem && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'#7e7ab4',color:'white'}} onClick={()=>global.document.querySelector('.itemsTable').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})} className="__ico_nqa v2">Item list</MDBBtn></Link>}
+                {(colItem.img!=='') && <hr className="__h_r_"/>}
+                {colItem && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItem.name && f.email==colItem.email)).length!==0) && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'#7e7ab4',color:'white'}} onClick={()=>global.document.querySelector('.itemsTable').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})} className="__ico_nqa v2">Item list</MDBBtn></Link>}
                 <p className="__descr_iption">{colItem.descript}</p>
                 {colItem.comment && <p className="">{colItem.comment}</p>}
                 <p>Author: <Link to={`/users/${author._id}`}><i className='linkToUser'>{author.name}</i></Link> </p>
                 <p className="__ty_pe">Type: {colItem.type}</p>
-                {adds && 
+                {adds && adds.length!==0 &&
                 <div>
                     <h3 className="__ads_ads_">Properties:</h3> 
                     <ul>
@@ -139,39 +165,15 @@ const CollectionPage = () => {
                         })}
                     </ul>
                 </div>}
-                <table style={{width: 'calc(100% - 6vw)'}} class="itemsTable table table-striped">
-                    <thead>
-                        <tr>
-                        <th><input type="checkbox" name='checkAllItems'/></th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Image url</th>
-                        <th>Properties</th>
-                        <th>Likes</th>
-                        <th>Tags</th>
-                        <th>Comments</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                        global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItem.name && f.email==colItem.email)).map((k,i)=>{
-                        return  <tr>
-                                    {/*parseBeauty(str,'add')*/}
-                                    {global.__user._id==JSON.parse(k.author)._id && <td><input type="checkbox" name={`itemCheck${i}`}/></td>}
-                                    <Link to={`/items/${k._id}`}><td style={{maxWidth:'200px'}} className="linkToUser">{k.name}</td></Link>
-                                    <td>{(k.description)?k.description:''}</td>
-                                    <td>{(k.img)?k.img:''}</td>
-                                    <td>{(k.add)?k.add:'[]'}</td>
-                                    <td>{(k.likes)?k.likes:'[]'}</td>
-                                    <td>{(k.tags)?k.tags:'[]'}</td>
-                                    <td>{(k.comments)?k.comments:'[]'}</td>
-                                </tr>
-                        })
-                        }
-                    </tbody>
-                </table>
+                <div style={{width:`calc(${contStyle.width} - 6vw)`}}>
+                    <AmazingTable id={id}/>
+                </div>
+                
+
                 <p style={{visibility:'hidden'}}className="fakeMargin __ads_ads_ listed">FAKE P FOR MARGIN IN THE BOTTOM OF CARD</p>
             </MDBCard> 
+            
+            
             </div>
             
         ):(<h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>Loading...</h1>)

@@ -16,18 +16,16 @@ class Collections extends Component {
         container:{
           width: '100%',
           height: '100%',
-          margin: '50px 0',
           minHeight: '200px',
-          padding: '20px',
+          padding: '0 20px',
           maxHeight: 'auto'
         },
         collectionsBox:{
-            padding: '50px 0',
             display: 'flex',
             flexWrap: 'wrap',
             minWidth: `${this.minWidth}px`,
             width: '21rem',
-            margin: `${this.margin}px`,
+            margin: `0 ${this.margin}px`,
             alignItems: 'flex-start',
             justifyContent: 'flex-start'
         },
@@ -69,7 +67,7 @@ class Collections extends Component {
     render() {
         return (
           <div style={this.styles.container}>
-              {global.__mainData && <h1><img src='' onError={()=>window.scrollTo(0,0)}/>Items/Collections cloud</h1>}
+              <img src='' onError={()=>window.scrollTo(0,0)}/>
               {this.drawFlexItem()}
               {!global.__mainData && <h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>Loading...</h1>}
           </div>

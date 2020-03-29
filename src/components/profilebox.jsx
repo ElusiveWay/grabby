@@ -4,12 +4,19 @@ import ReactDOM from 'react-dom'
 class ProfileBox extends Component {
     constructor(props){
         super(props)
+        this.state={
+            data : this.props.data
+        }
     }
     componentWillUnmount(){
       clearInterval(this.inter)  
+      clearInterval(this.inter2)  
     }
     componentDidMount(){
-        this.inter = setInterval(()=>this.updatera(), 1)
+        this.inter2 = setInterval(()=>{
+            console.log(this.state!==undefined && this.state.data!==undefined)
+            this.setState( {data : this.props.data})
+    }, 50)
     }
     updatera(){
             ReactDOM.findDOMNode(this).style.marginTop = window.scrollY+'px'
@@ -25,21 +32,25 @@ class ProfileBox extends Component {
                     lineHeight: '32px',
                     overflow: 'hidden',
                     textAlign:'right',
-                    transform:'translate(-50%,-50%)'
+                    transform:'translate(-50%,-50%)',
+                    wordWrap:'break-word',
+                    overflow:'hidden',
+                    whiteSpace: 'pre',
+                    textOverflow: 'ellipsis'
+                    },
+            span2 : {
+                    position:'absolute',
+                    left:'50%',
+                    width: '90%',
+                    top:'50%',
+                    lineHeight: '32px',
+                    overflow: 'hidden',
+                    textAlign:'right',
+                    transform:'translate(-50%,-50%)',
                     },
             profile:{
                         photo:{
-                            position: 'absolute',
-                            backgroundColor:'#e9ecef',
-                            backgroundSize: 'cover',
-                            borderRadius: '50%',
-                            backgroundPosition: 'center',
-                            width: '200px',
-                            borderBottom: '1px solid #00000033',
-                            height: '200px',
-                            top: '5%',
-                            left: '5%',
-                            backgroundImage : `url(${this.props.data.photo})`
+                           
                         },
                         likes:{
                             position: 'absolute',
@@ -78,11 +89,12 @@ class ProfileBox extends Component {
                             width:'30%', 
                             height: '400px',
                             color: '#495057',
-                            position: 'relative',
+                            position: 'fixed',
                             fontSize : '16px',
                             transition: '0.3s',
-                            marginTop:'0px',
-                            top:'20px'
+                            marginTop:'50px',
+                            marginLeft:'20px',
+                            top:'50px'
                         },
                         status:{
                             position: 'absolute',
@@ -101,12 +113,27 @@ class ProfileBox extends Component {
     render(){
         return (
             <div style={this.style.profile.container}>
-                <div style={this.style.profile.photo} className="profile-photo"></div>
-                <div style={this.style.profile.likes} className="profile-likes"><span style={this.style.span}>{this.props.data.likes}</span></div>
-                <div style={this.style.profile.name} className="profile-name"><span style={this.style.span}>{this.props.data.name}</span></div>
-                <div style={this.style.profile.online} className="profile-online"><span style={this.style.span}><b style={{color:'green',fontWeight:'600'}}>{this.props.data.online}</b></span></div>
-                <div style={this.style.profile.views} className="profile-views"><span style={this.style.span}>{this.props.data.views}</span></div>
-                <div style={this.style.profile.status} className="profile-status"><span style={this.style.span}><i style={{color:'rgb(135, 134, 197)',fontWeight:'900'}}>{this.props.data.status}</i></span></div>
+                <style dangerouslySetInnerHTML={{__html:`
+                .profile-photo{
+                    position: absolute;
+                    background-color:#e9ecef;
+                    background-size: cover;
+                    border-radius: 50%;
+                    background-position: center;
+                    background-image : url(${(this.state!==undefined && this.state.data!==undefined)?this.state.data.photo:'http://placehold.it/450x320?text=No+image+yet'});
+                    width: 200px;
+                    border-bottom: 1px solid #00000033;
+                    height: 200px;
+                    top: 5%;
+                    left: 5%;
+                }
+                `}}/>
+                <div className="profile-photo"></div>
+                <div style={this.style.profile.likes} className="profile-likes"><span style={this.style.span}>{(this.state.data)?this.state.data.likes:''}</span></div>
+                <div style={this.style.profile.name} className="profile-name"><span style={this.style.span}>{(this.state.data)?this.state.data.name:''}</span></div>
+                <div style={this.style.profile.online} className="profile-online"><span style={this.style.span}>{(this.state.data)?this.state.data.online:''}</span></div>
+                <div style={this.style.profile.views} className="profile-views"><span style={this.style.span}>{(this.state.data)?this.state.data.views:''}</span></div>
+                <div style={this.style.profile.status} className="profile-status"><span style={this.style.span2}><i style={{color:'rgb(135, 134, 197)',fontWeight:'900'}}>{(this.state.data)?this.state.data.status:''}</i></span></div>
             </div>
         )
     }

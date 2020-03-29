@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom'
 import * as $ from 'jquery'
 import Modal from './modal'
 import Message from './peref/message'
+import ModalOk from './modalok'
 import CommentsForm from './inputs/comments-form'
  
 
@@ -55,6 +56,16 @@ const ItemPage = () => {
                 )
             })
         )
+    }
+    const tegclicker = (e) => {
+        let teg = e.target.innerText
+        global.__modalok = <div>
+                              <h3 style={{marginBottom:'20px'}}>Items with teg : #<i>{teg}</i></h3>
+                              <ul>
+                                {global.__mainData.items.filter(v=>JSON.parse(v.tags).some(q=>q==teg)).map(v=><Link onClick={(e)=>{e.stopPropagation();global.document.querySelectorAll('.activeSearchList').forEach(v=>v.classList.remove('activeSearchList'));e.target.classList.add('activeSearchList')}} to={`/items/${v._id}`}><li><h5>{v.name}</h5></li></Link>)}
+                              </ul>
+                              
+                           </div>
     }
     useEffect(() => {
         //
@@ -134,6 +145,7 @@ const ItemPage = () => {
                 }
                 .__cont_ainer_{
                     position: relative;
+                    overflow:hidden;
                     display: ${(myItem._id)?'table':'none'};
                     width: ${width}vw;
                     float:left;
@@ -336,7 +348,10 @@ const ItemPage = () => {
                 {colItem && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">Go to the collection</MDBBtn></Link>}
             <MDBBtn onClick={clicker} className="__ico_nqa" color="" ><i className="fas fa-heart iconqa"></i> Likes :<span className="likes __darova_v1_">{likes.length}</span></MDBBtn>
                 <p className="__descr_iption">{myItem.description}</p>
-                <p className="__comm_ention">{tags.map(v=><div className="teger">{v}</div>)}</p>
+                <p className="__comm_ention">{tags.map(v=><div  data-target="#collPageModal" data-toggle="modal" onClick={tegclicker} className="teger">{v}</div>)}</p>  
+
+                
+
                 {myItem.add && JSON.parse(myItem.add).length && 
                 <div>
                     <h1 className="__ads_ads_">Some properties:</h1> 

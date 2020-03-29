@@ -7,7 +7,7 @@ export default class Modal extends Component{
         this.modalAction = this.modalAction.bind(this)
     }
     modalAction(){
-        if(global.__user.email == global.__deleteCommentsData.item.email){
+        if(global.__user.email == global.__deleteCommentsData.comment.liker){
             axios({
                 method: 'POST',
                 url: '/deleteComment',
@@ -17,7 +17,7 @@ export default class Modal extends Component{
                 }
                 }).then(r=>{
                     global.__deleteCommentsData = {}
-                }).catch(e=>e) 
+                }).catch(e=>console.log(e)) 
                  
         }
         else{

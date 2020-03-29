@@ -56,22 +56,10 @@ const Logout = (req, res, model, onlineFlag = 'online',blocked = false)=>{
             model.update({_id : session.signed[id]},{ [''+onlineFlag] : false},e=>e)
             session.signed.splice(id,1)
             res.cookie('key', '')
-            if(blocked!=true){
-                res.cookie('blocked', '')
-            }
-            else{
-                res.cookie('blocked', 'true')
-            }
             res.send({out: 'ok', action: 'logout'})
         }
         else{
-            //res.cookie('key', '') ////TYT
-            if(blocked!=true){
-                res.cookie('blocked', '')
-            }
-            else{
-                res.cookie('blocked', 'true')
-            }
+            res.cookie('key', '')
             res.send({out: 'neok', action : 'logout'})
         }
     })
@@ -138,7 +126,7 @@ const Login = (req, res, model, okRedir='/', erRedir='/signin')=>{
                 }
             }
             model.update({_id : posts[0]._id}, { [''+onlineStr] : true },e=>e)
-            res.cookie('key', posts[0]['_id'], { expires: new Date(Date.now() + 1200000) })
+            res.cookie('key', posts[0]['_id'], { signed:true,expires: new Date(Date.now() + 1200000) })
             res.cookie('unsigned', '', { expires: new Date(Date.now() + 1200000), httpOnly: true })
             res.send({out: 'ok', signed : session.signed, user : posts[0]}) // Вытащить мои колекции + к дате
         }

@@ -190,6 +190,7 @@ class Signin extends Component {
         return
       }
       global.__paramsgoo = obj;
+      console.log(obj)
       window.location.hash=''
       axios({
         method: 'POST',
@@ -198,7 +199,7 @@ class Signin extends Component {
           email: `start.g00.c0m:${global.__paramsgoo.email}:g00.c0m.end`,
           pass: `start.g00.c0m:${global.__paramsgoo.id}:g00.c0m.end`,
           action: 'signvk',
-          name: global.__paramsgoo.id,
+          name: global.__paramsgoo.name,
           img: global.__paramsgoo.picture
         }
       }).then(r=>{

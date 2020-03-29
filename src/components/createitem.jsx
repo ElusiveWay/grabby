@@ -6,8 +6,11 @@ import TextareaPage2 from './inputs/textarea2'
 import ProfileBox from './profilebox'
 import ReactDOM from 'react-dom'
 import ImageUpload from './inputs/Imageupload'
+import ModalOk from './modalok'
+import Collection from './CollectionElement'
 import DataPicker from './datapicker'
 import Message from './peref/message'
+import AmazingTable from './amazingTable'
 import DropdownBtn from './dropdown'
 import io from 'socket.io-client'
 import * as $ from 'jquery'
@@ -158,12 +161,6 @@ componentWillMount(){
 componentDidMount(){
     
      this.interval = setInterval(()=>{
-        if($('.spanDesc').height() < 100) {
-            $('.spanDesc').parent().css("align-items", 'center').css("color", 'unset')
-        }
-        else{
-            $('.spanDesc').parent().css("align-items", 'start').css("color", 'unset')
-        }
     try{
         let arr = []
         Array.prototype.forEach.call(global.document.getElementsByClassName('addsOutCont')[0].querySelectorAll('input, textarea'),v=>{
@@ -319,10 +316,10 @@ render(){
                 
             `}}/>
              <ProfileBox data={this.profileData} style={this.style.profile} />
-             <Route exact path="/profile/addc" >
+            { this.props.sub === 'addc' &&
              <section style={this.style.section} className="addCollectSect">
                 <form onSubmit={this.subFormColl} style={this.style.formColl}>
-                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to="/profile">Back</Link>
+                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${this.props.id}`}>Back</Link>
                     <h1 style={this.style.h1}>Add new Collection</h1>
                     <Text name="col_name" required nm="Name of collection*" />
                     <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
@@ -335,11 +332,11 @@ render(){
                     <MDBBtn style={this.style.submit}color="" type="submit">OK</MDBBtn>
                 </form>
              </section>
-            </Route>
-            <Route exact path="/profile/addi" >
+            }
+            { this.props.sub === 'addi' &&
             <section style={this.style.section} className="addItemSect">
                 <form onSubmit={this.subFormItems} style={this.style.formItem}>
-                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to="/profile">Back</Link>
+                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${this.props.id}`}>Back</Link>
                     <h1 style={this.style.h1}>Add new Item to Collection</h1>
                     <Text name="item_name" required nm="Name of Item*" />
                     <TextareaPage2 name="item_descript" required style={this.style.description2} nm="Description*" />
@@ -403,145 +400,13 @@ render(){
                     <MDBBtn style={this.style.submit} color=""type="submit">OK</MDBBtn>
                 </form>
              </section>
-            </Route>
-            <Route exact path="/profile" >
-            <section style={this.style.section} className="sectionsPage">
-                <form style={this.style.formPage}>
-                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to="/profile/addc">Add collection</Link>
-                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}}to="/profile/addi">Add item|</Link>
-                    <h1 style={{marginBottom:'15px',color:'#747373',paddingBottom:'5px',display:'inline-block',borderBottom:'1px solid #74737333'}}>Collections:</h1>
-                    <div style={{display: 'flex', flexWrap:'nowrap',flexDirection:'column-reverse'}}className="collectionsBox">
-                        {this.state.collections.map((v,i,a)=>{
-                            return (<Collection iterator={i} data={this.state.collections[i]} />)
-                        })}
-                    </div>
-                </form>
-             </section>
-            </Route>
+            }
+            { this.props.sub !== 'addi' && this.props.sub !== 'addc' && <Redirect to={`/users/${this.props.id}`}/>}
             {this.checkRedirect()}
         </div>
 
     )
 }
 }
-class Collection extends React.Component{
-    constructor(props){
-        super(props)
-    }
-    style={ 
-        collect:{
-            container:{
-                width: '100%',
-                position: 'relative',
-                margin:'20px 0',
-                minHeight:'150px',
-                height: 'auto',
-                borderRadius: '10px',
-                backgroundColor:'transparent',
-                color: '#000231'
-            },
-            image:{
-                display:(this.props.data.img=='')?'none':'flex',
-                height:'100%',
-                position:'absolute',
-                boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)',
-                width:'25%',
-                backgroundColor:'#e9ecef',
-                backgroundPosition:'center',
-                backgroundSize:'cover',
-                justifyContent: 'center',
-                alignItems:'center',
-                backgroundImage : (this.props.data.img=='')?'unset':`url(${this.props.data.img})`
-            },
-            type:{
-                display:'flex',
-                height:'30%',
-                right: '1%',
-                top: '6.3%',
-                boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)',
-                padding: '0',
-                margin: '0',
-                position:'absolute',
-                width:'17%',
-                backgroundColor:'#f8f9fa',
-                justifyContent: 'center',
-                alignItems:'center'
-            },
-            open:{
-                display:'flex',
-                height:'50%',
-                right: '1%', 
-                bottom:'6.8%',
-                position:'absolute',
-                width:'17%',
-                padding: '0',
-                margin: '0',
-                backgroundColor:'#f8f9fa',
-                justifyContent: 'center',
-                alignItems:'center',
-                cursor: 'pointer',
-                color: 'rgb(135, 134, 197)',
-                fontWeight: '600'
-            },
-            desc:{
-                display:'flex',
-                height:'87%',
-                left: (this.props.data.img=='')?'1%':'27.5%', 
-                bottom:'10px',  
-                padding: '10px',
-                margin: '0',
-                position:'absolute',
-                width:(this.props.data.img=='')?'80%':'52%',
-                boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)',
-                backgroundColor:'#f8f9fa',
-                justifyContent: 'center',
-                alignItems: 'space-around',
-                overflow:'hidden',
-                color:'transparent'
-            },
-        },
-    }
-    
-    render(){
-        
-             return ( 
-                 
-                <div className="cardOfCollections card mb-3" style={{cursor:'pointer',minHeight:'300px',width: "100%"}}>
-                        <style dangerouslySetInnerHTML={{__html: `
-                        .cardOfCollections{
-                            justifyContent:center;
-                            display:flex;
-                            transition: .3s;
-                            margin-top:20px;
-                        }
-                        .cardOfCollections:hover{
-                            box-shadow: 0 0 15px #3d495a;
-                        }
-                        .myCollll{
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                        }
-                        @media all and (min-width:768px){
-                            .myRoww{
-                                flex:1;
-                            }
-                        }
-                        `}}/>
-                        <img src='' onError={()=>window.scrollTo(0,0)}/>
-                        <div className="myRoww row no-gutters">
-                            {this.props.iterator%2==0 && <div className="col-md-4" style={{display:`${(this.props.data.img=='')?'none':'block'}`,backgroundSize:'cover',backgroundPosition:'center center',backgroundImage: `url(${this.props.data.img})`}}></div>}
-                            <div className="myCollll col-md-8">
-                            <div className="card-body">
-                                <h5 className="card-title">{this.props.data.name}</h5>
-                                <p className="card-text">{(this.props.data.descript.length > 470)?this.props.data.descript.slice(0,470)+'...':this.props.data.descript}</p>
-                                <p className="card-text"><small className="text-muted">{this.props.data.type}</small></p>
-                            </div>
-                            </div>
-                            {this.props.iterator%2==1 && <div className="col-md-4" style={{display:`${(this.props.data.img=='')?'none':'block'}`,backgroundSize:'cover',backgroundPosition:'center center',backgroundImage: `url(${this.props.data.img})`}}></div>}
-                        </div>
-                    </div>
-                    )
-                }
-}
+
 export default ItemCreator;

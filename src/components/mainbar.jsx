@@ -6,15 +6,19 @@ MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNavbarToggle
 MDBBtn , MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem
 } from "mdbreact";
 import MSwitch from './main-switch' 
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import Message from './peref/message'
+import ModalOk from './modalok'
 import * as $ from 'jquery'
 class Mainbar extends Component {
 state = {
   isOpen: false,
   signed: global.__signed,
   cookKey: global.__key,
-  user: global.__user
+  user: global.__user,
+  search : '',
+  modalok: '',
+  canSearch: true
 };
 
 toggleCollapse = () => {
@@ -75,6 +79,57 @@ ShowLogout = () =>{
         ) 
   }
 }
+onch = (e) =>{
+  if (this.state.canSearch !== true) return;
+  this.setState({search : e.target.value},()=>{
+    let itemsArr = [] 
+    if (this.state.search.length<1) return
+    if (!global.__mainData) return
+    global.__mainData.items.map(v=>{
+      if (RegExp(this.state.search,'gi').test(v.name)) {itemsArr.push(v); return}
+      if (RegExp(this.state.search,'gi').test(v.description)) {itemsArr.push(v); return}
+      if (RegExp(this.state.search,'gi').test(v.tags)) {itemsArr.push(v); return}
+      JSON.parse(v.add).map(q=>q).filter(q=>(q.type!=='checkbox')).map(q=>{
+          if (RegExp(this.state.search,'gi').test(q.value)) {if(itemsArr.every(r=>r._id!==v._id))itemsArr.push(v); return}
+      })
+      if (v.comments !== undefined){JSON.parse(v.comments).map(q=>{
+          if (RegExp(this.state.search,'gi').test(q.tex)) {if(itemsArr.every(r=>r._id!==v._id))itemsArr.push(v); return}
+          if (RegExp(this.state.search,'gi').test(q.titl)) {if(itemsArr.every(r=>r._id!==v._id))itemsArr.push(v); return}
+      })}
+    })
+    // from collections
+    let collItemsArr = []
+    global.__mainData.collections.map(v=>{
+      if (RegExp(this.state.search,'gi').test(v.name)) {global.__mainData.items.map(q=>q).filter(q=>q.collect==v.name).forEach(q=>collItemsArr.push(q)); return}
+      if (RegExp(this.state.search,'gi').test(v.descript))  {global.__mainData.items.map(q=>q).filter(q=>q.collect==v.name).forEach(q=>collItemsArr.push(q)); return}
+      if (RegExp(this.state.search,'gi').test(v.comment))  {global.__mainData.items.map(q=>q).filter(q=>q.collect==v.name).forEach(q=>collItemsArr.push(q)); return}
+      if (RegExp(this.state.search,'gi').test(v.type)) {global.__mainData.items.map(q=>q).filter(q=>q.collect==v.name).forEach(q=>collItemsArr.push(q)); return}
+      JSON.parse(v.adds).map(q=>{
+        if (RegExp(this.state.search,'gi').test(q[Object.keys(q)[0]])) {if(collItemsArr.every(r=>r._id!==v._id)){global.__mainData.items.map(q=>q).filter(q=>q.collect==v.name).forEach(q=>collItemsArr.push(q))}; return}
+      })
+    })
+    //from users
+    this.setState({modalok : <div>
+      <br/>
+      <h3>Items as searching result:</h3>
+      <ul>
+      {itemsArr.map(v=>{
+        return <Link to={`/items/${v._id}`}><li onClick={()=>$('#searchModal').modal('hide')}>{v.name}</li></Link>
+      })}
+      {itemsArr.length==0 && <li>There are no matches: {this.state.search}</li>}
+      </ul>
+      { collItemsArr.length!==0 && <h3>Items from collections search matching:</h3> }
+        <ul> 
+        {collItemsArr.map(v=>{
+          return <Link to={`/items/${v._id}`}><li>{v.name}</li></Link>
+        })}
+       </ul>
+    </div>})
+    
+    $('#searchModal').modal('show')
+    this.setState({canSearch : true})
+  })
+}
 ShowSignin = () =>{
   if (this.state.user.isAdmin === undefined){
     return (
@@ -84,13 +139,21 @@ ShowSignin = () =>{
         ) 
   }
 }
-componentWillUnmount(){
-  clearTimeout(this.timout)
-}
-render() {
-  this.timout = setTimeout(()=>{
+componentDidMount(){
+  $('#searchModal').on('show.bs.modal', ()=>{
+    global.document.getElementById('searcherid').focus()
+  })
+  $('#searchModal').on('shown.bs.modal	', ()=>{
+    global.document.getElementById('searcherid').focus()
+  })
+  this.timout = setInterval(()=>{
     this.setState({signed : global.__signed, cookKey : global.__key, user : global.__user})
   },100)
+}
+componentWillUnmount(){
+  clearInterval(this.timout)
+}
+render() {
   return (
       <MDBNavbar  style={{width:'100%',top:'0',zIndex:'10000',position:'fixed',backgroundColor: 'rgba(9, 56, 117, 0.54)'}}color="" dark expand="md">
         <MDBNavbarBrand>
@@ -102,9 +165,9 @@ render() {
             <MDBNavItem active>
             </MDBNavItem>
             <MDBNavLink to="/">Main</MDBNavLink>  
-            <MDBNavItem>
+            {/* <MDBNavItem>
             <MDBNavLink to="/collect">Collections</MDBNavLink>  
-            </MDBNavItem>
+            </MDBNavItem> */}
            { this.ShowProfile() }
            { this.ShowSignin() }
             <MDBNavItem>   
@@ -113,15 +176,16 @@ render() {
           <MDBNavbarNav right>
             { this.ShowAdmin() }
             <MDBNavItem>
-              <MDBFormInline waves>
+              <MDBFormInline>
                 <div className="md-form my-0">
-                  <input style={{float:'right'}}className="form-control mr-sm-2" type="text" placeholder="    Search" aria-label="Search" />
+                  <input onKeyPress={e=>{if(e.key=='Enter'){e.preventDefault()}}}onChange={this.onch.bind(this)} value={this.state.search} style={{boxShadow:'0 0 transparent',borderColor:'transparent',float:'right'}}className="searchinp form-control mr-sm-2" type="text" placeholder="    Search" aria-label="Search" />
                 </div>
               </MDBFormInline>
             </MDBNavItem>
             { this.ShowLogout() }
           </MDBNavbarNav>
         </MDBCollapse>
+        <ModalOk title='Search'  target="searchModal" text={<div><div style={{display:'flex'}}><input style={{flex:'1'}} id="searcherid" onChange={this.onch.bind(this)} value={this.state.search}type="text"></input><i style={{cursor: 'pointer',fontSize:'32px',padding:'5px 10px 5px 20px'}} onClick={()=>{this.setState({search: ''});global.document.getElementById('searcherid').focus()}} className="fas fa-eraser"></i></div>{this.state.modalok}</div>}></ModalOk>
       </MDBNavbar>
     );
   }
