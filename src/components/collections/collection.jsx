@@ -61,7 +61,7 @@ class Collection extends Component {
     } 
     render(){
         return (
-            <div style={{display:'flex'}}>
+            <div style={{display:'flex',width: '100%'}}>
             <MDBCard style={this.style.container}>
                 <div style={{position:'relative'}}>
                     <span style={{display:(this.props.bg===undefined)?'unset':'none',color:'#747373',textAlign:'center',top: '50%', left: '50%',transform: 'translate(-50%,-50%)',fontSize:'30px',position:'absolute'}}>There is no image</span>

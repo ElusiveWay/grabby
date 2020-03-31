@@ -76,7 +76,7 @@ const ItemPage = () => {
                 }
                 setUser(Object.keys(global.__user).length!==0 && global.__user!==undefined)
                 setMyItem((global.__mainData)?global.__mainData.items.filter(v=>v._id==id)[0]:{})
-                setCol((global.__mainData && colItem)?global.__mainData.collections.filter(k=>{return (k.email == myItem.email && myItem.collect == k.name)})[0]:{})
+                setCol((global.__mainData && colItem && myItem)?global.__mainData.collections.filter(k=>{return (k.email == myItem.email && myItem.collect == k.name)})[0]:{})
                 setAdds((global.__mainData && colItem)?(typeof colItem.adds == 'string')?JSON.parse(colItem.adds):{}:{})
                 setLikes((global.__mainData && myItem)?(typeof myItem.likes == 'string')?JSON.parse(myItem.likes):[]:[])
                 setComs((global.__mainData && myItem)?(typeof myItem.comments == 'string')?JSON.parse(myItem.comments):[]:[])
@@ -136,7 +136,7 @@ const ItemPage = () => {
                 }).catch(e=>console.log(e)) 
         } 
       }
-        return (global.__mainData)?(
+        return (global.__mainData && Object.keys(global.__mainData).length!==0 && myItem && colItem && Object.keys(myItem).length!==0 && Object.keys(colItem).length!==0)?(
         <div style={{display:'flex'}}>
             <img src='' onError={()=>window.scrollTo(0,0)}/>
             <style dangerouslySetInnerHTML={{__html: `
@@ -146,7 +146,7 @@ const ItemPage = () => {
                 .__cont_ainer_{
                     position: relative;
                     overflow:hidden;
-                    display: ${(myItem._id)?'table':'none'};
+                    display: ${(myItem && myItem._id)?'table':'none'};
                     width: ${width}vw;
                     float:left;
                     max-width: 1020px;

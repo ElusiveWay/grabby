@@ -7,7 +7,7 @@ class Text extends React.Component {
     }
     render(){
         return (
-            <MDBInput type={(this.props.numb)?'number':'text'} required={this.props.required} name={this.props.name} label={this.props.nm} />
+            <MDBInput valueDefault={(this.props.default)?this.props.default:''} type={(this.props.numb)?'number':'text'} required={this.props.required} name={this.props.name} label={this.props.nm} />
         )
     }
 }

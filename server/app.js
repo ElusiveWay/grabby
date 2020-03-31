@@ -61,8 +61,8 @@ app.use(cookieEncrypter(SecretKey))
 app.use(session({
     proxy:true,
     httpOnly: true,
-    secret: 'whitemothwhitemothwhitemothwhite',
-    cookie : {maxAge: 1200000}
+    secret: 'whitemoth',
+    cookie : {maxAge: 1200000, secure: false}
   }));
 //Render main page, try to find users in DB 
     global.session = session
@@ -89,7 +89,6 @@ app.post('/like', async(req,res)=>{
 
 app.post('/adminka', async (req,res)=>{
   let isAdmin = false
-  res.send([req.signedCookies,req.cookies])
   await users.find({_id: req.cookies.key}).then(r=>{
     isAdmin = (r[0].isAdmin===true)?true:false
   })
@@ -123,9 +122,14 @@ app.post('/adminka', async (req,res)=>{
     if (req.body.action == 'delete'){
       for (let i=0; i<req.body.users.length; i++){
         await users.find({_id: req.body.users[i]}).then(async q=>{
-          let flag = !q[0].isAdmin
-          await users.updateOne({_id : req.body.users[i]},{isAdmin : flag},e=>e).catch(e=>res.send('error'))
-          if (i == req.body.users.length-1) res.send('ok')
+            let index = -1
+            session.signed.forEach((v,i)=>{
+              if (v.toString() === q[0]._id.toString()) index=i
+            })
+            if (index !== -1) session.signed.splice(index,1)
+            await items.deleteMany({email : q[0].email},e=>e).catch(e=>res.send('error'))
+            await collection.deleteMany({email : q[0].email},e=>e).catch(e=>res.send('error'))
+            await users.deleteOne({email : q[0].email},e=>e).catch(e=>res.send('error'))
         }).catch(e=>res.send('error'))
       }
       res.send('null')
@@ -230,7 +234,7 @@ io.on('connection', function(socket){
             let arra = r.map(v=>v).reverse()
             socket.emit('get-collections',{respa : 'ok', data : arra})
         }).catch(()=>{
-          socket.emit('add-collection',{respa : 'error : database error', data : []})
+          socket.emit('get-collections',{respa : 'error : database error', data : []})
           return false
         })
     })
@@ -248,8 +252,16 @@ io.on('connection', function(socket){
     })
 
     socket.on('add-collection', async (r)=>{
-        if (['Brodiags','Alcohol','Cats','Weapon','Motos'].every(v=>v!=r.type)){
-          socket.emit('add-collection',{respa : 'error : type not found'})
+        let forcer = {}
+        await users.find({email : r.creator}).then(r=>{
+          forcer = (r.length!==0)?r[0]:{}
+        })
+        if(r.creator !== r.email && forcer.isAdmin!=true) {
+          socket.emit('add-collection',{respa : 'Yoy are not owner'})
+          return false
+        }
+        if (['Alcohol','Cats','Weapon','Motos'].every(v=>v!=r.type)){
+          socket.emit('add-collection',{respa : 'Type of collection not found'})
           return false
         }
         let exist = false
@@ -257,7 +269,7 @@ io.on('connection', function(socket){
           if (r.length > 0) exist = true;
         })
         if (exist==true){
-          socket.emit('add-collection',{respa : 'error : already exist'})
+          socket.emit('add-collection',{respa : 'Collection already exist'})
           return false
         }
         let img5 = ''
@@ -274,15 +286,90 @@ io.on('connection', function(socket){
             img : img5,
             adds : r.adds
         }).catch(()=>{
-          socket.emit('add-collection',{respa : 'error : database error'})
+          socket.emit('add-collection',{respa : 'Database error'})
           return false
         })
         socket.emit('add-collection',{respa : 'ok', data : r})
 
     });
+    socket.on('edit-collection', async (r)=>{
+        let erorrer = false
+        if (erorrer == true) return false
+        let forcer = {}
+        await users.find({email : r.creator}).then(r=>{
+          forcer = (r.length!==0)?r[0]:{}
+        })
+        if(r.creator !== r.email && forcer.isAdmin!=true) {
+          socket.emit('edit-collection',{respa : 'Yoy are not owner'})
+          return false
+        }
+        let current = {}
+        await collection.find({name : r.defName, email : r.email}).then(r=>{
+            if (r.length > 0) {current = r[0]}
+            else {
+              socket.emit('edit-collection',{respa : 'Collection not found'})
+              erorrer=true
+            }
+        }).catch(e=>{
+          socket.emit('edit-collection',{respa : 'Db error'})
+          erorrer=true
+        })
+        if (erorrer == true) return false
+        let img5 = ''
+        if (r.img === current.img){
+          img5 = r.img
+        }
+        else{
+          if(r.img instanceof Buffer == true){
+            await uploadToCloudinary(r.img).then(r=> img5=r.url).catch(e=>{
+              console.log('cant download')
+              img5 = r.img
+            })
+          }
+        }
+        if (r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,'') !== current.name){
+          await items.updateMany({collect : current.name, email: current.email}, {collect : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,'')}, e=>e).catch(e=>{
+            socket.emit('edit-collection',{respa : 'Db error'})
+            erorrer=true
+          })
+        }
+        if (erorrer == true) return false
+        let newads
+        if (JSON.parse(r.primAdds) instanceof Array){
+          if (JSON.parse(r.primAdds).every((e,i)=>Object.keys(e)[0] == Object.keys(JSON.parse(current.adds)[i])[0])){
+            newads = JSON.stringify(JSON.parse(r.primAdds).concat(JSON.parse(r.adds)))
+          }
+          else{
+            newads = JSON.stringify(JSON.parse(current.adds).concat(JSON.parse(r.adds)))
+          }
+        }
+        else{
+          newads = r.adds
+        }
+        await collection.updateOne({name : current.name, email: current.email},{
+            name : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''),
+            descript : r.descript.replace(/\s+/g, ' '),
+            comment : r.comment.replace(/\s+/g, ' '),
+            img : img5,
+            adds : newads
+        }, e=>e).catch(()=>{
+          socket.emit('edit-collection',{respa : 'Database error'})
+          erorrer=true
+        })
+        if (erorrer == true) return false
+        socket.emit('edit-collection',{respa : 'ok', data : r})
+
+    });
     socket.on('add-item', async (r)=>{
-        //проверки при которых прерываемся
-        if (['Brodiags','Alcohol','Cats','Weapon','Motos'].every(v=>v!=r.type)){
+        let forcer = {}
+        await users.find({email : r.creator}).then(r=>{
+          forcer = (r.length!==0)?r[0]:{}
+        })
+        if(r.creator !== r.email && forcer.isAdmin!=true) {
+          socket.emit('add-item',{respa : 'Yoy are not owner'})
+          return false
+        }
+        if (['Alcohol','Cats','Weapon','Motos'].every(v=>v!=r.type)){
           socket.emit('add-item',{respa : 'error : type not found'})
           return false
         }

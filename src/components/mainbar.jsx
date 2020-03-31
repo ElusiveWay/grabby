@@ -11,15 +11,19 @@ import Message from './peref/message'
 import ModalOk from './modalok'
 import * as $ from 'jquery'
 class Mainbar extends Component {
-state = {
-  isOpen: false,
-  signed: global.__signed,
-  cookKey: global.__key,
-  user: global.__user,
-  search : '',
-  modalok: '',
-  canSearch: true
-};
+  constructor(props){
+    super(props)
+    this.state = {
+      isOpen: false,
+      signed: global.__signed,
+      cookKey: global.__key,
+      user: this.props.user,
+      search : '',
+      modalok: '',
+      canSearch: true
+    }
+  }
+
 
 toggleCollapse = () => {
   this.setState({ isOpen: !this.state.isOpen });
@@ -48,18 +52,6 @@ Logout = () => {
       this.setState({redirect : 'home'})
     }
   })
-}
-ShowAdmin = () =>{ 
-  if (this.state.user.isAdmin === true){
-    return(
-      <MDBNavItem style={{marginRight:'30px'}}>  
-      <MDBNavLink to="/admin"><strong>Admin panel</strong></MDBNavLink>          
-      </MDBNavItem>
-      )
-  }
-  else{
-    
-  }
 }
 ShowProfile = () =>{
   if (this.state.user.isAdmin !== undefined){
@@ -147,7 +139,7 @@ componentDidMount(){
     global.document.getElementById('searcherid').focus()
   })
   this.timout = setInterval(()=>{
-    this.setState({signed : global.__signed, cookKey : global.__key, user : global.__user})
+    this.setState({signed : global.__signed, cookKey : global.__key, user : this.props.user})
   },100)
 }
 componentWillUnmount(){
@@ -174,7 +166,10 @@ render() {
             </MDBNavItem>
           </MDBNavbarNav>
           <MDBNavbarNav right>
-            { this.ShowAdmin() }
+          {this.state.user.isAdmin &&
+          <MDBNavItem style={{marginRight:'30px'}}>  
+            <MDBNavLink to="/admin"><strong>Admin panel</strong></MDBNavLink>          
+          </MDBNavItem>}
             <MDBNavItem>
               <MDBFormInline>
                 <div className="md-form my-0">

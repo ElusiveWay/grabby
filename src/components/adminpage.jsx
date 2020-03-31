@@ -14,6 +14,10 @@ const AdminPage = (props) => {
                 $('#markano')[0].checked = grabby.textfields[0].anomark
                 $('#markgui')[0].checked = grabby.textfields[0].guimark
                 $('.txag')[0].innerText = grabby.textfields[0].gui
+                $('[data-toggle="tooltip"]').tooltip({
+                    html:true,
+                    template: '<div class="tooltip" role="tooltip"><div class="tooltip-inner"></div></div>'
+                })
             }
     })
     const sub = (e) =>{
@@ -54,6 +58,7 @@ const AdminPage = (props) => {
             }
         }).then(r=>{
             console.log(r)
+            $('[data-name=user-check]').prop({'checked':false})
             makeMessage()
         }).catch(r=>{
             makeMessage('danger','Oops!','Something went wrong!')
@@ -66,7 +71,7 @@ const AdminPage = (props) => {
             styles{
                 content:'here styles for Admin page';
             }
-            td,th{
+            .adminTable td,th{
                 max-width:1px;
                 word-wrap:break-word;
                 white-space:pre;
@@ -117,9 +122,14 @@ const AdminPage = (props) => {
                 resize:none;
                 overflow-y:scroll;
                 height:300px;
+            }   
+            .tooltip,
+            .tooltip-inner {
+                color: black;
+                background-color: white;
             }
             `}}/>
-                <h1 style={{background:'transparent',color:'#7a93b4',margin:'20px',marginBottom:'70px',textAlign:'center'}}>Admin panel</h1>
+                <h1 style={{background:'transparent',color:'#7a93b4',margin:'20px',marginBottom:'70px',textAlign:'center'}}><i class="fas fa-users-cog"></i> Admin panel</h1>
                 <div className="admin-wrapper">
                     <div className="controllPanel">
                         <div className="panelField-wrapper">
@@ -133,29 +143,30 @@ const AdminPage = (props) => {
                         </div>
                     </div>
                     <table class="adminTable table table-striped">
-                    <caption style={{captionSide: 'top'}}>Users</caption>
+                    <caption style={{captionSide: 'top'}}>Users: <span style={{fontSize:'.8em',opacity:'.5',color:'green'}}>regular,</span> <span style={{fontSize:'.8em',opacity:'.5',color:'red'}}>from Google,</span> <span style={{fontSize:'.8em',opacity:'.5',color:'blue'}}>from Vk</span></caption>
                     <thead> 
                         <tr>
-                            <th><input style={{marginRight:'5px'}} onClick={(e)=>$('[data-name=user-check]').prop({'checked':e.target.checked})}type="checkbox" name='checkAllItems'/>Email</th>
-                            <th>Name</th>
-                            <th>Admin</th>
-                            <th>Blocked</th>
-                            <th>Collections</th>
-                            <th>Items</th>
+                            <th style={{width:'25%'}}><input style={{marginRight:'5px'}} onClick={(e)=>$('[data-name=user-check]').prop({'checked':e.target.checked})}type="checkbox" name='checkAllItems'/>Email</th>
+                            <th style={{width:'20%'}}>Name</th>
+                            <th style={{width:'10%'}}>Admin</th>
+                            <th style={{width:'10%'}}>Blocked</th>
+                            <th data-toggle="tooltip" title='Collections' style={{width:'10%'}}>Collections</th>
+                            <th style={{width:'10%'}}>Items</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         { grabby && grabby.users && grabby.users.length!==0 &&
                         grabby.users.map((v,i)=>{
+                            const locemail = (v.email.indexOf('@')==-1)?<Link style={{color:'blue'}} to={`/users/${v._id}`}> {`vk.com/id${v.email}`} </Link>:(v.email.indexOf('start.g00.c0m:')===0)?<span ><Link style={{color:'red'}} to={`/users/${v._id}`}>{v.email.substring(14,v.email.indexOf(':g00.c0m.end'))}</Link></span>:<span ><Link style={{color : 'green'}} to={`/users/${v._id}`}>{v.email}</Link></span>
                             return  <tr>
-                                        <td><input style={{marginRight:'5px'}} type="checkbox" data-name="user-check" name={v._id}/>{v.email}</td>
-                                        <td> {v.name}</td>
-                                        <td> {v.isAdmin.toString()}</td>
-                                        <td> {v.isBlocked.toString()}</td>
-                                        <td> {1}</td>
-                                        <td> {2}</td>
-                                        <td> {v.status}</td>
+                                        <td ><input style={{marginRight:'5px'}}  type="checkbox"  data-name="user-check" name={v._id}/>{locemail}</td>
+                                        <td title={(v.email.indexOf('@')==-1)?`Vk account : vk.com/id${v.email}`:(v.email.indexOf('start.g00.c0m:')!==-1)?'Google account: '+v.email.substring(14,v.email.indexOf(':g00.c0m.end')):v.email} data-toggle="tooltip">{v.name}</td>
+                                        <td> {(v.isAdmin==false)?v.isAdmin.toString():<span style={{color:'blue'}}>{v.isAdmin.toString()}</span>}</td>
+                                        <td> {(v.isBlocked==false)?v.isBlocked.toString():<span style={{color:'red'}}>{v.isBlocked.toString()}</span>}</td>
+                                        <td> {(grabby)?grabby.collections.filter(q=>q.email==v.email).length:''}</td>
+                                        <td> {(grabby)?grabby.items.filter(q=>q.email==v.email).length:''}</td>
+                                        <td data-toggle="tooltip" title={v.status}> {v.status}</td>
                                     </tr>
                             })
                         }

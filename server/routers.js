@@ -81,15 +81,7 @@ default: res.end
 }
 })
 router.post('/sync',async (req,res)=>{
-    let b = (findUserCookSession(req.cookies.key,session.signed)==-1)?false:true,
-        i = req.cookies.key
-    if (!b) {
-        Logout(req,res,users)
-    }
-    else{
-        res.cookie('key', req.cookies.key)
-        res.send({key : i})
-    }
+    console.log(req.cookies.key)
 })
 
 

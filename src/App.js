@@ -60,6 +60,7 @@ class App extends Component {
       global.__mainData = msg
       let user = msg.users.filter(v=>v._id === global.__user._id)
       if (user.length !== 0 ) this.setState({user : user[0]})
+      if (Object.keys(global.__user).length===0) this.setState({user : {}})
       this.setState({grabby : msg})
     })
     // 
@@ -67,7 +68,7 @@ class App extends Component {
      .then(response => response.json())
      .then(res => {
        global.__user = res.user
-       this.setState({user : global.__user})    //tyt
+       this.setState({user : res.user})    //tyt
        global.__signed = res.signed
        global.__key = res.key
      });
@@ -76,24 +77,13 @@ class App extends Component {
         this.setState({modalok : global.__modalok},()=>global.document.querySelectorAll('.activeSearchList').forEach(v=>v.classList.remove('activeSearchList')))
       }
       if (this.state.online2==false) this.setState({online2 : (global.__mainData)?true:false})
+      if (this.state.grabby && this.state.user && Object.keys(this.state.user).length!==0 &&!this.state.grabby.signed.some(v=>v==this.state.user._id)) this.setState({user : {}})
      },10)
      this.int = setInterval(()=>{
-      if (!global.__signed.length && !global.__key) global.__user = {}
       if (global.__canEmitSync == true){
         global.__canEmitSync = false
         socket.emit('getAllData')
       } 
-      if(global.__canAjaxSync == true){ 
-        global.__canAjaxSync = false
-        $.ajax({
-         method: 'POST',
-         url: '/sync',
-         success: r=>{
-           global.__key = r.key
-           global.__canAjaxSync = true
-         },
-         error : e=>global.__canAjaxSync = true
-       })}
       },500)
  }
  componentWillUnmount(){
@@ -111,7 +101,7 @@ class App extends Component {
     return (
       <div className="App">
         <Router>
-            <Mainbar></Mainbar>
+            <Mainbar grabby={this.state.grabby} user={this.state.user}></Mainbar>
             <div className="message-cont"></div>
             <Switch>
             <Route path="/signin">
@@ -138,18 +128,18 @@ class App extends Component {
             <Route exact path="/admin" >
                 <AdminPage grabby={this.state.grabby} user={this.state.user}/>
             </Route>
-            <Route path="/items/:id" grabby={this.state.grabby} user={this.state.user} children={<ItemPage/>} />
-            <Route path="/collections/:id" grabby={this.state.grabby} user={this.state.user} children={<CollectionPage/>} />
-            <Route path="/users/:id/:sub" grabby={this.state.grabby} user={this.state.user} children={<CreateItemWrapper/>} />
-            <Route exact path="/users/:id" grabby={this.state.grabby} user={this.state.user} children={<UsersPages/>} />
+            <Route path="/items/:id" children={<ItemPage grabby={this.state.grabby} user={this.state.user}/>} />
+            <Route path="/collections/:id"  children={<CollectionPage grabby={this.state.grabby} user={this.state.user}/>} />
+            <Route path="/users/:id/:sub"  children={<CreateItemWrapper grabby={this.state.grabby} user={this.state.user} />} />
+            <Route exact path="/users/:id" children={<UsersPages grabby={this.state.grabby} user={this.state.user}/>} />
             <Route exact path="/profile" >
-              <UsersPages grabby={this.state.grabby} user={this.state.user} id={global.__user._id} />
+              <UsersPages grabby={this.state.grabby} user={this.state.user} id={this.state.user._id} />
             </Route>
           </Switch>
         <ModalOk title='Info' target="collPageModal" text={this.state.modalok}></ModalOk>
         </Router>
         <Footbar></Footbar>
-        <Modal action={global.__modalAction}title='Comment deleting' target="commentDeleterModal" text='Are you sure about this?'></Modal>
+        <Modal action={global.__modalAction} title='Comment deleting' target="commentDeleterModal" text='Are you sure about this?'></Modal>
       </div>
     );
   }

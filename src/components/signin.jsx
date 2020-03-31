@@ -40,7 +40,13 @@ class Signin extends Component {
         action: e.target.action.value
       }
     }).then(r=>{
-      if (r.data.out == "neok"){
+      console.log(r)
+      if (r.data.out == "neok-blocked"){
+        let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+        $('.message-cont').append('<div id='+id+'></div>')
+        ReactDOM.render(<Message text1="Oops!" text2="You are blocked!" color="danger" id={id}/>, $('#'+id)[0])
+      }
+      else if (r.data.out == "neok"){
         let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
         $('.message-cont').append('<div id='+id+'></div>')
         ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
@@ -162,7 +168,12 @@ class Signin extends Component {
                 img: this.state.vkUrl
               }
             }).then(r=>{
-              if (r.data.out == "neok"){
+              if (r.data.out == "neok-blocked"){
+                let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+                $('.message-cont').append('<div id='+id+'></div>')
+                ReactDOM.render(<Message text1="Oops!" text2="You are blocked!" color="danger" id={id}/>, $('#'+id)[0])
+              }
+              else if (r.data.out == "neok"){
                 let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
                 $('.message-cont').append('<div id='+id+'></div>')
                 ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
@@ -203,7 +214,12 @@ class Signin extends Component {
           img: global.__paramsgoo.picture
         }
       }).then(r=>{
-        if (r.data.out == "neok"){
+        if (r.data.out == "neok-blocked"){
+          let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+          $('.message-cont').append('<div id='+id+'></div>')
+          ReactDOM.render(<Message text1="Oops!" text2="You are blocked!" color="danger" id={id}/>, $('#'+id)[0])
+        }
+        else if (r.data.out == "neok"){
           let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
           $('.message-cont').append('<div id='+id+'></div>')
           ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])

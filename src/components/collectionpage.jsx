@@ -5,7 +5,7 @@ import ModalOk from './modalok'
 import {Link} from 'react-router-dom'
 import AmazingTable from './amazingTable';
 
-const CollectionPage = () => {
+const CollectionPage = (props) => {
     let [colItem, setCol] = useState({})
     let [author, setAuthor] = useState({})
     let [adds, setAdds] = useState([])
@@ -13,6 +13,7 @@ const CollectionPage = () => {
     let [isUser, setUser] = useState(false)
     let [contStyle, setContStyle] = useState({})
     let [modalInner, setModal] = useState(<div>Loading...</div>)
+    const {grabby, user} = props
     let width = 80
     let height = 90
     let stoper = 999
@@ -146,12 +147,23 @@ const CollectionPage = () => {
                     width:190px;
                     height:100%;
                 }
+                .editBtn:hover{
+                    background-color: #7ab0b4;
+                    color:white;
+                }
+                .editBtn{
+                    cursor:pointer;
+                    border-radius:.5em;
+                    padding:.25em;
+                    transition:.3s;
+                }
             `}}/>
             <MDBCard className="__cont_ainer_">
                 <img src={colItem.img}className="__ima_ge__"/>
-                <h1 className="__ti_tle__">{colItem.name}</h1>
+            <h1 className="__ti_tle__">{colItem.name} {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'#7e7ab4'}} to={{pathname:`/users/${author._id}/editc`,editcol:id}}><i style={{marginLeft:'10px'}}class="editBtn fas fa-tools"></i></Link>}</h1>
                 {(colItem.img!=='') && <hr className="__h_r_"/>}
-                {colItem && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItem.name && f.email==colItem.email)).length!==0) && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'#7e7ab4',color:'white'}} onClick={()=>global.document.querySelector('.itemsTable').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})} className="__ico_nqa v2">Item list</MDBBtn></Link>}
+                {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'white'}}to={{pathname:`/users/${author._id}/addi`, addcoll: colItem}}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">Add Item</MDBBtn></Link>}
+                {colItem && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItem.name && f.email==colItem.email)).length!==0) && <MDBBtn color="" style={{backgroundColor:'#7e7ab4',color:'white'}} onClick={()=>global.document.querySelector('.itemsTable').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})} className="__ico_nqa v2">Item list</MDBBtn>}
                 <p className="__descr_iption">{colItem.descript}</p>
                 {colItem.comment && <p className="">{colItem.comment}</p>}
                 <p>Author: <Link to={`/users/${author._id}`}><i className='linkToUser'>{author.name}</i></Link> </p>

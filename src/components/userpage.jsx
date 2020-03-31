@@ -10,6 +10,8 @@ import Collection from './CollectionElement'
 
 const UsersPages = (props) => {
     let { id } = useParams();
+    let guser = props.user
+    let {grabby} = props
     id = (props.id!==undefined)?props.id:id
     let [colls, setColls] = useState([])
     let [items, setItems] = useState([])
@@ -56,8 +58,8 @@ const UsersPages = (props) => {
                 <ProfileBox data={profileData}></ProfileBox>
                 <section className="sectionsPage">
                     <form style={formPage}>
-                        <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addc`}>Add collection</Link>
-                        <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addi`}>Add item|</Link>
+                        {(guser.isAdmin === true || guser._id === user._id) && <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addc`}>Add collection</Link>}
+                        {(guser.isAdmin === true || guser._id === user._id) && <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addi`}>Add item|</Link>}
                         <h1 style={{marginBottom:'15px',color:'#747373',paddingBottom:'5px',display:'inline-block',borderBottom:'1px solid #74737333'}}>Collections:</h1>
                         <div style={{display: 'flex', flexWrap:'nowrap',flexDirection:'column-reverse'}}className="collectionsBox">
                             {colls.map((v,i,a)=>{

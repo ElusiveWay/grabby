@@ -6,6 +6,9 @@ class ImageUpload extends React.Component {
     this.state = {file: '',imagePreviewUrl: ''};
   }
 
+  componentDidMount(){
+    this.setState({imagePreviewUrl : (this.props.default)?(this.props.default):''})
+  }
   _handleSubmit(e) {
     e.preventDefault();
     // TODO: do something with -> this.state.file

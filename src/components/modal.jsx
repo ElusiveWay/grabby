@@ -41,8 +41,8 @@ export default class Modal extends Component{
                         {this.props.text}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" onClick={this.modalAction} data-dismiss="modal" class="btn btn-primary">Delete</button>
+                        <button type="button" style={{color:'white',backgroundColor:'#7ab0b4'}} class="btn" data-dismiss="modal">Close</button>
+                        <button type="button" style={{color:'white',backgroundColor:'#7e7ab4'}} onClick={this.modalAction} data-dismiss="modal" class="btn">Delete</button>
                     </div>
                     </div>
                 </div>

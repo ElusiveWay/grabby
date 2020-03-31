@@ -56,11 +56,19 @@ const Logout = (req, res, model, onlineFlag = 'online',blocked = false)=>{
             model.update({_id : session.signed[id]},{ [''+onlineFlag] : false},e=>e)
             session.signed.splice(id,1)
             res.cookie('key', '')
-            res.send({out: 'ok', action: 'logout'})
+            if (blocked===true){
+                res.send({out: 'ok-blocked', action: 'logout'})
+            }else{
+                res.send({out: 'ok', action: 'logout'})
+            }
         }
         else{
             res.cookie('key', '')
-            res.send({out: 'neok', action : 'logout'})
+            if (blocked===true){
+                res.send({out: 'neok-blocked', action: 'logout'})
+            }else{
+                res.send({out: 'neok', action : 'logout'})
+            }
         }
     })
 }
@@ -110,7 +118,7 @@ const Login = (req, res, model, okRedir='/', erRedir='/signin')=>{
     model.find({email : email, pass : pass}).then(posts=>{
         if (posts.length){
             if (posts[0].isBlocked == true) {
-                Logout(req, res, model, 'online')
+                Logout(req, res, model, 'online', true)
                 return false; 
             }
             if (session.signed.every((v)=>v.toString()!=posts[0]._id.toString())){ 
@@ -126,7 +134,8 @@ const Login = (req, res, model, okRedir='/', erRedir='/signin')=>{
                 }
             }
             model.update({_id : posts[0]._id}, { [''+onlineStr] : true },e=>e)
-            res.cookie('key', posts[0]['_id'], { signed:true,expires: new Date(Date.now() + 1200000) })
+            res.cookie('key', posts[0]['_id'])
+            
             res.cookie('unsigned', '', { expires: new Date(Date.now() + 1200000), httpOnly: true })
             res.send({out: 'ok', signed : session.signed, user : posts[0]}) // Вытащить мои колекции + к дате
         }
