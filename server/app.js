@@ -326,6 +326,9 @@ io.on('connection', function(socket){
               img5 = r.img
             })
           }
+          else{
+            img5 = r.img
+          }
         }
         if (r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,'') !== current.name){
           await items.updateMany({collect : current.name, email: current.email}, {collect : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,'')}, e=>e).catch(e=>{
@@ -411,6 +414,65 @@ io.on('connection', function(socket){
           return false
         })
         socket.emit('add-item',{respa : 'ok', data : r})
+    });
+    socket.on('edit-item', async (r)=>{
+        let forcer = {}
+        let error = false
+        await users.find({email : r.creator}).then(r=>{
+          forcer = (r.length!==0)?r[0]:{}
+        })
+        if(r.creator !== r.email && forcer.isAdmin!=true) {
+          socket.emit('add-item',{respa : 'Yoy are not owner'})
+          error = true
+        }
+        if (error==true) return
+        // passed
+        //find current item 
+        let current = {}
+        await items.find({name : r.defName, email : r.email, collect : r.collect}).then(r1=>{
+            if (r1.length > 0) {current = r1[0]}
+            else {
+              socket.emit('edit-item',{respa : 'item not found',data : r})
+              error=true
+            }
+        }).catch(e=>{
+          socket.emit('edit-item',{respa : 'Db error'})
+          error=true
+        })
+        if (error == true) return false
+
+        //
+        await items.find({name : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''), email : r.email, collect : r.collect}).then(r=>{
+          //something
+        })
+        //
+        let img5 = ''
+        if (r.img === current.img){
+          img5 = r.img
+        }
+        else{
+            if(r.img instanceof Buffer == true){
+              await uploadToCloudinary(r.img).then(r=> img5=r.url).catch(e=>{
+                console.log('cant download')
+                img5 = r.img
+              })
+          }
+          else{
+            img5 = r.img
+          }
+        }
+        await items.updateOne({name : r.defName, email : r.email, collect : r.collect},{
+            name : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''),
+            description : r.description.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''),
+            img : img5,
+            add : r.add,
+            tags : r.tags
+        },e=>e).catch(()=>{
+          socket.emit('add-item',{respa : 'error : database error'})
+          error=true
+        })
+        if (error == true) return false
+        socket.emit('edit-item',{respa : 'ok', data : r})
     });
   });
 //

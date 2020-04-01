@@ -1,17 +1,34 @@
-import React,{Component, useEffect, useState} from 'react'
+import React,{Component, useEffect, useState, useLayoutEffect} from 'react'
 import { useParams } from "react-router-dom";
 import useStateWithCallback from 'use-state-with-callback'
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
 import ModalOk from './modalok'
 import ProfileBox from './profilebox'
 import {Link} from 'react-router-dom'
-
+import Types from '../types'
+import 'tablesorter'
+import  * as $ from 'jquery'
 const AmazingTable = (props) => {
     let [modalInner, setModal] = useStateWithCallback(<div>Loading...</div>, ()=>{global.__modalok = modalInner})
     let [contStyle, setContStyle] = useState({})
     let [colItems, setCol] = useState([])
     let [adds, setAdds] = useState([])
     let id = (props.id instanceof Array)?props.id:[props.id]
+    
+    const filtrator = (e)=>{
+        const filterKeyb = (that)=>($(that).text().toLowerCase().indexOf(value) > -1)
+        const selector = (that)=>(global.document.getElementById('inlineFormCustomSelect').value == $(that)[0].dataset.type || global.document.getElementById('inlineFormCustomSelect').value == 'All types')
+        const tager = (that)=>($(that)[0].dataset.tags > 0 || $('#havetegcheckbox').prop('checked') == false)
+        const commenter = (that)=>($(that)[0].dataset.comments > 0 || $('#havecommentscheckbox').prop('checked') == false)
+        var value = $('[name="tablecontrol"]').val().toLowerCase()
+        $(".tablesorter tr:not(.headerrowtable)").filter(function() {
+          $(this).toggle(filterKeyb(this) && selector(this) && tager(this) && commenter(this))
+        })
+    }
+    useLayoutEffect(()=>{
+        $(".tablesorter").tablesorter();
+        if (global.document.querySelector('table.table th:nth-child(1)'))global.document.querySelector('table.table th:nth-child(1)').style.height = window.getComputedStyle(global.document.querySelector('table.table th:nth-child(2)')).height
+    })
     useEffect(() => {
         //
         const interval = setInterval(() => {
@@ -21,7 +38,7 @@ const AmazingTable = (props) => {
         }, 50);
     
         return () => clearInterval(interval);
-      });
+      },[]);
 
     const makeModal = (e,str,type,data={}) => {
         if (type == 'comments'){
@@ -84,14 +101,38 @@ const AmazingTable = (props) => {
             case 'comments': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser">Click to show</span>
             case 'tags': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser" >{JSON.parse(str).join(', ')}</span>
             case 'desc': return <span  data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser" >{str}</span>
-            case 'adds': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type,data)} className="linkToUser" >{adds.length!==0 && (adds[dataItaration].length !== 0)?(adds[dataItaration].every(v=>v!==''))?'Click to open':'':''}</span>
+            case 'adds': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type,data)} className="linkToUser" >{adds.length!==0 && (adds[dataItaration].length !== 0)?(adds[dataItaration].every(v=>v!==''))?'Click to open':'':'Open'}</span>
             case 'img': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type,data)} className="linkToUser" >{str.split('/').pop()}</span>
             default: return 'field is not defined'
         }
     }
     return colItems.length!==0 && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItems[0].name && f.email==colItems[0].email)).length!==0)?(<div>
+        <div>
+        <div className="filtrator">
+            <input type="text" onKeyUp={filtrator} className="filterelem form-control" placeholder="Filter" name="tablecontrol"/>
+            <select onChange={filtrator} class="custom-select mr-sm-2 filterelem" id="inlineFormCustomSelect">
+                <option value="All types" selected>All types</option>
+                {Types.map(v=><option value={v}>{v}</option>)}
+            </select>
+            <div>
+                <div class="custom-control custom-checkbox mr-sm-2">
+                    <input onChange={filtrator} type="checkbox" class="custom-control-input" id="havetegcheckbox"/>
+                    <label class="custom-control-label" for="havetegcheckbox">Have tag(s)</label>
+                </div>
+                <div class="custom-control custom-checkbox mr-sm-2">
+                    <input onChange={filtrator} type="checkbox" class="custom-control-input" id="havecommentscheckbox"/>
+                    <label class="custom-control-label" for="havecommentscheckbox">Have comment(s)</label>
+                </div>
+            </div>
+        </div>
+        <hr/>
         <div style={{width:'100%',overflowX:'scroll'}} className="table-responsive">
         <style dangerouslySetInnerHTML={{__html: `
+                .filterelem{
+                    display:inline-block;
+                    width:200px;
+                    margin-right:15px !important;
+                }
                 .tagpre:before{
                     content:'#';
                 }
@@ -130,30 +171,37 @@ const AmazingTable = (props) => {
                 table.table tbody tr:nth-child(odd) th:first-child, table.table tbody tr:nth-child(odd) td:first-child{
                     background: #f2f2f2;
                 }
+                table.table th:nth-child(2) div:before, table.table td:nth-child(2) div:before,
                 table.table th:nth-child(2):before, table.table td:nth-child(2):before{
                     content:'';
                     display:inline-block;
                     width:190px;
                     height:100%;
                 }
+                .filtrator{
+                    display: flex;
+                    align-items:center;
+                    margin-bottom:10px;
+                    margin-top:20px;
+                }
             `}}/>
-        <table style={{fontSize:`calc(${contStyle} / 10) !important`,width: 'calc(100%)'}} class="itemsTable table table-striped">
+        <table style={{fontSize:`calc(${contStyle} / 10) !important`,width: 'calc(100%)'}} class="tablesorter itemsTable table table-striped">
             <thead> 
-                <tr>
-                <th>{ global.__user.email==colItems[0].email && <input style={{marginRight:'5px'}} type="checkbox" name='checkAllItems'/> }Title</th>
-                <th>Description</th>
-                <th>Image url</th>
-                <th>Properties</th>
-                <th>Likes</th>
-                <th>Tags</th>
-                <th>Comments</th>
+                <tr className="headerrowtable">
+                <th>{ global.__user.email==colItems[0].email && <input style={{marginRight:'5px'}} type="checkbox" name='checkAllItems'/> }Title <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>Description <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>Image url <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>Properties <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>Likes <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>Tags <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>Comments <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
                 </tr>
             </thead>
             <tbody>
                 { colItems.length!==0 &&
                 colItems.map((colItem,ci)=>{
                    return global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItem.name && f.email==colItem.email)).map((k,i)=>{
-                    return  <tr>
+                    return  <tr data-comments={k.comments && (JSON.parse(k.comments) instanceof Array)?JSON.parse(k.comments).length:0} data-tags={k.tags && (JSON.parse(k.tags) instanceof Array)?JSON.parse(k.tags).length:0} data-type={k.type}>
                                 <td>{global.__user.email==colItem.email && <input style={{marginRight:'5px'}} type="checkbox" name={`itemCheck${i}`}/>}<Link className="linkToUser" to={`/items/${k._id}`}>{k.name}</Link></td>
                                 <td>{(k.description)?parseBeauty(k.description,'desc'):''}</td>
                                 <td>{(k.img)?parseBeauty(k.img,'img'):'No image'}</td>
@@ -167,6 +215,7 @@ const AmazingTable = (props) => {
                 }
             </tbody>
         </table>
+        </div>
         </div>
         </div>):<h2>Collection(s) have no elements!</h2>
 }

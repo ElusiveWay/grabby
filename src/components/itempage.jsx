@@ -13,9 +13,10 @@ import CommentsForm from './inputs/comments-form'
 
 
 
-const ItemPage = () => {
+const ItemPage = (props) => {
     let [myItem, setMyItem] = useState({})
     let [colItem, setCol] = useState({})
+    let [author, setAuthor] = useState({})
     let [adds, setAdds] = useState({})
     let [likes, setLikes] = useState([])
     let [commens, setComs] = useState([])
@@ -25,6 +26,7 @@ const ItemPage = () => {
     let width = 80
     let height = 90
     let { id } = useParams();
+    const {grabby, user} = props
 
     const deleteComment = (e) =>{
         let index = Array.prototype.indexOf.call(e.target.parentNode.parentNode.parentNode.children,e.target.parentNode.parentNode)-1
@@ -62,7 +64,7 @@ const ItemPage = () => {
         global.__modalok = <div>
                               <h3 style={{marginBottom:'20px'}}>Items with teg : #<i>{teg}</i></h3>
                               <ul>
-                                {global.__mainData.items.filter(v=>JSON.parse(v.tags).some(q=>q==teg)).map(v=><Link onClick={(e)=>{e.stopPropagation();global.document.querySelectorAll('.activeSearchList').forEach(v=>v.classList.remove('activeSearchList'));e.target.classList.add('activeSearchList')}} to={`/items/${v._id}`}><li><h5>{v.name}</h5></li></Link>)}
+                                {global.__mainData.items.filter(v=>JSON.parse(v.tags).some(q=>q==teg)).map(v=><Link onClick={(e)=>{e.stopPropagation();global.document.querySelectorAll('.activeSearchList').forEach(v=>v.classList.remove('activeSearchList'));e.target.classList.add('activeSearchList')}} to={`/items/${v._id}`}><li onClick={()=>$('#collPageModal').modal('hide')}><h5>{v.name}</h5></li></Link>)}
                               </ul>
                               
                            </div>
@@ -79,6 +81,7 @@ const ItemPage = () => {
                 setCol((global.__mainData && colItem && myItem)?global.__mainData.collections.filter(k=>{return (k.email == myItem.email && myItem.collect == k.name)})[0]:{})
                 setAdds((global.__mainData && colItem)?(typeof colItem.adds == 'string')?JSON.parse(colItem.adds):{}:{})
                 setLikes((global.__mainData && myItem)?(typeof myItem.likes == 'string')?JSON.parse(myItem.likes):[]:[])
+                setAuthor((myItem)?JSON.parse(myItem.author):{})
                 setComs((global.__mainData && myItem)?(typeof myItem.comments == 'string')?JSON.parse(myItem.comments):[]:[])
                 setTags((global.__mainData && myItem)?(typeof myItem.tags == 'string')?JSON.parse(myItem.tags):[]:[])
         }, 50);
@@ -340,10 +343,20 @@ const ItemPage = () => {
                     background: #7ab0b4; 
                     box-shadow: 0 0 5px #00000099;
                 }
+                .editBtn:hover{
+                    background-color: #7ab0b4;
+                    color:white;
+                }
+                .editBtn{
+                    cursor:pointer;
+                    border-radius:.5em;
+                    padding:.25em;
+                    transition:.3s;
+                }
             `}}/>
             <MDBCard className="__cont_ainer_">
                 <img src={myItem.img}className="__ima_ge__"/>
-                <h1 className="__ti_tle__">{myItem.name}</h1>
+                <h1 className="__ti_tle__">{myItem.name} {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'#7e7ab4'}} to={{pathname:`/users/${author._id}/editi`,edititem:id}}><i style={{marginLeft:'10px'}}class="editBtn fas fa-tools"></i></Link>} </h1>
                 <hr className="__h_r_"/>
                 {colItem && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">Go to the collection</MDBBtn></Link>}
             <MDBBtn onClick={clicker} className="__ico_nqa" color="" ><i className="fas fa-heart iconqa"></i> Likes :<span className="likes __darova_v1_">{likes.length}</span></MDBBtn>

@@ -35,7 +35,8 @@ class ItemCreator extends React.Component {
             file2 : '',
             owner : {},
             link: '',
-            editcol : {}
+            editcol : {},
+            edititem : {}
         }
         this.refItemDropbox2 = React.createRef()
         this.refItemDropbox1 = React.createRef()
@@ -156,10 +157,68 @@ class ItemCreator extends React.Component {
                 margin: '30px 5% 0px'
             },
         }
+        
     }
-componentWillMount(){
 
+componentWillMount(){
+    socket.off('edit-item');
+    socket.on('edit-item',(r)=>{
+        if (r.respa != "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Oops!" text2={r.respa} color="danger" id={id}/>, $('#'+id)[0])
+            console.log(r)
+          }else if(r.respa == "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Yeah!" text2="The item is added to collection!" color="success" id={id}/>, $('#'+id)[0])
+            this.setState({redirect : 'item'})
+            console.log(r)
+          }
+    })
+    socket.off('add-collection');
+    socket.on('add-collection',(r)=>{
+        if (r.respa != "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Error!" text2={r.respa} color="danger" id={id}/>, $('#'+id)[0])
+          }else if(r.respa == "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Yeah!" text2="The collection is added!" color="success" id={id}/>, $('#'+id)[0])
+            this.setState({redirect : 'profile'})
+          }
+    })
+    socket.off('edit-collection');
+    socket.on('edit-collection',(r)=>{
+        if (r.respa != "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Error!" text2={r.respa} color="danger" id={id}/>, $('#'+id)[0])
+          }else if(r.respa == "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Yeah!" text2="The collection is eddited!" color="success" id={id}/>, $('#'+id)[0])
+            this.setState({redirect : 'collect'})
+            console.log(r.data)
+          }
+    })
+    socket.off('add-item');
+    socket.on('add-item',(r)=>{
+        if (r.respa != "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Oops!" text2="Something went wrong!" color="danger" id={id}/>, $('#'+id)[0])
+            console.log(r)
+          }else if(r.respa == "ok"){
+            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
+            $('.message-cont').append('<div id='+id+'></div>')
+            ReactDOM.render(<Message text1="Yeah!" text2="The item is added to collection!" color="success" id={id}/>, $('#'+id)[0])
+            console.log(r)
+          }
+    })
 }
+
 componentDidMount(){
      this.interval = setInterval(()=>{
          if ((Object.keys(this.state.editcol).length===0 && this.props.location.editcol) || (this.props.location.editcol && this.state.editcol._id!==this.props.location.editcol)){
@@ -167,6 +226,15 @@ componentDidMount(){
                  if (Object.keys(this.state.editcol).length !== 0) {
                      console.log('init editcol')
                     $(`[name='col_descript']`).val(this.state.editcol.descript)
+                 }
+             })
+         }
+         if (this.state.edititem && (Object.keys(this.state.edititem).length===0 && this.props.location.edititem) || (this.state.edititem && this.props.location.edititem && this.state.edititem._id!==this.props.location.edititem)){
+             this.setState({edititem : this.props.grabby.items.filter(f=>f._id==this.props.location.edititem)[0]},()=>{
+                 console.log(this.state.edititem)
+                 if (Object.keys(this.state.edititem).length !== 0) {
+                     console.log('init edititem')
+                    $(`[name='item_descript']`).val(this.state.edititem.description)
                  }
              })
          }
@@ -225,6 +293,10 @@ checkRedirect(){
         this.setState({redirect : ''})
         return <Redirect to={`/collections/${this.state.editcol._id}`}/>
     }
+    if (this.state.redirect == 'item'){
+        this.setState({redirect : ''})
+        return <Redirect to={`/items/${this.state.edititem._id}`}/>
+    }
 }
 
 subFormColl = (e) => {
@@ -242,18 +314,6 @@ subFormColl = (e) => {
             adds : JSON.stringify(array),
             creator : this.props.user.email
         })
-    socket.on('add-collection',(r)=>{
-        if (r.respa != "ok"){
-            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
-            $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Error!" text2={r.respa} color="danger" id={id}/>, $('#'+id)[0])
-          }else if(r.respa == "ok"){
-            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
-            $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Yeah!" text2="The collection is added!" color="success" id={id}/>, $('#'+id)[0])
-            this.setState({redirect : 'profile'})
-          }
-    })
 }
 subEditCol = (e) => {
     e.preventDefault()
@@ -273,19 +333,7 @@ subEditCol = (e) => {
             adds : JSON.stringify(array),
             creator : this.props.user.email
         })
-    socket.on('edit-collection',(r)=>{
-        if (r.respa != "ok"){
-            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
-            $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Error!" text2={r.respa} color="danger" id={id}/>, $('#'+id)[0])
-          }else if(r.respa == "ok"){
-            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
-            $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Yeah!" text2="The collection is eddited!" color="success" id={id}/>, $('#'+id)[0])
-            this.setState({redirect : 'collect'})
-            console.log(r.data)
-          }
-    })
+    
 }
 subFormItems = (e) => {
     e.preventDefault()
@@ -302,24 +350,30 @@ subFormItems = (e) => {
         tags : JSON.stringify(this.state.tegState),
         creator : this.props.user.email
     })
-    socket.on('add-item',(r)=>{
-        if (r.respa != "ok"){
-            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
-            $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Oops!" text2="Something went wrong!" color="danger" id={id}/>, $('#'+id)[0])
-            console.log(r)
-          }else if(r.respa == "ok"){
-            let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
-            $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Yeah!" text2="The item is added to collection!" color="success" id={id}/>, $('#'+id)[0])
-            console.log(r)
-          }
+}
+subEditItem = (e) => {
+    e.preventDefault()
+    if(this.state.owner.email === undefined) return false;
+    socket.emit('edit-item',{
+        author : JSON.stringify(this.state.owner),
+        email : this.state.owner.email,
+        name : e.target.item_name.value,
+        defName : this.state.edititem.name,
+        description : e.target.item_descript.value,
+        type : document.getElementsByClassName('addinpdropiq')[0].value,
+        collect: document.getElementsByClassName('addinpdropiq2')[0].value,
+        img : ($('[name="item_img"]')[0].style.backgroundImage.slice(4, -1).replace(/["']/g, "") === this.state.edititem.img)?this.state.edititem.img:this.state.file2,
+        add : JSON.stringify(this.state.addsOutState),
+        tags : JSON.stringify(this.state.tegState),
+        creator : this.props.user.email
     })
+    
 }
 changeItemType(){
     console.log('da')
 }
 render(){
+    
     return (
          <div style={this.style.container}>
              <style dangerouslySetInnerHTML={{__html: `
@@ -468,7 +522,8 @@ render(){
                     <hr style={this.style.hr}/>
                     <MDBBtn style={this.style.submit} color=""type="submit">OK</MDBBtn>
                 </form>
-                </section>: this.state.link=='addi' && <section className="addItemSect">
+                </section>: 
+                this.state.link=='addi' && <section className="addItemSect">
                             <form onSubmit={this.subFormItems} style={this.style.formItem}>
                                 <div style={{position:'relative',width:'100%',minHeight:'400px'}}>
                                     <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${this.props.id}`}>Back</Link>
@@ -480,6 +535,81 @@ render(){
                             </form>
                         </section>
             }
+            { this.props.sub === 'editi' && (this.props.user._id === this.props.id || this.props.user.isAdmin === true) &&
+            (this.props.grabby.collections.filter(f=>f.email===this.props.owner.email).length > 0) && <section style={this.style.section} className="addItemSect">
+                <form onSubmit={this.subEditItem} style={this.style.formItem}>
+                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={(this.props.location.edititem)?`/items/${this.props.location.edititem}`:`/users/${this.props.id}`}>Back</Link>
+                    <h1 style={this.style.h1}>Edit Item</h1>
+                    {typeof this.state.edititem.name === 'string' && <Text name="item_name" default={this.state.edititem.name} required nm="Name of Item*" />}
+                    <TextareaPage2 name="item_descript" required style={this.style.description2} nm="Description*" />
+                    {typeof this.state.edititem.img === 'string' && <ImageUpload default={this.state.edititem.img} func={this.returnMeVar.bind(this)} name="item_img" />}
+                    <Text name='addTegPlsIWanna'nm="Add teg" />   
+                    <div style={{marginBottom:'30px'}} name="МАССИВ ТЕГОВ">
+                        <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`)}} className="teg add">Add</div> 
+                        <div className='tegCont'>
+                        {typeof this.state.edititem.tags === 'string' && 
+                            JSON.parse(this.state.edititem.tags).map(t=>{
+                            return  <div className="teg" onClick={(e)=>$(e.target).remove()} className="teg">{t}</div>
+                            })
+                        }
+                        </div>
+                    </div>
+                    <span style={{marginBottom:'30px',display:'inline-block',textAlign:'center',width:'50%'}}>Collection type</span><span style={{display:'inline-block',textAlign:'center',width:'50%'}}>Collection</span>
+                    {typeof this.state.edititem.type === 'string' && <DropboxInput forced={this.state.edititem.type} class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type' style={this.style.dropboxinp} />}
+                    {typeof this.state.edititem.collect === 'string' && <DropboxInput forced={this.state.edititem.collect} class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection' style={this.style.dropboxinp} />}
+                    <div>
+                                    {(this.state.addsForItemCreation.length)?<hr style={this.style.hr} />:''}
+                                    <h1 style={this.style.h1}>{(typeof this.state.edititem.add === 'string' && JSON.parse(this.state.edititem.add).length!==0)?'Set additional properties':''}</h1>
+                                <div className='addsOutCont' style={{
+                                    backgroundColor: '#e9ecef',
+                                    padding: '0 20px',
+                                    borderRadius: '10px',
+                                    border: '1px solid #ced4da',
+                                    color: '#7a93b4',
+                                    display: (typeof this.state.edititem.add === 'string' && JSON.parse(this.state.edititem.add).length!==0)?'block':'none'
+                                }}>
+                    {typeof this.state.edititem.add === 'string' && JSON.parse(this.state.edititem.add).length!==0 &&
+                    this.props.grabby.collections.filter(f=>f.name === this.state.edititem.collect && this.state.edititem.email === f.email).map(m=>JSON.parse(m.adds))[0].map((v,i,a)=>{
+                        const val = (JSON.parse(this.state.edititem.add)[i] !== undefined)?JSON.parse(this.state.edititem.add)[i].value:''
+                        switch(Object.keys(v)[0]){
+                            
+                        case 'date' :  return (
+                                    <DataPicker default={val} text={`${v[Object.keys(v)[0]]} : `} />  
+                            ) 
+                        case 'textarea' :  return (
+                                <fieldset style={{width:'90%',margin:"30px 5%"}} class="form-group">
+                                    <label for={`exampleFormControlTextareaa${i}`}>{`${v[Object.keys(v)[0]]}`}</label>
+                                    <textarea defaultValue={val} style={this.style.description11} className="form-control rounded-0" id={`exampleFormControlTextareaa${i}`} rows="10"></textarea>
+                                </fieldset>  
+                            ) 
+                        case 'string'  : return (
+                                <fieldset style={{width:'90%',margin:"30px 5%"}}>
+                                        <label for={`textt${i}`}>{`${v[Object.keys(v)[0]]}`}</label>
+                                        <input defaultValue={val} type="text" id={`textt${i}`} class="form-control"></input>
+                                </fieldset>  
+                            ) 
+                        case 'number'  : return (
+                                <fieldset style={{width:'90%',margin:"30px 5%"}}>
+                                        <label for={`numberr${i}`}>{`${v[Object.keys(v)[0]]}`}</label>
+                                        <input defaultValue={val} type="number" id={`numberr${i}`} class="form-control"></input>
+                                    </fieldset>   
+                            ) 
+                        case 'checkbox'  :  return (
+                                <fieldset style={{width:'90%',margin:"30px 5%"}} className="custom-control custom-checkbox">
+                                            <input defaultChecked={val} type="checkbox" className="custom-control-input" id={`checkboxx${i}`} />
+                                            <label  className="custom-control-label" for={`checkboxx${i}`}>{` ${v[Object.keys(v)[0]]}`}</label>
+                                </fieldset>   
+                            ) 
+                            }
+                        })}
+                            </div>
+                        </div>
+                    
+                    
+                    <hr style={this.style.hr}/>
+                    <MDBBtn style={this.style.submit} color=""type="submit">OK</MDBBtn>
+                </form>
+                </section>} 
             { ((this.props.user._id !== this.props.id && this.props.user.isAdmin !== true) || (this.props.sub !== 'addi' && this.props.sub !== 'addc' && this.props.sub !== 'editi' && this.props.sub !== 'editc')) && <Redirect to={`/users/${this.props.id}`}/>}
             {this.checkRedirect()}
         </div>

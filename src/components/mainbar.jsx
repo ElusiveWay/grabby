@@ -113,7 +113,7 @@ onch = (e) =>{
       { collItemsArr.length!==0 && <h3>Items from collections search matching:</h3> }
         <ul> 
         {collItemsArr.map(v=>{
-          return <Link to={`/items/${v._id}`}><li>{v.name}</li></Link>
+          return <Link to={`/items/${v._id}`}><li onClick={()=>$('#searchModal').modal('hide')}>{v.name}</li></Link>
         })}
        </ul>
     </div>})

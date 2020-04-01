@@ -22,6 +22,10 @@ class DataPicker extends React.Component {
             width:'10em',
             textAlign: 'center'
         })
+        if (this.props.default) {
+            console.log('lol')
+            this.setState({startDate : this.props.default})
+        }
     }
     render() {
         $('.cXcRCo').css({transition:'0.2s',zIndex : '10000',transform:'translateY(calc(-100% - 30px))'})
