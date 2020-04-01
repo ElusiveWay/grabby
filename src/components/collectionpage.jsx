@@ -4,6 +4,7 @@ import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, 
 import ModalOk from './modalok'
 import {Link} from 'react-router-dom'
 import AmazingTable from './amazingTable';
+import Modal from './modal'
 
 const CollectionPage = (props) => {
     let [colItem, setCol] = useState({})
@@ -38,6 +39,9 @@ const CollectionPage = (props) => {
         <div style={{display:'flex'}}>
             <img src='' onError={()=>window.scrollTo(0,0)}/>
             <style dangerouslySetInnerHTML={{__html: `
+                .modal.fade.show{
+                    z-index: 99999;
+                }
                 .tagpre:before{
                     content:'#';
                 }
@@ -54,9 +58,7 @@ const CollectionPage = (props) => {
                     width: ${width}vw;
                     float:left;
                     max-width: 1020px;
-                    left: 50%;
-                    margin:2vw 0;
-                    transform: translateX(-50%);
+                    margin:2vw auto;
                     height: auto;
                 }
                 .__ima_ge__{
@@ -70,7 +72,7 @@ const CollectionPage = (props) => {
                 .__ti_tle__{
                     float: right;
                     margin-right: 3vw;
-                    margin-top: 3vw;
+                    margin-top: 40px;
                     max-width: calc(45% - 5vw);
                     word-wrap: break-word;
                     height:auto;
@@ -160,13 +162,18 @@ const CollectionPage = (props) => {
             `}}/>
             <MDBCard className="__cont_ainer_">
                 <img src={colItem.img}className="__ima_ge__"/>
-            <h1 className="__ti_tle__">{colItem.name} {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'#7e7ab4'}} to={{pathname:`/users/${author._id}/editc`,editcol:id}}><i style={{marginLeft:'10px'}}class="editBtn fas fa-tools"></i></Link>}</h1>
+            <h1 className="__ti_tle__">{colItem.name} 
+                <span style={{top:'10px',right:'10px',position:'absolute'}}>
+                    {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'#7e7ab4'}} to={{pathname:`/users/${author._id}/editc`,editcol:id}}><i style={{verticalAlign:'top',fontSize:'.5em',marginLeft:'10px'}}class="editBtn fas fa-tools"></i></Link>}
+                    {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<i data-target="#collectDeleteModal" data-toggle='modal' className="far editBtn fa-trash-alt" style={{verticalAlign:'top',fontSize:'.5em',marginLeft:'10px'}}></i>} 
+                </span>
+            </h1>
                 {(colItem.img!=='') && <hr className="__h_r_"/>}
                 {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'white'}}to={{pathname:`/users/${author._id}/addi`, addcoll: colItem}}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">Add Item</MDBBtn></Link>}
                 {colItem && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItem.name && f.email==colItem.email)).length!==0) && <MDBBtn color="" style={{backgroundColor:'#7e7ab4',color:'white'}} onClick={()=>global.document.querySelector('.itemsTable').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})} className="__ico_nqa v2">Item list</MDBBtn>}
                 <p className="__descr_iption">{colItem.descript}</p>
-                {colItem.comment && <p className="">{colItem.comment}</p>}
-                <p>Author: <Link to={`/users/${author._id}`}><i className='linkToUser'>{author.name}</i></Link> </p>
+                {colItem.comment && <p style={{clear:'both'}} className="">{colItem.comment}</p>}
+                <p style={{clear:'both'}}>Author: <Link to={`/users/${author._id}`}><i className='linkToUser'>{author.name}</i></Link> </p>
                 <p className="__ty_pe">Type: {colItem.type}</p>
                 {adds && adds.length!==0 &&
                 <div>
@@ -178,14 +185,14 @@ const CollectionPage = (props) => {
                     </ul>
                 </div>}
                 <div style={{width:`calc(${contStyle.width} - 6vw)`}}>
-                    <AmazingTable id={id}/>
+                    {Object.keys(author).length!==0 && <AmazingTable owner={author} user={user} id={id}/>}
                 </div>
                 
 
                 <p style={{visibility:'hidden'}}className="fakeMargin __ads_ads_ listed">FAKE P FOR MARGIN IN THE BOTTOM OF CARD</p>
             </MDBCard> 
             
-            
+            {author && user && id && <Modal user={user} owner={author} deleteCollections={[id]} title='Collection deleting...' target="collectDeleteModal" text={`Are you sure to delete this collection?`}></Modal>}
             </div>
             
         ):(<h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>Loading...</h1>)

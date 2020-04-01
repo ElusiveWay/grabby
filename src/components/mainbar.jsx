@@ -48,7 +48,7 @@ Logout = () => {
       global.__user = {}
       let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
       $('.message-cont').append('<div id='+id+'></div>')
-      ReactDOM.render(<Message text1="Byu Buy!" text2="See you!" color="success" id={id}/>, $('#'+id)[0])
+      ReactDOM.render(<Message text1="Bye Bye!" text2="See you!" color="success" id={id}/>, $('#'+id)[0])
       this.setState({redirect : 'home'})
     }
   })
@@ -57,7 +57,9 @@ ShowProfile = () =>{
   if (this.state.user.isAdmin !== undefined){
     return (
       <MDBNavItem>  
-        <MDBNavLink style={(this.state.user.id)} to="/profile">Profile</MDBNavLink>          
+      <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
+        <MDBNavLink style={(this.state.user.id)} to="/profile">Profile</MDBNavLink>    
+        </div>      
       </MDBNavItem> 
         ) 
   }
@@ -65,8 +67,11 @@ ShowProfile = () =>{
 ShowLogout = () =>{
   if (this.state.user.isAdmin !== undefined){
     return (
-      <MDBNavItem style={{marginLeft:'30px'}}>
-      <MDBBtn style={{padding: '8px',margin:'0',lineHeight: '1.5',color:'white',boxShadow:'unset',width:'auto',height:'100%'}}color="transparent" onClick={this.Logout}><strong>Log out</strong></MDBBtn>  
+      <MDBNavItem >
+        
+        <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
+          <MDBBtn style={{padding: '8px',margin:'0',lineHeight: '1.5',color:'white',boxShadow:'unset',width:'auto',height:'100%'}}color="transparent" onClick={this.Logout}><strong>Log out</strong></MDBBtn>  
+        </div>
       </MDBNavItem>
         ) 
   }
@@ -147,28 +152,25 @@ componentWillUnmount(){
 }
 render() {
   return (
-      <MDBNavbar  style={{width:'100%',top:'0',zIndex:'10000',position:'fixed',backgroundColor: 'rgba(9, 56, 117, 0.54)'}}color="" dark expand="md">
+      <MDBNavbar  id="mainGrabbyNavbar"style={{width:'100%',top:'0',zIndex:'10000',position:'fixed',backgroundColor: 'rgba(9, 56, 117, 0.54)'}}color="" dark expand="md">
         <MDBNavbarBrand>
           <strong className="white-text">Grabby</strong>
         </MDBNavbarBrand>
         <MDBNavbarToggler onClick={this.toggleCollapse} />
         <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
           <MDBNavbarNav left>
-            <MDBNavItem active>
-            </MDBNavItem>
-            <MDBNavLink to="/">Main</MDBNavLink>  
-            {/* <MDBNavItem>
-            <MDBNavLink to="/collect">Collections</MDBNavLink>  
-            </MDBNavItem> */}
+          <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
+            <MDBNavLink to="/">Main</MDBNavLink> 
+          </div> 
            { this.ShowProfile() }
            { this.ShowSignin() }
-            <MDBNavItem>   
-            </MDBNavItem>
           </MDBNavbarNav>
           <MDBNavbarNav right>
           {this.state.user.isAdmin &&
           <MDBNavItem style={{marginRight:'30px'}}>  
-            <MDBNavLink to="/admin"><strong>Admin panel</strong></MDBNavLink>          
+          <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
+              <MDBNavLink to="/admin"><strong>Admin panel</strong></MDBNavLink>    
+            </div>      
           </MDBNavItem>}
             <MDBNavItem>
               <MDBFormInline>

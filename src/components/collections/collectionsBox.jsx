@@ -66,7 +66,8 @@ class Collections extends Component {
     }
     render() {
         return (
-          <div style={this.styles.container}>
+          <div className="container__collboxes">
+              <style dangerouslySetInnerHTML={{__html:COMPONENT_STYLE}}/>
               <img src='' onError={()=>window.scrollTo(0,0)}/>
               {this.drawFlexItem()}
               {!global.__mainData && <h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>Loading...</h1>}
@@ -74,5 +75,25 @@ class Collections extends Component {
       )
     }
 }
+const COMPONENT_STYLE=`
+.container__collboxes:{
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
+      padding: 0 20px;
+      max-height: auto;
+    }
+    @media screen and (max-width: 500px){
+      .container__collboxes:{
+        padding: 0;
+      }
+      .container__collboxes .__freeColumn_v1_{
+        width:unset !important;
+        max-width:400px;
+      }
+      
+    }
+`
+
 
 export default Collections

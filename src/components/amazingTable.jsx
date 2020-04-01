@@ -2,19 +2,33 @@ import React,{Component, useEffect, useState, useLayoutEffect} from 'react'
 import { useParams } from "react-router-dom";
 import useStateWithCallback from 'use-state-with-callback'
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
-import ModalOk from './modalok'
+import Modal from './modal'
 import ProfileBox from './profilebox'
+import axios from 'axios'
 import {Link} from 'react-router-dom'
 import Types from '../types'
 import 'tablesorter'
 import  * as $ from 'jquery'
+import makeMessage from './peref/mess';
 const AmazingTable = (props) => {
     let [modalInner, setModal] = useStateWithCallback(<div>Loading...</div>, ()=>{global.__modalok = modalInner})
     let [contStyle, setContStyle] = useState({})
     let [colItems, setCol] = useState([])
+    let [delItems, setDelItems] = useState({items:[]})
     let [adds, setAdds] = useState([])
+    let [access, setAccess] = useState(false)
     let id = (props.id instanceof Array)?props.id:[props.id]
-    
+    const {user,owner} = props
+    const changeCheckHandler = (e) =>{
+        global.document.querySelectorAll(':not([style*="display: none"]) > td >[data-type="chosenItem"]').forEach(v=>v.checked = e.target.checked)
+        updateDeleter()
+    }
+    const updateDeleter = () => {
+        const chosen = Array.prototype.map.call(global.document.querySelectorAll('[data-type="chosenItem"]'),v=>v).filter(v=>{
+            return (v.parentNode.parentNode.style.display !== 'none' && v.checked == true) 
+        })
+        setDelItems({items:chosen.map(v=>v.name)})
+    }
     const filtrator = (e)=>{
         const filterKeyb = (that)=>($(that).text().toLowerCase().indexOf(value) > -1)
         const selector = (that)=>(global.document.getElementById('inlineFormCustomSelect').value == $(that)[0].dataset.type || global.document.getElementById('inlineFormCustomSelect').value == 'All types')
@@ -24,26 +38,37 @@ const AmazingTable = (props) => {
         $(".tablesorter tr:not(.headerrowtable)").filter(function() {
           $(this).toggle(filterKeyb(this) && selector(this) && tager(this) && commenter(this))
         })
+        updateDeleter()
     }
     useLayoutEffect(()=>{
+        $('[name="checkAllItems"]').off('change')
+        $('[name="checkAllItems"]').on('change', changeCheckHandler)
+        $('[data-type="chosenItem"]').off('change')
+        $('[data-type="chosenItem"]').on('change', updateDeleter)
         $(".tablesorter").tablesorter();
         if (global.document.querySelector('table.table th:nth-child(1)'))global.document.querySelector('table.table th:nth-child(1)').style.height = window.getComputedStyle(global.document.querySelector('table.table th:nth-child(2)')).height
+        if ($('[data-type="chosenItem"]').length==0){
+            $('[name=checkAllItems]').css('display','none')
+        }
+        else{
+            $('[name=checkAllItems]').css('display','inline') 
+        }
     })
     useEffect(() => {
-        //
         const interval = setInterval(() => {
                 setContStyle((global.document && global.document.querySelectorAll('.__cont_ainer_').length!==0)?window.getComputedStyle(global.document.querySelector('.__cont_ainer_')):{})
                 setCol((global.__mainData)?global.__mainData.collections.filter(k=>id.some(o=>o==k._id)):[])
                 setAdds((colItems)?colItems.map(v=>JSON.parse(v.adds)):[])
+                setAccess((user.isAdmin===true || user.email===owner.email))
         }, 50);
     
         return () => clearInterval(interval);
-      },[]);
+      },[user]);
 
     const makeModal = (e,str,type,data={}) => {
         if (type == 'comments'){
         setModal(
-            <div class="modalInnerator">
+            <div className="modalInnerator">
                 <h2>Comments:</h2>
                 {JSON.parse(str).map(v=>{
                         return (<div><h4 style={{color:'#49586c'}}>{v.likerName}:</h4>
@@ -56,7 +81,7 @@ const AmazingTable = (props) => {
         }
         if (type == 'tags'){
         setModal(
-            <div class="modalInnerator">
+            <div className="modalInnerator">
                 <h2>Full list of tags:</h2>
                 {JSON.parse(str).map(v=>{
                         return (<div><h4 className="tagpre"style={{color:'#49586c'}}>{v}</h4></div>
@@ -67,7 +92,7 @@ const AmazingTable = (props) => {
         }
         if (type == 'adds'){
         setModal(
-            <div class="modalInnerator">
+            <div className="modalInnerator">
                 <h2>List of additional properties:</h2>
                 {JSON.parse(str).map((v,i)=>{
                         let coll = global.__mainData.collections.filter(f=>(f.name==data.collect && f.email == data.email))[0]
@@ -79,7 +104,7 @@ const AmazingTable = (props) => {
         }
         if (type == 'desc'){
         setModal(
-            <div class="modalInnerator">
+            <div className="modalInnerator">
                 <h2>Full description:</h2>
                 <p>{str}</p>
             </div>
@@ -107,9 +132,10 @@ const AmazingTable = (props) => {
         }
     }
     return colItems.length!==0 && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItems[0].name && f.email==colItems[0].email)).length!==0)?(<div>
-        <div>
+        <div style={{minHeight:'400px'}}>
         <div className="filtrator">
-            <input type="text" onKeyUp={filtrator} className="filterelem form-control" placeholder="Filter" name="tablecontrol"/>
+            {access && <i onClick={()=>{if(delItems.items.length==0)makeMessage('danger', 'Stop!','You didn\'t select any item!')}} data-toggle={delItems.items.length!==0?'modal':''} data-target="#itemDeleteModal" className="far deleteIcon fa-trash-alt" style={{marginRight:'15px'}}></i>}
+            <input  type="text" onKeyUp={filtrator} className="filterelem form-control" placeholder="Filter" name="tablecontrol"/>
             <select onChange={filtrator} class="custom-select mr-sm-2 filterelem" id="inlineFormCustomSelect">
                 <option value="All types" selected>All types</option>
                 {Types.map(v=><option value={v}>{v}</option>)}
@@ -128,6 +154,16 @@ const AmazingTable = (props) => {
         <hr/>
         <div style={{width:'100%',overflowX:'scroll'}} className="table-responsive">
         <style dangerouslySetInnerHTML={{__html: `
+                .modal.fade.show{
+                    z-index: 99999;
+                }
+                .deleteIcon:hover{
+                    cursor:pointer;
+                    color: #bc4141;
+                }
+                .deleteIcon{
+                    transition:.3s;
+                }
                 .filterelem{
                     display:inline-block;
                     width:200px;
@@ -184,11 +220,14 @@ const AmazingTable = (props) => {
                     margin-bottom:10px;
                     margin-top:20px;
                 }
+                .itemsTable{
+                   
+                }
             `}}/>
         <table style={{fontSize:`calc(${contStyle} / 10) !important`,width: 'calc(100%)'}} class="tablesorter itemsTable table table-striped">
             <thead> 
                 <tr className="headerrowtable">
-                <th>{ global.__user.email==colItems[0].email && <input style={{marginRight:'5px'}} type="checkbox" name='checkAllItems'/> }Title <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th><input style={{display:(access==true)?'inline':'none',marginRight:'5px'}} type="checkbox"  name='checkAllItems'/>Title <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
                 <th>Description <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
                 <th>Image url <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
                 <th>Properties <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
@@ -202,7 +241,7 @@ const AmazingTable = (props) => {
                 colItems.map((colItem,ci)=>{
                    return global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItem.name && f.email==colItem.email)).map((k,i)=>{
                     return  <tr data-comments={k.comments && (JSON.parse(k.comments) instanceof Array)?JSON.parse(k.comments).length:0} data-tags={k.tags && (JSON.parse(k.tags) instanceof Array)?JSON.parse(k.tags).length:0} data-type={k.type}>
-                                <td>{global.__user.email==colItem.email && <input style={{marginRight:'5px'}} type="checkbox" name={`itemCheck${i}`}/>}<Link className="linkToUser" to={`/items/${k._id}`}>{k.name}</Link></td>
+                                <td>{access &&<input style={{marginRight:'5px'}} type="checkbox" data-type="chosenItem" name={k._id}/>}<Link className="linkToUser" to={`/items/${k._id}`}>{k.name}</Link></td>
                                 <td>{(k.description)?parseBeauty(k.description,'desc'):''}</td>
                                 <td>{(k.img)?parseBeauty(k.img,'img'):'No image'}</td>
                                 <td>{(k.add)?parseBeauty(k.add,'adds',k,ci):'No additional fields'}</td>
@@ -217,6 +256,7 @@ const AmazingTable = (props) => {
         </table>
         </div>
         </div>
+        <Modal user={user} owner={owner} deleteItems={delItems} title='Item deleting' target="itemDeleteModal" text={`Are you sure to delete (${delItems.items.length}) items?`}></Modal>
         </div>):<h2>Collection(s) have no elements!</h2>
 }
 

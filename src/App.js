@@ -113,7 +113,7 @@ class App extends Component {
             <Route exact path="/" >
               <div className='mane-page'>
                 {this.state.online2===true &&  <h2 style={{textAlign:'center',marginTop:'45px'}}>There is nowhere to go if your favorite thing in life is to collect something. Besides Grabby!</h2>}
-                <div style={{display:'flex',width:'100%'}}>
+                <div className="advancedFields">
                 {this.state.online2===true  &&  <div className="textField">
                       <TextField grabby={this.state.grabby}/>
                     </div>}

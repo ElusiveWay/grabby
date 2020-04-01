@@ -1,10 +1,55 @@
 import React,{Component} from 'react'
 import axios from 'axios'
+import makeMessage from './peref/mess'
+import * as $ from 'jquery'
 
 export default class Modal extends Component{
     constructor(props){
         super(props)
         this.modalAction = this.modalAction.bind(this)
+        this.deleteItems = this.deleteItems.bind(this)
+        this.deleteCollections = this.deleteCollections.bind(this)
+    }
+    deleteCollections(){
+        console.log('del')
+        const collections = this.props.deleteCollections
+        axios({
+            method: 'post',
+            url : '/deletecollections',
+            data: {
+                owner : JSON.stringify(this.props.owner),
+                user : JSON.stringify(this.props.user),
+                collections : JSON.stringify(collections)
+            }
+        }).then(r=>{
+            console.log(r)
+            if (r.data.resp=='ok'){
+                makeMessage()
+            }
+            else{
+                makeMessage('danger','Oops!', r.data.resp || 'Unknown error')
+            }
+        })
+    }
+    deleteItems(){
+        const itemsIds = this.props.deleteItems.items
+        axios({
+            method: 'post',
+            url : '/deleteitems',
+            data: {
+                owner : JSON.stringify(this.props.owner),
+                user : JSON.stringify(this.props.user),
+                items : JSON.stringify(itemsIds)
+            }
+        }).then(r=>{
+            if (r.data.resp=='ok'){
+                makeMessage()
+                global.document.querySelectorAll('[data-type="chosenItem"]').forEach(v=>v.checked = false)
+            }
+            else{
+                makeMessage('danger','Oops!', r.data.resp || 'Unknown error')
+            }
+        })
     }
     modalAction(){
         if(global.__user.email == global.__deleteCommentsData.comment.liker){
@@ -42,7 +87,7 @@ export default class Modal extends Component{
                     </div>
                     <div class="modal-footer">
                         <button type="button" style={{color:'white',backgroundColor:'#7ab0b4'}} class="btn" data-dismiss="modal">Close</button>
-                        <button type="button" style={{color:'white',backgroundColor:'#7e7ab4'}} onClick={this.modalAction} data-dismiss="modal" class="btn">Delete</button>
+                        <button type="button" style={{color:'white',backgroundColor:'#7e7ab4'}} onClick={(this.props.deleteItems)?this.deleteItems:(this.props.deleteCollections)?this.deleteCollections:this.modalAction} data-dismiss="modal" class="btn">Delete</button>
                     </div>
                     </div>
                 </div>

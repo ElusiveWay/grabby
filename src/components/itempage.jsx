@@ -9,7 +9,7 @@ import Modal from './modal'
 import Message from './peref/message'
 import ModalOk from './modalok'
 import CommentsForm from './inputs/comments-form'
- 
+import makeMessage from './peref/mess'
 
 
 
@@ -169,7 +169,7 @@ const ItemPage = (props) => {
                 .__ti_tle__{
                     float: right;
                     margin-right: 3vw;
-                    margin-top: 3vw;
+                    margin-top: 40px;
                     max-width: calc(45% - 5vw);
                     word-wrap: break-word;
                     height:auto;
@@ -353,15 +353,23 @@ const ItemPage = (props) => {
                     padding:.25em;
                     transition:.3s;
                 }
+                .modal.fade.show{
+                    z-index:9999999;
+                }
             `}}/>
             <MDBCard className="__cont_ainer_">
                 <img src={myItem.img}className="__ima_ge__"/>
-                <h1 className="__ti_tle__">{myItem.name} {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'#7e7ab4'}} to={{pathname:`/users/${author._id}/editi`,edititem:id}}><i style={{marginLeft:'10px'}}class="editBtn fas fa-tools"></i></Link>} </h1>
+                <h1 className="__ti_tle__">{myItem.name} 
+                    <span style={{top:'10px',right:'10px',position:'absolute'}}>
+                        {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'#7e7ab4'}} to={{pathname:`/users/${author._id}/editi`,edititem:id}}><i style={{verticalAlign:'top',fontSize:'.5em',marginLeft:'10px'}}className="editBtn fas fa-tools"></i></Link>} 
+                        {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<i data-target="#itemDeleteModal" data-toggle='modal' className="far editBtn fa-trash-alt" style={{verticalAlign:'top',fontSize:'.5em',marginLeft:'10px'}}></i>} 
+                    </span>
+                </h1>
                 <hr className="__h_r_"/>
                 {colItem && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">Go to the collection</MDBBtn></Link>}
             <MDBBtn onClick={clicker} className="__ico_nqa" color="" ><i className="fas fa-heart iconqa"></i> Likes :<span className="likes __darova_v1_">{likes.length}</span></MDBBtn>
                 <p className="__descr_iption">{myItem.description}</p>
-                <p className="__comm_ention">{tags.map(v=><div  data-target="#collPageModal" data-toggle="modal" onClick={tegclicker} className="teger">{v}</div>)}</p>  
+                <p style={{clear:'both'}} className="__comm_ention">{tags.map(v=><div  data-target="#collPageModal" data-toggle="modal" onClick={tegclicker} className="teger">{v}</div>)}</p>  
 
                 
 
@@ -384,6 +392,7 @@ const ItemPage = (props) => {
                 </div>
                 <p style={{visibility:'hidden'}}className="__ads_ads_ listed">FAKE P FOR MARGIN IN THE BOTTOM OF CARD</p>
             </MDBCard> 
+            {author && user && id && <Modal user={user} owner={author} deleteItems={{items:[id]}} title='Item deleting' target="itemDeleteModal" text={`Are you sure to delete this item?`}></Modal>}
             </div>
             
         ):(<h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>Loading...</h1>)

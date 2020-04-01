@@ -69,3 +69,21 @@ h1,h2,h3,h4,h5,h6{
     width:100%;
     background-color: transparent;
 }
+.advancedFields{
+    display:flex;
+    width:100%;
+}
+@media screen and (max-width: 769px){
+    .advancedFields{
+        flex-direction: column;
+    }  
+    .advancedFields .textField{
+        width: 100%;
+        transform-origin: center;
+        margin:auto;
+        max-width: 550px;
+    }
+    .advancedFields .carusel{
+        width:calc(100% - 6vw);
+    }
+}

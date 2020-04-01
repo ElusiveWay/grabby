@@ -29,7 +29,30 @@ const TextField = (props) => {
                 border-color: transparent !important;
                 color:black !important;
             }
-            
+            .mycarysel{
+                min-height:250px;
+            }
+            .textField-wrapper img{
+                max-width:50%;
+            }
+            @media screen and (max-width: 769px){
+                .textField-wrapper h1,
+                .textField-wrapper h2,
+                .textField-wrapper h3,
+                .textField-wrapper h4,
+                .textField-wrapper h5,
+                .textField-wrapper h6{
+                    text-align:center
+                }
+                .textField-wrapper img{
+                    width: auto;
+                    max-width:70%;
+                    clear: both;
+                    float:unset !important;
+                    display: block;
+                    margin: auto;
+                }
+            }
             `}}/>
             <ul style={{marginTop:'1%',marginLeft:'3%'}}className="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">

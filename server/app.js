@@ -137,6 +137,85 @@ app.post('/adminka', async (req,res)=>{
 
 })
 
+app.post('/deletecollections', async (req,res)=>{
+  const user = JSON.parse(req.body.user)
+  const owne = JSON.parse(req.body.owner)
+  const collectArr = JSON.parse(req.body.collections)
+  let owner
+  let access = false
+  let error = false 
+  if (error == true) return
+  await users.find({_id : user._id}).then(async r=>{
+      if(r.length!==0  && (r[0].isAdmin==true || r[0]._id == req.cookies.key)){
+        access = true
+        await users.find({_id : owne._id}).then(r=>{
+          if (r.length!==0) {owner = r[0]}
+          else { error=true;res.send({resp:'Owner not found'}) }
+        }).catch(e=>{error=true;res.send({resp:'Database error'})})
+      }
+  }).catch(e=>{error=true;res.send({resp:'Database error'})})
+  if (error == true) return
+  console.log(`access=${access}`)
+  if (access==true){
+    for (let i=0;i<collectArr.length;i++){
+    await collection.find({_id : collectArr[i]}).then(async r=>{
+      if (r.length>0){
+        console.log(`inside collection=${r[0]._id}`)
+        console.log(`item email=${r[0].email}`)
+        console.log(`owner email=${owner.email}`)
+        let collect = r[0]
+        if (collect.email===owner.email){
+          await items.deleteMany({email : collect.email, collect : collect.name},e=>e).catch(e=>{error=true;res.send('Unable to delete collection items')})
+          if (error == true) return
+          await collection.deleteOne({_id : collect._id},e=>e).catch(e=>e)
+        }
+      }
+    }).catch(e=>e)
+    }
+  }
+  else{
+    error=true;
+    res.send({resp:'You have no access'})
+  }
+  if (error == true) return
+  res.send({resp:'ok'})
+})
+app.post('/deleteitems', async (req,res)=>{
+  const user = JSON.parse(req.body.user)
+  const owne = JSON.parse(req.body.owner)
+  const itemArr = JSON.parse(req.body.items)
+  let owner
+  let access = false
+  await users.find({_id : user._id}).then(async r=>{
+      if(r.length!==0  && (r[0].isAdmin==true || r[0]._id == req.cookies.key)){
+        access = true
+        await users.find({_id : owne._id}).then(r=>{
+          if (r.length!==0) {owner = r[0]}
+          else { res.send({resp:'Owner not found'}) }
+        }).catch(e=>res.send({resp:'Database error'}))
+      }
+  }).catch(e=>res.send({resp:'Database error'}))
+  console.log(`access=${access}`)
+  if (access==true){
+    for (let i=0;i<itemArr.length;i++){
+    await items.find({_id : itemArr[i]}).then(async r=>{
+      if (r.length>0){
+        console.log(`inside item=${r[0]._id}`)
+        console.log(`item email=${r[0].email}`)
+        console.log(`owner email=${owner.email}`)
+        let item = r[0]
+        if (item.email===owner.email){
+          await items.deleteOne({_id : item._id},e=>e).catch(e=>e)
+        }
+      }
+    }).catch(e=>e)
+    }
+  }
+  else{
+    res.send({resp:'You have no access'})
+  }
+  res.send({resp:'ok'})
+})
 app.post('/sigvk', (req,res2)=>{
     request(req.body.url, function (err, res, data) {res2.send(data)});
 })
