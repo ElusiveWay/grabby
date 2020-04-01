@@ -29,8 +29,8 @@ import {
   Link
 } from "react-router-dom";
 
-const socket = io();
 
+const socket = io();
 global.__signed = []
 global.__user = {}
 global.__key = ''
@@ -100,6 +100,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <div dangerouslySetInnerHTML={{__html:CANVAS_INIT}}></div>
         <Router>
             <Mainbar grabby={this.state.grabby} user={this.state.user}></Mainbar>
             <div className="message-cont"></div>
@@ -145,3 +146,6 @@ class App extends Component {
   }
 }
 export default App;
+
+
+const CANVAS_INIT = `<div class="content content--canvas"><script>document.documentElement.className="js";var supportsCssVars=function(){var e,t=document.createElement("style");return t.innerHTML="root: { --tmp-var: bold; }",document.head.appendChild(t),e=!!(window.CSS&&window.CSS.supports&&window.CSS.supports("font-weight","var(--tmp-var)")),t.parentNode.removeChild(t),e};supportsCssVars()||console.log('unsupported')</script></div>`

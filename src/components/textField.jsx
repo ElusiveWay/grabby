@@ -14,6 +14,14 @@ const TextField = (props) => {
     return (
         <div style={{overflowY:'scroll', height: '100%'}} className="textField-wrapper">
             <style dangerouslySetInnerHTML={{__html:`
+            .bg-control-textfield{
+                width:100%;
+                height:100%;
+                top:0;
+                left:0;
+                position:absolute;
+                filter: blur(10px) grayscale(50%);
+            }
             .nav-tabs a.nav-link{
                 border-top-left-radius: unset;
                 border-top-right-radius: unset;

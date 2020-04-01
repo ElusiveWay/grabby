@@ -58,7 +58,7 @@ ShowProfile = () =>{
     return (
       <MDBNavItem>  
       <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
-        <MDBNavLink style={(this.state.user.id)} to="/profile">Profile</MDBNavLink>    
+        <Link className="linkerNav" style={(this.state.user.id)} to="/profile">Profile</Link>    
         </div>      
       </MDBNavItem> 
         ) 
@@ -67,10 +67,9 @@ ShowProfile = () =>{
 ShowLogout = () =>{
   if (this.state.user.isAdmin !== undefined){
     return (
-      <MDBNavItem >
-        
+      <MDBNavItem style={{margin:'auto 0'}}>
         <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
-          <MDBBtn style={{padding: '8px',margin:'0',lineHeight: '1.5',color:'white',boxShadow:'unset',width:'auto',height:'100%'}}color="transparent" onClick={this.Logout}><strong>Log out</strong></MDBBtn>  
+          <Link className="linkerNav" color="transparent" onClick={this.Logout}><strong>Log out</strong></Link>  
         </div>
       </MDBNavItem>
         ) 
@@ -131,7 +130,9 @@ ShowSignin = () =>{
   if (this.state.user.isAdmin === undefined){
     return (
       <MDBNavItem>
-      <MDBNavLink exact to="/signin">Sign</MDBNavLink>          
+      <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
+        <Link className="linkerNav" exact to="/signin">Sign</Link>       
+      </div>   
       </MDBNavItem>
         ) 
   }
@@ -153,6 +154,17 @@ componentWillUnmount(){
 render() {
   return (
       <MDBNavbar  id="mainGrabbyNavbar"style={{width:'100%',top:'0',zIndex:'10000',position:'fixed',backgroundColor: 'rgba(9, 56, 117, 0.54)'}}color="" dark expand="md">
+        <style dangerouslySetInnerHTML={{__html:`
+        .linkerNav{
+          padding:6px;
+          color:white;
+          display:block;
+        }
+        .linkerNav:hover{
+          color:lightgreen;
+        }
+        `}}
+        ></style>
         <MDBNavbarBrand>
           <strong className="white-text">Grabby</strong>
         </MDBNavbarBrand>
@@ -160,16 +172,16 @@ render() {
         <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
           <MDBNavbarNav left>
           <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
-            <MDBNavLink to="/">Main</MDBNavLink> 
+            <Link className="linkerNav" to="/">Main</Link>
           </div> 
            { this.ShowProfile() }
            { this.ShowSignin() }
           </MDBNavbarNav>
           <MDBNavbarNav right>
           {this.state.user.isAdmin &&
-          <MDBNavItem style={{marginRight:'30px'}}>  
+          <MDBNavItem style={{margin:'auto 0'}}>  
           <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
-              <MDBNavLink to="/admin"><strong>Admin panel</strong></MDBNavLink>    
+              <Link className="linkerNav" to="/admin"><strong>Admin panel</strong></Link>    
             </div>      
           </MDBNavItem>}
             <MDBNavItem>

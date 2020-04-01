@@ -1,4 +1,6 @@
 #root{
+    filter: invert();
+
     margin-top: 42px;
 	display: flex;
 	flex-direction: column;
