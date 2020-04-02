@@ -223,6 +223,21 @@ const AmazingTable = (props) => {
                 .itemsTable{
                    
                 }
+                @media all and (max-width:1021px){
+                    .formPageUserPage{
+                        padding: 30px 20px;
+                    }
+                    .table.table th:first-child, table.table td:first-child {
+                        width: 140px;
+                    }
+                    table.table th:nth-child(2) div:before, table.table td:nth-child(2) div:before,
+                    table.table th:nth-child(2):before, table.table td:nth-child(2):before{
+                        width:140px;
+                    }
+                    .table.table th, table.table td{
+                        font-size: 13.5px;
+                    }
+                }
                 @media all and (max-width:769px){
                     .filtrator > *{
                         width:100%;
@@ -239,7 +254,14 @@ const AmazingTable = (props) => {
                     table.table th:nth-child(2) div:before, table.table td:nth-child(2) div:before,
                     table.table th:nth-child(2):before, table.table td:nth-child(2):before{
                     width:120px;
-                }
+                    }
+                    .filterelem{
+                        margin-right: 0px !important;
+                    }
+                    i.deleteIcon{
+                        text-align: center;
+                        margin: 10px;
+                    }
                 }
             `}}/>
         <table style={{fontSize:`calc(${contStyle} / 10) !important`,width: 'calc(100%)'}} class="tablesorter itemsTable table table-striped">

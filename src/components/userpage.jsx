@@ -103,8 +103,8 @@ const UsersPages = (props) => {
                     `}}/>
                     <form className="formPageUserPage">
                             {(guser.isAdmin === true || guser._id === user._id) && <div className="microToolBar" style={{float:'right'}}>
-                            <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addc`}>Add collection</Link>
-                                <span style={{whiteSpace:'pre',color:'rgba(9, 56, 117, 0.65)',float:'right'}}>   | </span>
+                            <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addc`}>Add collection</Link>
+                                <span style={{whiteSpace:'pre',color:'rgba(9, 56, 117, 0.65)',float:'right'}}>  |  </span>
                             <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addi`}>Add item</Link>
                             </div>
                             }

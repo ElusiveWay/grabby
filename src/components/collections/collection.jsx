@@ -79,7 +79,7 @@ class Collection extends Component {
                     float: 'right',
                     color: 'white'
             
-                }} color=""><i className={(JSON.parse(this.props.likes).some(v=>v==global.__user.email))?"fas fa-heart iconqa":"far fa-heart iconqa"}></i> Likes :<span className="likes __darova_v1_">{JSON.parse(this.props.likes).length}</span></MDBBtn>
+                }} color=""><i className={(JSON.parse(this.props.likes).some(v=>v==global.__user.email))?"fas fa-heart iconqa":"far fa-heart iconqa"}></i><span style={{whiteSpace:'pre'}}> Likes : </span><span className="likes __darova_v1_">{JSON.parse(this.props.likes).length}</span></MDBBtn>
                 </MDBCardBody>
             </MDBCard> 
             </div>
