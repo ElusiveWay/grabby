@@ -1,6 +1,33 @@
 /* html{
     filter: invert();
 } */
+@keyframes logo {
+    0%{
+        color: #315a42;
+        text-shadow: 0px 0px 2px rgba(13, 85, 61, 0.582);
+        transform: translate(0px,0px);
+    }
+    25%{
+        color: #4a6688;
+        text-shadow: 5px 0px 5px rgba(13, 85, 61, 0.582);
+        transform: translate(-5px,0px);
+    }
+    50%{
+        color: #315a42;
+        text-shadow: 0px 0px 2px rgba(13, 85, 61, 0.582);
+        transform: translate(0px,0px);
+    }
+    75%{
+        color: #4a6688;
+        text-shadow: -5px 0px 5px rgba(13, 85, 61, 0.582);
+        transform: translate(5px,0px);
+    }
+    100%{
+        color: #315a42;
+        text-shadow: 0px 0px 2px rgba(13, 85, 61, 0.582);
+        transform: translate(0px,0px);
+    }
+}
 #root{
     padding-top: 42px;
 	display: flex;
@@ -9,7 +36,7 @@
     position: absolute;
     height: auto;
     width: 100%;
-    background-color:#fafffa;
+    background-color:transparent;
 }
 .App{
     background-color:transparent;
@@ -25,6 +52,7 @@ body,html{
     padding: 0px;
     font-family: 'Exo 2', sans-serif;
 }
+
 h1,h2,h3,h4,h5,h6{
     word-wrap: break-word;
 }
@@ -38,6 +66,10 @@ h1,h2,h3,h4,h5,h6{
     justify-content: space-around;
     align-items: center;
 }
+.mane-page{
+    max-width: 1200px;
+    margin:auto
+}
 .message-cont{
     z-index: 2;
     position: fixed;
@@ -48,7 +80,6 @@ h1,h2,h3,h4,h5,h6{
     transform-origin: left top;
     left:0;
     position: relative;
-    margin-top:3vw;
     margin-left: 3vw;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     padding:5px;
@@ -62,7 +93,6 @@ h1,h2,h3,h4,h5,h6{
     transform-origin: right top;
     transform: scale(0.94);
     color:black;
-    margin-top:3vw;
     margin-right: 3vw;
     right:0;
     position: relative;
@@ -76,7 +106,49 @@ h1,h2,h3,h4,h5,h6{
     display:flex;
     width:100%;
 }
+.headerImg{
+    position: relative;
+    left:50%;
+    transform: translateX(-50%);
+}
+.logoH1.dva{
+    display: none;
+}
+.logoH1{
+    font-family: "Indie Flower", cursive;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 800px;
+    cursor: pointer;
+    transition: .5s;
+    color: #4a6688;
+    position: relative;
+}
+.logoH1::selection{
+    background-color: transparent;
+}
+.wrapperDiv{
+    z-index: -1;
+    width:100%;
+    height: 100%;
+    top:0;
+    left:0;
+    filter: blur(5px) opacity(.1);
+    position: absolute;
+    background-repeat: repeat;
+    background-image: url(http://res.cloudinary.com/dete2z5hu/image/upload/v1585868111/file_estpve.jpg);
+}
+.table{
+    background-color:white;
+    border: 1px solid #eee;
+}
 @media screen and (max-width: 769px){
+    .logoH1{
+        display: none;
+    }
+    .logoH1.dva{
+        display: block;
+    }
     .advancedFields{
         flex-direction: column;
     }  

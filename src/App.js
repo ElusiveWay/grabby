@@ -100,6 +100,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <div className="wrapperDiv"/>
         <div dangerouslySetInnerHTML={{__html:CANVAS_INIT}}></div>
         <Router>
             <Mainbar grabby={this.state.grabby} user={this.state.user}></Mainbar>
@@ -113,15 +114,19 @@ class App extends Component {
             </Route>
             <Route exact path="/" >
               <div className='mane-page'>
-                {this.state.online2===true &&  <h2 style={{textAlign:'center',marginTop:'45px'}}>There is nowhere to go if your favorite thing in life is to collect something. Besides Grabby!</h2>}
-                <div className="advancedFields">
-                {this.state.online2===true  &&  <div className="textField">
-                      <TextField grabby={this.state.grabby}/>
-                    </div>}
-                  <div className="carusel">
-                    <Carusel/>
-                  </div>
+                {this.state.online2===true  && <div style={{position:'relative'}}>
+                  <h1 className="logoH1">If you were looking for a place where you can collect anything you want, then you already came to</h1>
+                  <h1 className="logoH1 dva">Welcome to the Grabby!<br/> It's collections time!</h1>
+                    <div className="advancedFields">
+                      <div className="textField">
+                          <TextField grabby={this.state.grabby}/>
+                        </div>
+                      <div className="carusel">
+                        <Carusel/>
+                      </div>
+                    </div>
                 </div>
+                }
                   <TegCloud/>
                   <Collections />
               </div>

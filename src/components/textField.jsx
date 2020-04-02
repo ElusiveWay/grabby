@@ -6,7 +6,18 @@ const TextField = (props) => {
     const {grabby} = props
     useEffect(()=>{
         let raf = () => {
-            try{if(document.getElementsByClassName('textField').length && document.getElementsByClassName('mycarysel').length)document.getElementsByClassName('textField')[0].style.height = `calc(${window.getComputedStyle(document.getElementsByClassName('mycarysel')[0]).height})`}catch(e){}
+            try{
+                if(document.getElementsByClassName('textField').length && document.getElementsByClassName('mycarysel').length){
+                    if(global.document.body.offsetWidth > 769){
+                        document.getElementsByClassName('textField')[0].style.height = `calc(${window.getComputedStyle(document.getElementsByClassName('mycarysel')[0]).height})`
+                        document.getElementsByClassName('textField-wrapper')[0].style.overflowY = 'scroll'
+                    }
+                    else{
+                        document.getElementsByClassName('textField')[0].style.height = `auto`
+                        document.getElementsByClassName('textField-wrapper')[0].style.overflowY = 'visible'
+                    }
+                }
+            }catch(e){}
             requestAnimationFrame(raf)
         }
         requestAnimationFrame(raf)

@@ -117,7 +117,7 @@ const UsersPages = (props) => {
                         </div>
                         <h1 style={{marginBottom:'15px',color:'#747373',paddingBottom:'5px',display:'inline-block',borderBottom:'1px solid #74737333'}}>Items:</h1>
                         <div className='__cont_ainer_'>
-                            <AmazingTable owner={user} user={guser} color="#fafffa" id={colls.map(v=>v._id)}/>
+                            <AmazingTable owner={user} user={guser} color="white" id={colls.map(v=>v._id)}/>
                         </div> 
                         
                     </form>
