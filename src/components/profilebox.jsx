@@ -1,5 +1,6 @@
 import React,{Component} from 'react'
 import ReactDOM from 'react-dom'
+import * as $ from 'jquery'
 
 class ProfileBox extends Component {
     constructor(props){
@@ -72,13 +73,6 @@ class ProfileBox extends Component {
                     
                 }
                 .profile-span{
-                    left:50%;
-                    width: 90%;
-                    top:50%;
-                    line-height: 32px;
-                    overflow: hidden;
-                    text-align:right;
-                    transform:translate(-50%,-50%);
                     word-wrap:break-word;
                     overflow:hidden;
                     white-space: pre;
@@ -92,8 +86,80 @@ class ProfileBox extends Component {
                     max-width: 250px;
                     margin:auto;
                 }
+                .profileSet{
+                    display:none;
+                }
+                @media all and (max-width:769px){
+                    .prof_ile__contain{
+                        cursor:pointer;
+                        z-index: 5;
+                        transition:.5s;
+                        flex-wrap:nowrap;
+                        justify-content:start;
+                        align-items:flex-start;
+                        margin-top: 17px;
+                        padding-left: 0px;
+                        width: auto;
+                        max-width: 100%;
+                        border-bottom-right-radius: 25px;
+                        border-top-right-radius: 25px;
+                        background-color: #e3f7e33d;
+                        box-shadow: 0 0 5px #0004;
+                        color:white;
+                    }
+                    .profile-photo{
+                        order:2;
+                        margin:  0 auto;
+                        top:0;
+                        cursor:pointer;
+                        height: 50px;
+                        border-bottom: 1px solid #00000033;
+                        width: 50px;
+                    }
+                    .profile-textTable{
+                        height:50px;
+                        padding: 0;
+                        width:0px;
+                        max-width:100vw;
+                        min-width:0;
+                        width: 0px;
+                        overflow: hidden;
+                        transition:.3s;
+                    }
+                    .prof_ile__contain.activirovan{
+                        background-color:#91be91;
+                    }
+                    .prof_ile__contain.activirovan .profile-textTable{
+                        width:200px;
+                    }
+                    .prof_ile__contain.activirovan .profileSet{
+                        width:30px;
+                    }
+                    .profile-likes,
+                    .profile-online,
+                    .profile-status,
+                    .profile-views{
+                        display: none;
+                    }
+                    .profile-textElem.profile-name{
+                        margin:0;
+                        border:unset;
+                        max-width:100vw;
+                    }
+                    .profileSet{
+                        padding-left:12px;
+                        margin:auto;
+                        display: inline;
+                        width:0px;
+                    }
+                    .profileSet:hover{
+                        color:#5d7da3;
+                        cursor:pointer;
+                    }
+                }
                 `}}/>
-                <div className="profile-photo"></div>
+                <div onClick={()=>$('.prof_ile__contain').toggleClass('activirovan')} className="profile-photo"></div>
+                <i  class="profileSet fas fa-cog"></i>
                 <div className="profile-textTable">
                     <div className="profile-textElem profile-name"><span>{(this.state.data)?this.state.data.name:''}</span></div>
                     <div className="profile-textElem profile-likes"><span >{(this.state.data)?this.state.data.likes:''}</span></div>

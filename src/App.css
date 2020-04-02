@@ -1,6 +1,6 @@
-html{
-    /* filter: invert(); */
-}
+/* html{
+    filter: invert();
+} */
 #root{
     padding-top: 42px;
 	display: flex;

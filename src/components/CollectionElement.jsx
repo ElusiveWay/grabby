@@ -10,18 +10,24 @@ class Collection extends React.Component{
         
              return ( 
                  
-                <Link style={{color:'black'}} to={`/collections/${this.props.data2}`}><div className="cardOfCollections card mb-3" style={{cursor:'pointer',width: "100%"}}>
+                <Link style={{color:'black'}} to={`/collections/${this.props.data2}`}><div className="cardOfCollections card mb-3" style={{cursor:'pointer',height:'100%',width: "100%"}}>
                         <style dangerouslySetInnerHTML={{__html: `
+                        .cardOfCollections.card{
+                            margin:0 !important;
+                        }
                         .cardOfCollections{
                             justifyContent:center;
                             display:flex;
                             transition: .3s;
-                            margin-top:20px;
+                            margin:0;
                         }
                         .cardOfCollections:hover{
                             box-shadow: 0 0 15px #3d495a;
                         }
                         .card .card-body.newrevis{
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
                             box-sizing: border-box;
                             transform: scale(0.95);
                             background-color: #fff8;

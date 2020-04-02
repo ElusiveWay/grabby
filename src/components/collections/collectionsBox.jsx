@@ -76,6 +76,9 @@ class Collections extends Component {
     }
 }
 const COMPONENT_STYLE=`
+.collElemWrapper{
+  min-height:200px;
+}
 .container__collboxes:{
       width: 100%;
       height: 100%;

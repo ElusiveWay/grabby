@@ -223,6 +223,24 @@ const AmazingTable = (props) => {
                 .itemsTable{
                    
                 }
+                @media all and (max-width:769px){
+                    .filtrator > *{
+                        width:100%;
+                    }
+                    .filtrator{
+                        flex-direction:column;
+                    }
+                    .table.table th, table.table td{
+                        font-size: 12px;
+                    }
+                    .table.table th:first-child, table.table td:first-child {
+                        width: 120px;
+                    }
+                    table.table th:nth-child(2) div:before, table.table td:nth-child(2) div:before,
+                    table.table th:nth-child(2):before, table.table td:nth-child(2):before{
+                    width:120px;
+                }
+                }
             `}}/>
         <table style={{fontSize:`calc(${contStyle} / 10) !important`,width: 'calc(100%)'}} class="tablesorter itemsTable table table-striped">
             <thead> 
