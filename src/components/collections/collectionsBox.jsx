@@ -83,13 +83,13 @@ const COMPONENT_STYLE=`
       padding: 0 20px;
       max-height: auto;
     }
-    @media screen and (max-width: 500px){
+    @media screen and (max-width: 640px){
       .container__collboxes:{
         padding: 0;
       }
       .container__collboxes .__freeColumn_v1_{
         width:unset !important;
-        max-width:400px;
+        max-width:450px;
       }
       
     }

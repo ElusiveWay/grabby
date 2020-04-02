@@ -153,7 +153,7 @@ componentWillUnmount(){
 }
 render() {
   return (
-      <MDBNavbar  id="mainGrabbyNavbar"style={{width:'100%',top:'0',zIndex:'10000',position:'fixed',backgroundColor: 'rgba(9, 56, 117, 0.54)'}}color="" dark expand="md">
+      <MDBNavbar  id="mainGrabbyNavbar"style={{width:'100%',top:'0',zIndex:'10000',position:'fixed',backgroundColor: 'rgba(9, 56, 117, 0.65)'}}color="" dark expand="md">
         <style dangerouslySetInnerHTML={{__html:`
         .linkerNav{
           padding:6px;

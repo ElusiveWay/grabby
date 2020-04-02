@@ -16,7 +16,7 @@ state = {
 };
 render() {
   return (  
-      <MDBNavbar  style={{zIndex: '-1',position:'absolute',width:'100%',top:'100%',backgroundColor: 'rgba(9, 56, 117, 0.54)'}}color="" dark expand="md">
+      <MDBNavbar  style={{zIndex: '-1',position:'absolute',width:'100%',top:'100%',backgroundColor: 'rgba(9, 56, 117, 0.65)'}}color="" dark expand="md">
         <MDBNavbarToggler onClick={this.toggleCollapse} />
         <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
           <MDBNavbarNav left>
