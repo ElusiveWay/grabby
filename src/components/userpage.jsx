@@ -25,15 +25,6 @@ const UsersPages = (props) => {
                 status : 'Its hard to find me, easy to lose and impossible to forget. '
     })
 
-    let formPage = {
-        width:'66%',
-        marginLeft: '32%',
-        padding: '30px 50px',
-        marginTop: '20px',
-        minHeight: '600px',
-        borderLeft: '1px solid rgba(219, 219, 219, 1)',
-    }
-
     useEffect(() => {
         const interval = setInterval(() => {
             
@@ -57,13 +48,39 @@ const UsersPages = (props) => {
                 <img src='' onError={()=>window.scrollTo(0,0)}/>
                 <ProfileBox data={profileData}></ProfileBox>
                 <section className="sectionsPage">
-                    <form style={formPage}>
+                    <style dangerouslySetInnerHTML={{__html:`
+                        .formPageUserPage{
+                            width: calc(100% - (300px + 0vw));
+                            margin-left: calc(300px + 0vw);
+                            padding: 30px 50px;
+                            margin-top: 20px;
+                            min-height: 600px;
+                            border-left: 1px solid rgba(219, 219, 219, 1);
+                        }
+                        .collectionsBox{
+                            display: flex;
+                             flex-wrap:wrap;
+                             flex-direction:row-reverse;
+                        }
+                        .collElemWrapper{
+
+                        }
+                        @media screen and (min-width: 1250px){
+                            .collectionsBox{
+                                 justify-content:space-between;
+                            }
+                            .collElemWrapper{
+                                width:47.5%;
+                            }
+                        }
+                    `}}/>
+                    <form className="formPageUserPage">
                         {(guser.isAdmin === true || guser._id === user._id) && <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addc`}>Add collection</Link>}
                         {(guser.isAdmin === true || guser._id === user._id) && <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addi`}>Add item|</Link>}
                         <h1 style={{marginBottom:'15px',color:'#747373',paddingBottom:'5px',display:'inline-block',borderBottom:'1px solid #74737333'}}>Collections:</h1>
-                        <div style={{display: 'flex', flexWrap:'nowrap',flexDirection:'column-reverse'}}className="collectionsBox">
+                        <div className="collectionsBox">
                             {colls.map((v,i,a)=>{
-                                return (<Collection data2={v._id} iterator={i} data={colls[i]} />)
+                                return (<div className='collElemWrapper'><Collection data2={v._id} iterator={i} data={colls[i]} /></div>)
                             })}
                             {colls.length==0 && <h2 style={{marginBottom:'50px'}}>User has not added collections yet.</h2>}
                         </div>

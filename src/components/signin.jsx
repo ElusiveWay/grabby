@@ -23,8 +23,8 @@ class Signin extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.subme = this.subme.bind(this);
   }
-  urla = `https://oauth.vk.com/authorize?client_id=7356046&display=page&scope=4&redirect_uri=http://localhost:3000/signin/vk&scope=photos&response_type=code&v=5.52`
-  urlb = "https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:3000/signin/goo/&response_type=code&client_id=645970962185-vsd8i9vo1qlmlmjhc386p04onmmmvm5v.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile"
+  urla = `https://oauth.vk.com/authorize?client_id=7356046&display=page&scope=4&redirect_uri=http://${window.location.host}/signin/vk&scope=photos&response_type=code&v=5.52`
+  urlb = `https://accounts.google.com/o/oauth2/auth?redirect_uri=http://${window.location.host}/signin/goo/&response_type=code&client_id=645970962185-vsd8i9vo1qlmlmjhc386p04onmmmvm5v.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile`
   subme = (e) => {
     e.preventDefault()
     if (global.__canAjax == true){
@@ -91,7 +91,7 @@ class Signin extends Component {
     let codeid = window.location.href.indexOf('?code=')
     if (codeid!=-1 && (window.location.pathname=="/signin/vk/" || window.location.pathname=="/signin/vk")){
       global.__codevk = window.location.href.slice(codeid+6)
-      global.__urla = `https://oauth.vk.com/access_token?client_id=7356046&client_secret=RkjosevOktcKtd6vRXNN&redirect_uri=http://localhost:3000/signin/vk&code=${global.__codevk}`
+      global.__urla = `https://oauth.vk.com/access_token?client_id=7356046&client_secret=RkjosevOktcKtd6vRXNN&redirect_uri=http://${window.location.host}/signin/vk&code=${global.__codevk}`
       if (global.__canAjax == true){
         global.__canAjax = false
         setTimeout(()=>{global.__canAjax = true},500)
@@ -110,7 +110,7 @@ class Signin extends Component {
     }
     if (codeid!=-1 && (window.location.pathname=="/signin/goo/" || window.location.pathname=="/signin/goo")){
       global.__codegoo = window.location.href.slice(codeid+6,window.location.href.indexOf('&'))
-      global.__urlgoo = `https://accounts.google.com/o/oauth2/token?code=${global.__codegoo}&client_id=645970962185-vsd8i9vo1qlmlmjhc386p04onmmmvm5v.apps.googleusercontent.com&client_secret=qHI-nVfKOJ2gerY0Lxa6zBfS&redirect_uri=http://localhost:3000/signin/goo/&grant_type=authorization_code`
+      global.__urlgoo = `https://accounts.google.com/o/oauth2/token?code=${global.__codegoo}&client_id=645970962185-vsd8i9vo1qlmlmjhc386p04onmmmvm5v.apps.googleusercontent.com&client_secret=qHI-nVfKOJ2gerY0Lxa6zBfS&redirect_uri=http://${window.location.host}/signin/goo/&grant_type=authorization_code`
       if (global.__canAjax == true){
         global.__canAjax = false
         setTimeout(()=>{global.__canAjax = true},500)
