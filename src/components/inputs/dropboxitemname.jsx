@@ -40,7 +40,7 @@ changeState(obj){
 }
 render() {
     return (
-      <MDBContainer style={this.props.style}>
+      <MDBContainer className={this.props.className} style={this.props.style}>
         <MDBInputGroup
           className={(this.props.class!==undefined)?`${this.props.class} disabledInput`:"disabledInput"}
           id = {this.aidi}

@@ -143,7 +143,7 @@ const AdminPage = (props) => {
                         </div>
                     </div>
                     <table class="adminTable table table-striped">
-                    <caption style={{captionSide: 'top'}}>Users: <span style={{fontSize:'.8em',opacity:'.5',color:'green'}}>regular,</span> <span style={{fontSize:'.8em',opacity:'.5',color:'red'}}>from Google,</span> <span style={{fontSize:'.8em',opacity:'.5',color:'blue'}}>from Vk</span></caption>
+                    <caption style={{captionSide: 'top'}}>Users: </caption>
                     <thead> 
                         <tr>
                             <th style={{width:'25%'}}><input style={{marginRight:'5px'}} onClick={(e)=>$('[data-name=user-check]').prop({'checked':e.target.checked})}type="checkbox" name='checkAllItems'/>Email</th>
@@ -158,12 +158,12 @@ const AdminPage = (props) => {
                     <tbody>
                         { grabby && grabby.users && grabby.users.length!==0 &&
                         grabby.users.map((v,i)=>{
-                            const locemail = (v.email.indexOf('@')==-1)?<Link style={{color:'blue'}} to={`/users/${v._id}`}> {`vk.com/id${v.email}`} </Link>:(v.email.indexOf('start.g00.c0m:')===0)?<span ><Link style={{color:'red'}} to={`/users/${v._id}`}>{v.email.substring(14,v.email.indexOf(':g00.c0m.end'))}</Link></span>:<span ><Link style={{color : 'green'}} to={`/users/${v._id}`}>{v.email}</Link></span>
+                            const locemail = (v.email.indexOf('@')==-1)?<Link style={{color:'#7a93b4'}} to={`/users/${v._id}`}> {`vk.com/id${v.email}`} </Link>:(v.email.indexOf('start.g00.c0m:')===0)?<span ><Link style={{color:'#a56565'}} to={`/users/${v._id}`}>{v.email.substring(14,v.email.indexOf(':g00.c0m.end'))}</Link></span>:<span ><Link style={{}} to={`/users/${v._id}`}>{v.email}</Link></span>
                             return  <tr>
                                         <td ><input style={{marginRight:'5px'}}  type="checkbox"  data-name="user-check" name={v._id}/>{locemail}</td>
                                         <td title={(v.email.indexOf('@')==-1)?`Vk account : vk.com/id${v.email}`:(v.email.indexOf('start.g00.c0m:')!==-1)?'Google account: '+v.email.substring(14,v.email.indexOf(':g00.c0m.end')):v.email} data-toggle="tooltip">{v.name}</td>
-                                        <td> {(v.isAdmin==false)?v.isAdmin.toString():<span style={{color:'blue'}}>{v.isAdmin.toString()}</span>}</td>
-                                        <td> {(v.isBlocked==false)?v.isBlocked.toString():<span style={{color:'red'}}>{v.isBlocked.toString()}</span>}</td>
+                                        <td> {(v.isAdmin==false)?v.isAdmin.toString():<span style={{color:'#7a93b4'}}>{v.isAdmin.toString()}</span>}</td>
+                                        <td> {(v.isBlocked==false)?v.isBlocked.toString():<span style={{color:'#a56565'}}>{v.isBlocked.toString()}</span>}</td>
                                         <td> {(grabby)?grabby.collections.filter(q=>q.email==v.email).length:''}</td>
                                         <td> {(grabby)?grabby.items.filter(q=>q.email==v.email).length:''}</td>
                                         <td data-toggle="tooltip" title={v.status}> {v.status}</td>

@@ -45,7 +45,7 @@ class ItemCreator extends React.Component {
                 zIndex:'0',
                 margin:'0px 70% 50px',
                 display:'block',
-                width:'20%',
+                width:'100px',
                 color:'white',
                 backgroundColor:'#7ab0b4'
             },
@@ -84,9 +84,7 @@ class ItemCreator extends React.Component {
                 width:'100%',
                 boxSizing: 'content-box',
                 backgroundColor: '#fafffa',
-                //margin: '30px auto',
                 minHeight: '500px',
-                //boxShadow :  '0 0 15px #aaa'
             },
             file:{
                 display: 'inline-block',
@@ -375,8 +373,13 @@ changeItemType(){
 render(){
     
     return (
-         <div style={this.style.container}>
+         <div className="createItemContainer">
              <style dangerouslySetInnerHTML={{__html: `
+                    .createItemContainer{
+                        width: 100%;
+                        box-sizing: content-box;
+                        min-height: 500px;
+                    }
                     .teg { 
                         background: #7ab0b4; 
                         width: auto;
@@ -409,23 +412,93 @@ render(){
                         color:white;
                         box-shadow: 0 0 5px #00000099;
                     }
+                    .formCreateItem{
+                        width: calc(100% - (300px + 0vw));
+                        margin-left: calc(300px + 0vw);
+                        padding: 30px 50px;
+                        margin-top: 20px;
+                        min-height: 600px;
+                        border-left: 1px solid rgba(219, 219, 219, 1);
+                    }
+                    .createItem-h1{
+                        marginBottom:50px;
+                        color: rgb(135, 134, 197);
+                    }
+                    .createItem-link{
+                        position: absolute;
+                        top: 100px;
+                        font-size:1em;
+                        right: 20px;
+                        color: rgb(135, 134, 197);
+                        float: right;
+                    }
+                    .createItem-db2{
+                        display: inline-block;
+                        margin: 10px;
+                        transform: translateY(0px);
+                        padding: unset;
+                        width: calc(50% - 20px);
+                        z-index: 3;
+                    }
+                    .createItem-dbtitle{
+                        margin-bottom: 30px;
+                        display: inline-block;
+                        text-align: center;
+                        width: 50%;
+                    }
+                    @media screen and (max-width: 1000px){
+                        .createItem-db2{
+                            display: block;
+                            margin: auto;
+                            transform: translateY(0px);
+                            padding: unset;
+                            width: calc(100% - 20px);
+                            z-index: 3;
+                        }
+                        .createItem-dbtitle{
+                            width:100%;
+                        }
+                    }
+                    @media screen and (max-width: 769px){
+                        .formCreateItem {
+                            width: 100%;
+                            padding:10px;
+                            margin-left: 0;
+                            margin-top:65px;
+                        }
+                        .createItem-h1{
+                            marginBottom:0px;
+                            font-size:8vw;
+                            text-align:center;
+                        }
+                        .createItem-link{
+                            position: absolute;
+                            top: 100px;
+                            font-size:.8em;
+                            right: 20px;
+                            color: rgb(135, 134, 197);
+                            float: right;
+                        }
+                    }
                 
             `}}/>
              <ProfileBox data={this.props.ProfileData} />
             { this.props.sub === 'addc' && (this.props.user._id === this.props.id || this.props.user.isAdmin === true) &&
              <section style={this.style.section} className="addCollectSect">
-                <form onSubmit={this.subFormColl} style={this.style.formColl}>
-                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${this.props.id}`}>Back</Link>
-                    <h1 style={this.style.h1}>Add new Collection</h1>
-                    <Text name="col_name" required nm="Name of collection*" />
-                    <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
-                    <ImageUpload func={this.returnMeVar.bind(this)} name="col_img" />
-                    <Text name="col_comment" nm="Author comment" />
-                    <span style={{marginBottom:'30px',display:'inline-block',textAlign:'center',width:'50%'}}>Choose collection type:</span>
-                    <DropboxInput name="col_type" disabled arr={this.state.types}  named='Collection type' style={this.style.dropboxinp2} />
-                    <DropdownBtn name="col_adds" color=""/>
-                    <hr style={this.style.hr}/>
-                    <MDBBtn style={this.style.submit}color="" type="submit">OK</MDBBtn>
+                <form onSubmit={this.subFormColl} className="formCreateItem" >
+                    <div className='createitem-reducer'>
+                        <Link className="createItem-link" to={`/users/${this.props.id}`}>Back</Link>
+                        <h1 className="createItem-h1">Add new Collection</h1>
+                        <Text name="col_name" required nm="Name of collection*" />
+                        <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
+                        <ImageUpload func={this.returnMeVar.bind(this)} name="col_img" />
+                        <Text name="col_comment" nm="Author comment" />
+                        <span className="createItem-dbtitle">Choose collection type:</span>
+                        <DropboxInput name="col_type" disabled arr={this.state.types}  named='Collection type' className="createItem-db2"/>
+                        <DropdownBtn name="col_adds" color=""/>
+                        <hr style={this.style.hr}/>
+                        <MDBBtn style={this.style.submit}color="" type="submit">OK</MDBBtn>
+                    </div>
                 </form>
              </section>
             }

@@ -36,17 +36,6 @@ class ImageUpload extends React.Component {
       position: 'absolute',
       color: 'transparent'
   }
-  styleCont = {
-    height: '300px',
-    width: 'calc(50% - 50px)',
-    marginLeft:'30px',
-    backgroundImage : `transparent`,
-    position: 'relative',
-    background: 'white',
-    border: '1px solid #ced4da',
-    borderRadius: ".25rem",
-    display: 'inline-block'
-  }
   prew = {
     height: '100%',
     width: '100%',
@@ -68,7 +57,29 @@ class ImageUpload extends React.Component {
     let {imagePreviewUrl} = this.state;
 
     return (
-      <div style={this.styleCont} className="previewComponent">
+      <div  className="previewComponent upploadImageCont">
+          <style dangerouslySetInnerHTML={{__html:`
+          .upploadImageCont{
+            height:300px;
+            width: calc(50% - 50px);
+            margin-left:30px;
+            background-image : transparent;
+            position: relative;
+            background: white;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            display: inline-block;
+        }
+        @media screen and (max-width: 1000px){
+            .upploadImageCont{
+                height:200px;
+                width: calc(100% - 20px);
+                margin-left:0px;
+                margin: auto;
+                display: block;
+            }
+        }
+          `}}></style>
           <div className="input-group-prepend">
                 <span style={this.text} class="input-group-text" id="basic-addon">Click or drop an image to the area to add one</span>
           </div>

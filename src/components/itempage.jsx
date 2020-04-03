@@ -153,16 +153,18 @@ const ItemPage = (props) => {
                     width: ${width}vw;
                     float:left;
                     max-width: 1020px;
-                    left: 50%;
-                    margin:2vw 0;
-                    transform: translateX(-50%);
+                    margin:2vw auto;
                     height: auto;
+                }
+                .__ima_ge__.dva{
+                    display:none;
                 }
                 .__ima_ge__{
                     display:block;
                     float: left;
                     margin: 3vw 3vw 1vw  3vw;
                     width: 40%;
+                    max-width: 100%;
                     height: auto;
                     background-color: #eee;
                 }
@@ -356,6 +358,58 @@ const ItemPage = (props) => {
                 .modal.fade.show{
                     z-index:9999999;
                 }
+
+                @media screen and (max-width: 1021px){
+                    .__cont_ainer_{
+                        width: 100%;
+                        max-width: 1020px;
+                        margin:2vw 2vw;
+
+                    }
+                }
+                @media all and (max-width:769px){
+                    .__ti_tle__{
+                        float: unset;
+                        margin: 40px auto 20px;
+                        text-align: center;
+                        max-width: 100%;
+                    }
+                    img.__ima_ge__{
+                        display:none;
+                    }
+                    .__ima_ge__.dva {
+                        width: 100%;
+                        float: unset;
+                        max-width:400px;
+                        clear: both;
+                        margin: auto;
+                        display:block;
+                    }
+                    .card > a {
+                        margin: 0;
+                    }
+                    .card  .__ico_nqa,
+                    .card  .__ico_nqa.v2{
+                        width:90%;
+                        margin-left:5%;
+                        float:unset;
+                        max-width: 100%;
+                    }
+                    .card > .__h_r_{
+                        width:70%;
+                        float:unset;
+                        margin: 34px 15% 20px 15%;
+                    }
+                    .comments-wrapper{
+                        width: 100%;
+                        max-width: 400px;
+                    }
+                    .left h5 .deleteIcon,
+                    .right h5 .deleteIcon{
+                        right:unset;
+                        left:unset;
+                    }
+                }
             `}}/>
             <MDBCard className="__cont_ainer_">
                 <img src={myItem.img}className="__ima_ge__"/>
@@ -365,6 +419,7 @@ const ItemPage = (props) => {
                         {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<i data-target="#itemDeleteModal" data-toggle='modal' className="far editBtn fa-trash-alt" style={{verticalAlign:'top',fontSize:'.5em',marginLeft:'10px'}}></i>} 
                     </span>
                 </h1>
+                <img src={myItem.img} className="__ima_ge__ dva"/>
                 <hr className="__h_r_"/>
                 {colItem && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">Go to the collection</MDBBtn></Link>}
             <MDBBtn onClick={clicker} className="__ico_nqa" color="" ><i className="fas fa-heart iconqa"></i> Likes :<span className="likes __darova_v1_">{likes.length}</span></MDBBtn>

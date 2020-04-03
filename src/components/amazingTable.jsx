@@ -203,6 +203,8 @@ const AmazingTable = (props) => {
                     border-right:1px solid #dee2e6;
                     background: ${props.color || 'white'};
                     width:190px;
+                    border-left: 1px solid #dee2e6;
+                    margin-left: -1px;
                 }
                 table.table tbody tr:nth-child(odd) th:first-child, table.table tbody tr:nth-child(odd) td:first-child{
                     background: #f2f2f2;
@@ -250,6 +252,7 @@ const AmazingTable = (props) => {
                     }
                     .table.table th:first-child, table.table td:first-child {
                         width: 120px;
+
                     }
                     table.table th:nth-child(2) div:before, table.table td:nth-child(2) div:before,
                     table.table th:nth-child(2):before, table.table td:nth-child(2):before{

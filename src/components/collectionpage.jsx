@@ -64,6 +64,7 @@ const CollectionPage = (props) => {
                 .__ima_ge__{
                     display:block;
                     float: left;
+                    max-width: 100%;
                     margin: 3vw 3vw 1vw  3vw;
                     width: 40%;
                     height: auto;
@@ -159,15 +160,59 @@ const CollectionPage = (props) => {
                     padding:.25em;
                     transition:.3s;
                 }
+                .__ima_ge__.dva{
+                    display:none;
+                }
+                @media screen and (max-width: 1021px){
+                    .__cont_ainer_{
+                        width: 100%;
+                        max-width: 1020px;
+                        margin:2vw 2vw;
+
+                    }
+                }
+                @media all and (max-width:769px){
+                    .__ti_tle__{
+                        float: unset;
+                        margin: 20px auto;
+                        text-align: center;
+                        max-width: 100%;
+                    }
+                    img.__ima_ge__{
+                        display:none;
+                    }
+                    .__ima_ge__.dva {
+                        width: auto;
+                        float: unset;
+                        clear: both;
+                        margin: auto;
+                        display:block
+                    }
+                    .card > a {
+                        margin: 0;
+                    }
+                    .card  .__ico_nqa.v2{
+                        width:90%;
+                        margin-left:5%;
+                        float:unset;
+                        max-width: 100%;
+                    }
+                    .card > .__h_r_{
+                        width:70%;
+                        float:unset;
+                        margin: 34px 15% 20px 15%;
+                    }
+                }
             `}}/>
             <MDBCard className="__cont_ainer_">
                 <img src={colItem.img}className="__ima_ge__"/>
-            <h1 className="__ti_tle__">{colItem.name} 
+                <h1 className="__ti_tle__">{colItem.name} 
                 <span style={{top:'10px',right:'10px',position:'absolute'}}>
                     {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'#7e7ab4'}} to={{pathname:`/users/${author._id}/editc`,editcol:id}}><i style={{verticalAlign:'top',fontSize:'.5em',marginLeft:'10px'}}class="editBtn fas fa-tools"></i></Link>}
                     {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<i data-target="#collectDeleteModal" data-toggle='modal' className="far editBtn fa-trash-alt" style={{verticalAlign:'top',fontSize:'.5em',marginLeft:'10px'}}></i>} 
                 </span>
             </h1>
+                <img src={colItem.img}className="__ima_ge__ dva"/>
                 {(colItem.img!=='') && <hr className="__h_r_"/>}
                 {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'white'}}to={{pathname:`/users/${author._id}/addi`, addcoll: colItem}}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">Add Item</MDBBtn></Link>}
                 {colItem && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItem.name && f.email==colItem.email)).length!==0) && <MDBBtn color="" style={{backgroundColor:'#7e7ab4',color:'white'}} onClick={()=>global.document.querySelector('.itemsTable').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})} className="__ico_nqa v2">Item list</MDBBtn>}

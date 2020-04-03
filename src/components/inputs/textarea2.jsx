@@ -10,7 +10,20 @@ class TextareaPage2 extends React.Component {
 
 render(){
     return (
-        <div style={{display: 'inline-block',width: 'calc(50% - 20px)', margin: '20px 10px'}} className="input-group">
+        <div className="txa2Cont input-group">
+            <style dangerouslySetInnerHTML={{__html:`
+            .txa2Cont{
+                display: inline-block;
+                width: calc(50% - 20px);
+                margin: 20px 10px;
+            }
+            @media screen and (max-width: 1000px){
+                .txa2Cont{
+                    width: calc(100% - 20px);
+                    margin: 20px 10px;
+                }
+            }
+            `}}></style>
             <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon">
                 {this.props.nm}
