@@ -422,7 +422,7 @@ const ItemPage = (props) => {
                 <img src={myItem.img} className="__ima_ge__ dva"/>
                 <hr className="__h_r_"/>
                 {colItem && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">Go to the collection</MDBBtn></Link>}
-            <MDBBtn onClick={clicker} className="__ico_nqa" color="" ><i className="fas fa-heart iconqa"></i> Likes :<span className="likes __darova_v1_">{likes.length}</span></MDBBtn>
+            <MDBBtn onClick={clicker} className="__ico_nqa" color="" ><i className="fas fa-heart iconqa"></i><span style={{whiteSpace:'pre'}}> Likes : </span><span className="likes __darova_v1_">{likes.length}</span></MDBBtn>
                 <p className="__descr_iption">{myItem.description}</p>
                 <p style={{clear:'both'}} className="__comm_ention">{tags.map(v=><div  data-target="#collPageModal" data-toggle="modal" onClick={tegclicker} className="teger">{v}</div>)}</p>  
 

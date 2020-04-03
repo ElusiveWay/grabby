@@ -174,7 +174,7 @@ const CollectionPage = (props) => {
                 @media all and (max-width:769px){
                     .__ti_tle__{
                         float: unset;
-                        margin: 20px auto;
+                        margin: 40px auto;
                         text-align: center;
                         max-width: 100%;
                     }

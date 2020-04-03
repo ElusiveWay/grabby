@@ -446,6 +446,9 @@ render(){
                         text-align: center;
                         width: 50%;
                     }
+                    .createItem-dbtitle.tri{
+                        display:none;
+                    }
                     @media screen and (max-width: 1000px){
                         .createItem-db2{
                             display: block;
@@ -457,6 +460,12 @@ render(){
                         }
                         .createItem-dbtitle{
                             width:100%;
+                        }
+                        .createItem-dbtitle.dva{
+                            display:none;
+                        }
+                        .createItem-dbtitle.tri{
+                            display:inline-block;
                         }
                     }
                     @media screen and (max-width: 769px){
@@ -490,7 +499,7 @@ render(){
                         <Link className="createItem-link" to={`/users/${this.props.id}`}>Back</Link>
                         <h1 className="createItem-h1">Add new Collection</h1>
                         <Text name="col_name" required nm="Name of collection*" />
-                        <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
+                        <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
                         <ImageUpload func={this.returnMeVar.bind(this)} name="col_img" />
                         <Text name="col_comment" nm="Author comment" />
                         <span className="createItem-dbtitle">Choose collection type:</span>
@@ -504,15 +513,15 @@ render(){
             }
             { this.props.sub === 'editc' && (this.props.user._id === this.props.id || this.props.user.isAdmin === true) &&
              <section style={this.style.section} className="addCollectSect">
-                <form onSubmit={this.subEditCol} style={this.style.formColl}>
-                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/collections/${this.state.editcol._id}`}>Back</Link>
-                    <h1 style={this.style.h1}>Edit Collection</h1>
+                <form onSubmit={this.subEditCol} className="formCreateItem">
+                    <Link className="createItem-link" to={`/collections/${this.state.editcol._id}`}>Back</Link>
+                    <h1 className="createItem-h1">Edit Collection</h1>
                     {this.state.editcol.name && <Text default={this.state.editcol.name} name="col_name" required nm="Name of collection*" />}
-                    <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
+                    <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
                     {typeof this.state.editcol.img == 'string' &&<ImageUpload default={this.state.editcol.img} func={this.returnMeVar.bind(this)} name="col_img" />}
                     {typeof this.state.editcol.comment == 'string' && <Text default={this.state.editcol.comment} name="col_comment" nm="Author comment" />}
-                    <span style={{marginBottom:'30px',display:'inline-block',textAlign:'center',width:'50%'}}>Type of your collection:</span>
-                    <DropboxInput name="col_type" disabled arr={this.state.types} init={this.state.editcol}  named='Collection type' style={this.style.dropboxinp2} />
+                    <span className="createItem-dbtitle">Type of your collection:</span>
+                    <DropboxInput name="col_type" disabled arr={this.state.types} init={this.state.editcol}  named='Collection type' className="createItem-db2" />
                     <div className="alreadyInUse">
                     {typeof this.state.editcol.adds === 'string' && JSON.parse(this.state.editcol.adds).map((v,i,a)=>{
                         return <div style={{width:"100%",margin: "30px 0% 0px"}} className="input-group mb-3">
@@ -531,23 +540,24 @@ render(){
             }
             { this.props.sub === 'addi' && (this.props.user._id === this.props.id || this.props.user.isAdmin === true) &&
             (this.props.grabby.collections.filter(f=>f.email===this.props.owner.email).length > 0)?<section style={this.style.section} className="addItemSect">
-                <form onSubmit={this.subFormItems} style={this.style.formItem}>
-                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={(this.props.location.addcoll)?`/collections/${this.props.location.addcoll._id}`:`/users/${this.props.id}`}>Back</Link>
-                    <h1 style={this.style.h1}>Add new Item to Collection</h1>
+                <form onSubmit={this.subFormItems} className="formCreateItem">
+                    <Link className="createItem-link" to={(this.props.location.addcoll)?`/collections/${this.props.location.addcoll._id}`:`/users/${this.props.id}`}>Back</Link>
+                    <h1 className="createItem-h1">Add new Item to Collection</h1>
                     <Text name="item_name" required nm="Name of Item*" />
-                    <TextareaPage2 name="item_descript" required style={this.style.description2} nm="Description*" />
+                    <TextareaPage2 name="item_descript" required style={this.style.description2} nm="Description*" />
                     <ImageUpload func={this.returnMeVar.bind(this)} name="item_img" />
                     <Text name='addTegPlsIWanna'nm="Add teg" />   
                     <div style={{marginBottom:'30px'}} name="МАССИВ ТЕГОВ">
                         <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`)}} className="teg add">Add</div> 
                         <div className='tegCont'></div>
                     </div>
-                    <span style={{marginBottom:'30px',display:'inline-block',textAlign:'center',width:'50%'}}>Choose collection type for an Item</span><span style={{display:'inline-block',textAlign:'center',width:'50%'}}>List of available collection</span>
-                    {(this.props.location.addcoll)?<DropboxInput forced={this.props.location.addcoll.type} class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type' style={this.style.dropboxinp} />:<DropboxInput  class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type' style={this.style.dropboxinp} />}
-                    {(this.props.location.addcoll)?<DropboxInput forced={this.props.location.addcoll.name} class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection' style={this.style.dropboxinp} />:<DropboxInput class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection' style={this.style.dropboxinp} />}
+                    <span className="createItem-dbtitle">Choose collection type for an Item</span><span className="createItem-dbtitle dva">List of available collection</span>
+                    {(this.props.location.addcoll)?<DropboxInput forced={this.props.location.addcoll.type} className='createItem-db2' class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type' />:<DropboxInput  className='createItem-db2' class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type'  />}
+                    <span className="createItem-dbtitle tri">List of available collection</span>
+                    {(this.props.location.addcoll)?<DropboxInput forced={this.props.location.addcoll.name} className='createItem-db2' class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection' />:<DropboxInput className='createItem-db2' class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection' />}
                     <div>
                                     {(this.state.addsForItemCreation.length)?<hr style={this.style.hr} />:''}
-                                    <h1 style={this.style.h1}>{(this.state.addsForItemCreation.length)?'Set additional properties':''}</h1>
+                                    <h1 className="createItem-h1">{(this.state.addsForItemCreation.length)?'Set additional properties':''}</h1>
                                 <div className='addsOutCont' style={{
                                     backgroundColor: '#e9ecef',
                                     padding: '0 20px',
@@ -597,9 +607,9 @@ render(){
                 </form>
                 </section>: 
                 this.state.link=='addi' && <section className="addItemSect">
-                            <form onSubmit={this.subFormItems} style={this.style.formItem}>
+                            <form onSubmit={this.subFormItems} className="formCreateItem">
                                 <div style={{position:'relative',width:'100%',minHeight:'400px'}}>
-                                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${this.props.id}`}>Back</Link>
+                                    <Link className="createItem-link" to={`/users/${this.props.id}`}>Back</Link>
                                     <div style={{position:'absolute',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>
                                         <h2 style={{marginBottom:'25px',textAlign:'center'}}>Add collection first!</h2>
                                         <Link style={{color:'black'}} to={{pathname:`/users/${this.props.owner._id}/addc`}}><MDBBtn style={{position:'relative',left:'50%',transform: 'translateX(-50%)'}}color=''>Add</MDBBtn></Link>
@@ -610,9 +620,9 @@ render(){
             }
             { this.props.sub === 'editi' && (this.props.user._id === this.props.id || this.props.user.isAdmin === true) &&
             (this.props.grabby.collections.filter(f=>f.email===this.props.owner.email).length > 0) && <section style={this.style.section} className="addItemSect">
-                <form onSubmit={this.subEditItem} style={this.style.formItem}>
-                    <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={(this.props.location.edititem)?`/items/${this.props.location.edititem}`:`/users/${this.props.id}`}>Back</Link>
-                    <h1 style={this.style.h1}>Edit Item</h1>
+                <form onSubmit={this.subEditItem} className="formCreateItem">
+                    <Link className="createItem-link" to={(this.props.location.edititem)?`/items/${this.props.location.edititem}`:`/users/${this.props.id}`}>Back</Link>
+                    <h1 className="createItem-h1">Edit Item</h1>
                     {typeof this.state.edititem.name === 'string' && <Text name="item_name" default={this.state.edititem.name} required nm="Name of Item*" />}
                     <TextareaPage2 name="item_descript" required style={this.style.description2} nm="Description*" />
                     {typeof this.state.edititem.img === 'string' && <ImageUpload default={this.state.edititem.img} func={this.returnMeVar.bind(this)} name="item_img" />}
@@ -627,12 +637,13 @@ render(){
                         }
                         </div>
                     </div>
-                    <span style={{marginBottom:'30px',display:'inline-block',textAlign:'center',width:'50%'}}>Collection type</span><span style={{display:'inline-block',textAlign:'center',width:'50%'}}>Collection</span>
-                    {typeof this.state.edititem.type === 'string' && <DropboxInput forced={this.state.edititem.type} class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type' style={this.style.dropboxinp} />}
-                    {typeof this.state.edititem.collect === 'string' && <DropboxInput forced={this.state.edititem.collect} class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection' style={this.style.dropboxinp} />}
+                    <span className="createItem-dbtitle">Collection type</span><span className="createItem-dbtitle dva">Collection</span>
+                    {typeof this.state.edititem.type === 'string' && <DropboxInput forced={this.state.edititem.type} className="createItem-db" class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type'  />}
+                    <span className="createItem-dbtitle tri">Collection</span>
+                    {typeof this.state.edititem.collect === 'string' && <DropboxInput forced={this.state.edititem.collect} className="createItem-db" class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection'  />}
                     <div>
                                     {(this.state.addsForItemCreation.length)?<hr style={this.style.hr} />:''}
-                                    <h1 style={this.style.h1}>{(typeof this.state.edititem.add === 'string' && JSON.parse(this.state.edititem.add).length!==0)?'Set additional properties':''}</h1>
+                                    <h1 className="createItem-h1">{(typeof this.state.edititem.add === 'string' && JSON.parse(this.state.edititem.add).length!==0)?'Set additional properties':''}</h1>
                                 <div className='addsOutCont' style={{
                                     backgroundColor: '#e9ecef',
                                     padding: '0 20px',
