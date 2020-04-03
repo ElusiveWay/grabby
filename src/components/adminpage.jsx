@@ -85,7 +85,7 @@ const AdminPage = (props) => {
                 flex:3;
                 height: 100%;
                 border:1.5px solid #dee2e6;
-                margin: 0px 30px 30px 0px;
+                margin: 0;
             }
             .controllPanel h4{
                 color:gray;
@@ -128,8 +128,51 @@ const AdminPage = (props) => {
                 color: black;
                 background-color: white;
             }
+            .tableWrapper{
+                width:100%;
+                height: 100%;
+            }
+            .admin-h1{
+                background: transparent;
+                color: rgb(122, 147, 180);
+                margin: 20px 0;
+                text-align: center;
+            }
+            @media screen and (max-width:1001px){
+                .adminTable td,
+                .adminTable th{
+                    max-width:200px;
+                }
+                .tableWrapper{
+                    overflow-x:scroll;
+                    overflow-y:visible;
+                    height:100%;
+                    margin: 0px 30px 30px 0px;
+                }
+            }
+            @media screen and (max-width:550px){
+                .subBtn-admin{
+                    float:left !important;
+                }
+                .controllPanel{
+                    transform:unset;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                .admin-wrapper{
+                    flex-direction: column;
+                }
+                .panelField-wrapper{
+                    display:block;
+                    padding:0;
+                    margin:auto;
+                }
+                .admin-h1{
+                    margin: 50px 0;
+                }
+            }
             `}}/>
-                <h1 style={{background:'transparent',color:'#7a93b4',margin:'20px',marginBottom:'70px',textAlign:'center'}}><i class="fas fa-users-cog"></i> Admin panel</h1>
+                <h1 className="admin-h1"><i class="fas fa-users-cog"></i> Admin panel</h1>
                 <div className="admin-wrapper">
                     <div className="controllPanel">
                         <div className="panelField-wrapper">
@@ -142,7 +185,8 @@ const AdminPage = (props) => {
                             <button onClick={tableAction} className="btn">Block</button>
                         </div>
                     </div>
-                    <table class="adminTable table table-striped">
+                    <div className="tableWrapper">
+                    <table className="adminTable table table-striped">
                     <caption style={{captionSide: 'top'}}>Users: </caption>
                     <thead> 
                         <tr>
@@ -172,6 +216,7 @@ const AdminPage = (props) => {
                         }
                     </tbody>
                 </table>
+                </div>
             </div>
             <hr style={{width:'90%',marginLeft:'5%'}}/>
             <h3 style={{color:'gray',marginLeft:'3%',}}>Text field of main page:</h3>
@@ -186,7 +231,7 @@ const AdminPage = (props) => {
                                     <a class="btn nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
                                     aria-controls="pills-profile" aria-selected="false">Guide</a>
                                 </li>
-                                    <div style={{flex:10}}><button style={{float:'right',color:'white',backgroundColor:'#7ab0b4'}} className="btn">Submit</button></div>
+                                    <div style={{flex:10}}><button  style={{float:'right',color:'white',backgroundColor:'#7ab0b4'}} className="subBtn-admin btn">Submit</button></div>
                                 </ul>
                                 <div style={{width:'100%'}} class="tab-content pt-2 pl-1" id="pills-tabContent">
                                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
