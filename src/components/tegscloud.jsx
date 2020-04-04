@@ -21,8 +21,11 @@ const TegCloud = (props) => {
                            </div>
     }
     return (
-        <div style={{width:'calc(100% - 6vw)',marginTop:'10px',marginLeft:'3vw'}}>
+        <div className="tegCloudForTheme"style={{width:'calc(100% - 6vw)',marginTop:'10px',marginLeft:'3vw'}}>
             <style dangerouslySetInnerHTML={{__html: `
+                    .darkMode .tegCloudForTheme{
+                        filter: invert(1) hue-rotate(-121deg);
+                    }
                     .teg { 
                         background: #7ab0b4; 
                         width: auto;

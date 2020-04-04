@@ -21,21 +21,24 @@ const Carusel = () => {
         },50)
     return () => clearInterval(interval);
     })
-    return (colls.length>0 &&
+    return (
         <div style={{backgroundColor:'white',boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)'}}  id="carouselExampleIndicators" className="mycarysel carousel slide" data-ride="carousel">
             <style dangerouslySetInnerHTML={{__html: `
+                        .darkMode .mycarysel{
+                            filter: invert(1) grayscale(1);
+                        }
                         .mainCollCarus{
                             font-size:1rem;
                             height:14rem;
                         }
                         .bg-control.third{
-                            background-image:url(${colls[2].img});
+                            background-image:url(${colls.length>2?colls[2].img:''});
                         }
                         .bg-control.second{
-                            background-image:url(${colls[1].img});
+                            background-image:url(${colls.length>1?colls[1].img:''});
                         }
                         .bg-control.first{
-                            background-image:url(${colls[0].img});
+                            background-image:url(${colls.length>0?colls[0].img:''});
                         }
                         .bg-control{
                             z-index:0;
@@ -92,7 +95,12 @@ const Carusel = () => {
                 <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
             </ol>
             <div className="carousel-inner">
-                <div className="carousel-item active">
+            {colls.length === 0 && <div className="carousel-item active">
+                                        <div style={{width:'100%',height:'350px'}}>
+                                            <h2 style={{textAlign:'center',position:'absolute',left:'50%',top:'50%',transform:'translate(-50%,-50%)'}}>There are no collections on the site</h2>
+                                        </div>
+                                </div>}
+            {colls.length > 0 && <div className="carousel-item active">
                     <div className="bg-control first"></div>
                     <div style={{backgroundColor:'#fff8',border:'2px solid white',padding:'5px',overflow:'hidden',paddingBottom:'1rem',color:'#000',textAlign:'center',fontSize:'10px',transform:'translateX(0px) scale(0.95)',float:'right',width:'100%'}}>
                         <div className="ash">
@@ -108,7 +116,7 @@ const Carusel = () => {
                         <hr style={{position:'relative',top:'5px',bottom:'5px',clear:'both'}}/>
                         <div className="mainCollCarus" >{colls[0].descript.substring(0,900)+'...'}</div>
                     </div>
-                </div>
+                </div>}
                 {colls.length > 1 && <div className="carousel-item">
                     <div className="bg-control second"></div>
                     <div style={{backgroundColor:'#fff8',border:'2px solid white',padding:'5px',overflow:'hidden',paddingBottom:'1rem',color:'#000',textAlign:'center',fontSize:'10px',transform:'translateX(0px) scale(0.95)',float:'right',width:'100%'}}>

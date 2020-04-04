@@ -11,24 +11,41 @@ import Message from './peref/message'
 import * as $ from 'jquery'
 
 class Footbar extends Component {
+constructor(props){
+  super(props)
+  this.changeTheme = this.changeTheme.bind(this)
+}
 state = {
   isOpen: false
 };
+changeTheme(){
+  localStorage.setItem('dark',(localStorage.getItem('dark')==='dark')?'light':'dark')
+  if (this.props.user && Object.keys(this.props.user).length!==0) axios({
+    method:'post',
+    url: '/changeColor',
+    data: {
+      user: this.props.user._id,
+      theme: localStorage.getItem('dark')
+    }
+  })
+}
 render() {
   return (  
-      <MDBNavbar  style={{zIndex: '-1',position:'absolute',width:'100%',top:'100%',backgroundColor: 'rgba(9, 56, 117, 0.65)'}}color="" dark expand="md">
+      <MDBNavbar className="footWrap" style={{zIndex: '-1',position:'absolute',width:'100%',top:'100%',backgroundColor: 'rgba(9, 56, 117, 0.65)'}}color="" dark expand="md">
+        <style dangerouslySetInnerHTML={{__html:`
+        .changeThemeBtn{
+          font-size:1.5em;
+          cursor:pointer;
+          color: black;
+        }
+        .footWrap .navbar-toggler{
+          display:none;
+        }
+        `}}></style>
         <MDBNavbarToggler onClick={this.toggleCollapse} />
-        <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
           <MDBNavbarNav left>
-            <MDBNavItem>.      
-            </MDBNavItem>
+              <i  onClick={this.changeTheme} className="changeThemeBtn fas fa-adjust"></i> 
           </MDBNavbarNav>
-          <MDBNavbarNav >
-          </MDBNavbarNav>
-          <MDBNavbarBrand >
-          <strong className="white-text">by Uladzislau Kaminski</strong>
-        </MDBNavbarBrand>
-        </MDBCollapse>
       </MDBNavbar>
     );
   }

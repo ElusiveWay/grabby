@@ -132,7 +132,7 @@ const AmazingTable = (props) => {
         }
     }
     return colItems.length!==0 && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItems[0].name && f.email==colItems[0].email)).length!==0)?(<div>
-        <div style={{minHeight:'400px'}}>
+        <div className="mainAmazingTableCont" style={{minHeight:'400px'}}>
         <div className="filtrator">
             {access && <i onClick={()=>{if(delItems.items.length==0)makeMessage('danger', 'Stop!','You didn\'t select any item!')}} data-toggle={delItems.items.length!==0?'modal':''} data-target="#itemDeleteModal" className="far deleteIcon fa-trash-alt" style={{marginRight:'15px'}}></i>}
             <input  type="text" onKeyUp={filtrator} className="filterelem form-control" placeholder="Filter" name="tablecontrol"/>
@@ -154,6 +154,9 @@ const AmazingTable = (props) => {
         <hr/>
         <div style={{width:'100%',overflowX:'scroll'}} className="table-responsive">
         <style dangerouslySetInnerHTML={{__html: `
+                .darkMode .mainAmazingTableCont{
+                    filter:invert(1);
+                }
                 .modal.fade.show{
                     z-index: 99999;
                 }

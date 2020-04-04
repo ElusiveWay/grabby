@@ -49,6 +49,11 @@ const UsersPages = (props) => {
                 <ProfileBox data={profileData}></ProfileBox>
                 <section className="sectionsPage">
                     <style dangerouslySetInnerHTML={{__html:`
+                        .darkMode .card .card-body.newrevis{
+                            transform: scale(1);
+                            background-color: #ffffffdb;
+                            filter: invert(1);
+                        }
                         .microToolBar{
                             margin-top: -40px;
                             margin-bottom: 40px;

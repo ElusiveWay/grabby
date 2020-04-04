@@ -71,6 +71,15 @@ app.use(session({
 //REACT ROUTING
 app.use(cors())
 
+app.post('/changeColor', async(req,res)=>{
+  if (req.cookies.key === req.body.user) {
+    await users.updateOne({_id : req.body.user}, {theme: req.body.theme}, e=>e)
+    res.send('ok')
+  }
+  else{
+    res.send('neok')
+  }
+})
 app.post('/like', async(req,res)=>{
   if (session.signed.every(v=>v!=req.body.likerId)){return}
   await items.find({_id : req.body.itemId}).then(async r2=>{

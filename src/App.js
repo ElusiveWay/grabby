@@ -53,12 +53,25 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  componentWillMount(){
+    this.int3 = setInterval(()=>{
+        if (localStorage.getItem('dark') === null || localStorage.getItem('dark') === 'light'){
+          if (Array.prototype.some.call(global.document.querySelector('html').classList,v=>v=='darkMode'))global.document.querySelector('html').classList.remove('darkMode')
+        }
+        else{
+          if (Array.prototype.every.call(global.document.querySelector('html').classList,v=>v!=='darkMode'))global.document.querySelector('html').classList.add('darkMode')
+        }
+    },20)
+  }
   componentDidMount() {
     //sync
     socket.on('getAllData',msg=>{
       global.__canEmitSync = true
       global.__mainData = msg
       let user = msg.users.filter(v=>v._id === global.__user._id)
+      if (user.length !== 0 && this.state.user && JSON.stringify(user[0])!==JSON.stringify(this.state.user) && typeof user[0].theme === 'string' && localStorage.getItem('dark')!==user[0].theme){
+          localStorage.setItem('dark',user[0].theme)
+      }
       if (user.length !== 0 ) this.setState({user : user[0]})
       if (Object.keys(global.__user).length===0) this.setState({user : {}})
       this.setState({grabby : msg})
@@ -73,6 +86,9 @@ class App extends Component {
        global.__key = res.key
      });
      this.int2 = setInterval(()=>{
+      if (this.state.user && typeof this.state.user.theme === 'string') {
+        if (localStorage.getItem('dark') === null) localStorage.setItem('dark',this.state.user.theme)
+      }
       if (global.__modalok!==this.state.modalok){
         this.setState({modalok : global.__modalok},()=>global.document.querySelectorAll('.activeSearchList').forEach(v=>v.classList.remove('activeSearchList')))
       }
@@ -89,6 +105,7 @@ class App extends Component {
  componentWillUnmount(){
    clearInterval(this.int)
    clearInterval(this.int2)
+   clearInterval(this.int3)
  }
   handleChange(event) {
     this.setState({ name: event.target.value });
@@ -144,7 +161,7 @@ class App extends Component {
           </Switch>
         <ModalOk title='Info' target="collPageModal" text={this.state.modalok}></ModalOk>
         </Router>
-        <Footbar></Footbar>
+        <Footbar user={this.state.user}></Footbar>
         <Modal action={global.__modalAction} title='Comment deleting' target="commentDeleterModal" text='Are you sure about this?'></Modal>
       </div>
     );

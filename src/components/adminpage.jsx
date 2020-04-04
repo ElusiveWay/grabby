@@ -66,7 +66,7 @@ const AdminPage = (props) => {
     }
     return (
         (user.isAdmin===true)
-        ?<div style={{maxWidth:'1100px',margin:'auto',marginTop:'30px'}}>
+        ?<div className="adminWrapForTheme"style={{maxWidth:'1100px',margin:'auto',marginTop:'30px'}}>
             <style dangerouslySetInnerHTML={{__html:`
             styles{
                 content:'here styles for Admin page';

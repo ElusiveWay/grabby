@@ -25,6 +25,12 @@ const TextField = (props) => {
     return (
         <div style={{overflowY:'scroll', height: '100%'}} className="textField-wrapper">
             <style dangerouslySetInnerHTML={{__html:`
+            .darkMode .textField img{
+                filter:invert(1);
+            }
+            .darkMode .textField{
+                filter:invert(1);
+            }
             .bg-control-textfield{
                 width:100%;
                 height:100%;

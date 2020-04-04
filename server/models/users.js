@@ -26,6 +26,9 @@ const schema = new Schema({
         },
         isAdmin: {
             type: Boolean
+        },
+        theme: {
+            type: String
         }
     }
 )

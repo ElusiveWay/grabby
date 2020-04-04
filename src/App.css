@@ -44,6 +44,34 @@
     margin-top:14px;
     overflow-x: hidden;
 }
+html.darkMode{
+    background-color: #0c0c0c;;
+}
+.darkMode .modal-content,
+.darkMode .sign-page .card,
+.darkMode .formCreateItem,
+.darkMode .adminWrapForTheme,
+.darkMode .prof_ile__contain,
+.darkMode .profile-photo,
+.darkMode .formCreateItem .fileInput,
+.darkMode .card.__cont_ainer_ button,
+.darkMode .contOfItemMain,
+.darkMode .contOfItemMain img{
+    filter:invert(1);
+}
+.darkMode #mainGrabbyNavbar *:hover{
+    color:black !important;
+}
+.darkMode .collectionsBox{
+    filter:grayscale(1);
+}
+.darkMode .card.__cont_ainer_{
+    background: #000;
+    color: #a69999;
+    box-shadow: 0 0 30px #fff3;
+}
+
+
 body,html{
     height: auto;
     width: 100%;
@@ -126,6 +154,9 @@ h1,h2,h3,h4,h5,h6{
 }
 .logoH1::selection{
     background-color: transparent;
+}
+.darkMode .wrapperDiv{
+    filter: blur(3px) invert() opacity(.15);
 }
 .wrapperDiv{
     z-index: -1;
