@@ -7,6 +7,7 @@ import Route from "react-router-dom"
 import AmazingTable from './amazingTable'
 import {Link} from 'react-router-dom'
 import Collection from './CollectionElement'
+import LANG from '../lang'
 
 const UsersPages = (props) => {
     let { id } = useParams();
@@ -18,11 +19,11 @@ const UsersPages = (props) => {
     let [user, setUser] = useState({})
     let [profileData, setProfileData] = useState({
                 photo : 'http://placehold.it/450x320?text=No+image+yet',
-                likes : 'Likes :',
+                likes : `${LANG.likes[localStorage.getItem('lang')]}`,
                 name : '',
                 online : '',
-                views : 'Items : ',
-                status : 'Its hard to find me, easy to lose and impossible to forget. '
+                views : `${LANG.items[localStorage.getItem('lang')]} `,
+                status : `${LANG.status[localStorage.getItem('lang')]}. `
     })
 
     useEffect(() => {
@@ -33,10 +34,10 @@ const UsersPages = (props) => {
             setUser(global.__mainData?global.__mainData.users.map(v=>v).filter(v=>v._id == id)[0]:{})
             setProfileData({
                 photo : (user && user.img && user.img!=='')?user.img:'http://placehold.it/450x320?text=No+image+yet',
-                likes : (user && Object.keys(user).length!==0 && items && items.length!==0)?`Likes : ${items.reduce((t,c,i)=>{return (c.likes!==undefined)?t+JSON.parse(c.likes).length:t},0)}`:'Likes : 0',
+                likes : (user && Object.keys(user).length!==0 && items && items.length!==0)?`${LANG.likes[localStorage.getItem('lang')]} ${items.reduce((t,c,i)=>{return (c.likes!==undefined)?t+JSON.parse(c.likes).length:t},0)}`:'Likes : 0',
                 name : (user && Object.keys(user).length!==0)?user.name:'',
-                online : (user && Object.keys(user).length!==0 && global.__signed && global.__signed.length!==0 && global.__signed.some(v=>v==id))?<b style={{color:'green',fontWeight:'600'}}>Online</b>:<b style={{color:'red',fontWeight:'600'}}>Offline</b>,
-                views : (user && Object.keys(user).length!==0 && items && items.length!==0)?`Items : ${items.length}`:'Items : 0',
+                online : (user && Object.keys(user).length!==0 && global.__signed && global.__signed.length!==0 && global.__signed.some(v=>v==id))?<b style={{color:'green',fontWeight:'600'}}>{LANG.online[localStorage.getItem('lang')]}</b>:<b style={{color:'red',fontWeight:'600'}}>{LANG.offline[localStorage.getItem('lang')]}</b>,
+                views : (user && Object.keys(user).length!==0 && items && items.length!==0)?`${LANG.items[localStorage.getItem('lang')]} ${items.length}`:`${LANG.items[localStorage.getItem('lang')]} 0`,
                 status : (user && Object.keys(user).length!==0)?user.status:''
             })
         }, 50)
@@ -108,26 +109,26 @@ const UsersPages = (props) => {
                     `}}/>
                     <form className="formPageUserPage">
                             {(guser.isAdmin === true || guser._id === user._id) && <div className="microToolBar" style={{float:'right'}}>
-                            <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addc`}>Add collection</Link>
+                            <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addc`}>{LANG.addcoll[localStorage.getItem('lang')]}</Link>
                                 <span style={{whiteSpace:'pre',color:'rgba(9, 56, 117, 0.65)',float:'right'}}>  |  </span>
-                            <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addi`}>Add item</Link>
+                            <Link style={{color:'rgb(135, 134, 197)',float:'right'}} to={`/users/${id}/addi`}>{LANG.additem[localStorage.getItem('lang')]}</Link>
                             </div>
                             }
-                        <h1 style={{marginBottom:'15px',color:'#747373',paddingBottom:'5px',display:'inline-block',borderBottom:'1px solid #74737333'}}>Collections:</h1>
+                        <h1 style={{marginBottom:'15px',color:'#747373',paddingBottom:'5px',display:'inline-block',borderBottom:'1px solid #74737333'}}>{LANG.colls[localStorage.getItem('lang')]}:</h1>
                         <div className="collectionsBox">
                             {colls.map(v=>v).reverse().map((v,i,a)=>{
                                 return (<div className={(a.length%2==1 && i==a.length-1)?'collElemWrapper filled':'collElemWrapper'}><Collection data2={v._id} iterator={i} data={a[i]} /></div>)
                             })}
-                            {colls.length==0 && <h2 style={{marginBottom:'50px'}}>User has not added collections yet.</h2>}
+                            {colls.length==0 && <h2 className="contrastHx" style={{marginBottom:'50px'}}>{LANG.notaddedcolls[localStorage.getItem('lang')]}</h2>}
                         </div>
-                        <h1 style={{marginBottom:'15px',color:'#747373',paddingBottom:'5px',display:'inline-block',borderBottom:'1px solid #74737333'}}>Items:</h1>
+                        <h1 style={{marginBottom:'15px',color:'#747373',paddingBottom:'5px',display:'inline-block',borderBottom:'1px solid #74737333'}}>{LANG.items[localStorage.getItem('lang')]}</h1>
                         <div className='__cont_ainer_'>
                             <AmazingTable owner={user} user={guser} color="white" id={colls.map(v=>v._id)}/>
                         </div> 
                         
                     </form>
                 </section>
-            </div>):<div style={{flexDirection:'column',height:'90vh',display:'flex',justifyContent:'center',alignItems:'center'}}><h2>Loading...</h2><br/><Link to='/signin'><button style={{color:'black'}}className="btn">Sign</button></Link></div>
+            </div>):<div style={{flexDirection:'column',height:'90vh',display:'flex',justifyContent:'center',alignItems:'center'}}><h2>{LANG.loading[localStorage.getItem('lang')]}</h2><br/><Link to='/signin'><button style={{color:'black'}}className="btn">{LANG.signin[localStorage.getItem('lang')]}</button></Link></div>
 }
 
 export default UsersPages

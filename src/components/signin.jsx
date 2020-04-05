@@ -7,6 +7,7 @@ import { BrowserRouter as Router,
 import Message from './peref/message'
 import "axios-jsonp-pro"
 import * as $ from 'jquery'
+import LANG from '../lang'
 // import io from 'socket.io-client'
 // const socket = io()
 //da
@@ -44,16 +45,16 @@ class Signin extends Component {
       if (r.data.out == "neok-blocked"){
         let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
         $('.message-cont').append('<div id='+id+'></div>')
-        ReactDOM.render(<Message text1="Oops!" text2="You are blocked!" color="danger" id={id}/>, $('#'+id)[0])
+        ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.urblocked[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
       }
       else if (r.data.out == "neok"){
         let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
         $('.message-cont').append('<div id='+id+'></div>')
-        ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
+        ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.somewrong[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
       }else if(r.data.out == "ok"){
         let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
         $('.message-cont').append('<div id='+id+'></div>')
-        ReactDOM.render(<Message text1="Yeah!" text2="You are logined!" color="success" id={id}/>, $('#'+id)[0])
+        ReactDOM.render(<Message text1={LANG.yeah[localStorage.getItem('lang')]} text2={LANG.urlogined[localStorage.getItem('lang')]} color="success" id={id}/>, $('#'+id)[0])
         this.setState({redirect : 'home'})
         global.__signed = r.data.signed
         global.__user = r.data.user
@@ -80,7 +81,7 @@ class Signin extends Component {
   render(){
     const vkStyle = {
       display: 'inline-block',
-      width: '50px',
+      width: '40px',
     }
     const vkStyleA = {
       margin: '0 10px',
@@ -171,16 +172,16 @@ class Signin extends Component {
               if (r.data.out == "neok-blocked"){
                 let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
                 $('.message-cont').append('<div id='+id+'></div>')
-                ReactDOM.render(<Message text1="Oops!" text2="You are blocked!" color="danger" id={id}/>, $('#'+id)[0])
+                ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.urblocked[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
               }
               else if (r.data.out == "neok"){
                 let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
                 $('.message-cont').append('<div id='+id+'></div>')
-                ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
+                ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.somewrong[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
               }else if(r.data.out == "ok"){
                 let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
                 $('.message-cont').append('<div id='+id+'></div>')
-                ReactDOM.render(<Message text1="Yeah!" text2="You are logined with VKontakte!" color="success" id={id}/>, $('#'+id)[0])
+                ReactDOM.render(<Message text1={LANG.yeah[localStorage.getItem('lang')]} text2={LANG.urloginedvk[localStorage.getItem('lang')]} color="success" id={id}/>, $('#'+id)[0])
                 this.setState({redirect : 'home'})
                 global.__signed = r.data.signed
                 global.__user = r.data.user
@@ -189,14 +190,14 @@ class Signin extends Component {
           }).catch((er)=>{
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
+            ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.somewrong[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
           })
         }
     const myfunc2 = (obj) => {
       if (obj.email === undefined){
         let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
           $('.message-cont').append('<div id='+id+'></div>')
-          ReactDOM.render(<Message text1="ERROR!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
+          ReactDOM.render(<Message text1={LANG.error[localStorage.getItem('lang')]} text2={LANG.somewrong[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
           this.setState({redirect : 'tosign'})
         return
       }
@@ -217,16 +218,16 @@ class Signin extends Component {
         if (r.data.out == "neok-blocked"){
           let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
           $('.message-cont').append('<div id='+id+'></div>')
-          ReactDOM.render(<Message text1="Oops!" text2="You are blocked!" color="danger" id={id}/>, $('#'+id)[0])
+          ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.urblocked[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
         }
         else if (r.data.out == "neok"){
           let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
           $('.message-cont').append('<div id='+id+'></div>')
-          ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
+          ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.somewrong[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
         }else if(r.data.out == "ok"){
           let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
           $('.message-cont').append('<div id='+id+'></div>')
-          ReactDOM.render(<Message text1="Yeah!" text2="You are logined with Google!" color="success" id={id}/>, $('#'+id)[0])
+          ReactDOM.render(<Message text1={LANG.yeah[localStorage.getItem('lang')]} text2={LANG.urloginedgoo[localStorage.getItem('lang')]} color="success" id={id}/>, $('#'+id)[0])
           this.setState({redirect : 'home'})
           global.__signed = r.data.signed
           global.__user = r.data.user
@@ -237,10 +238,10 @@ class Signin extends Component {
             <MDBCard style={{margin:'20px',width : '400px', height : '500px', minHeigth : "300px"}}>
               <MDBCardBody>
                 <form style={{color:'#2196f3'}} onSubmit={ this.subme }>
-                  <p className="h4 text-center py-4">Sign in</p>
+                  <p className="h4 text-center py-4">{LANG.signin[localStorage.getItem('lang')]}</p>
                   <div className="grey-text">
                     <MDBInput
-                      label="Your email"
+                      label={LANG.uemail[localStorage.getItem('lang')]}
                       icon="envelope"
                       group
                       required
@@ -253,7 +254,7 @@ class Signin extends Component {
                       success="right"
                     />
                     <MDBInput
-                      label="Your password"
+                      label={LANG.upass[localStorage.getItem('lang')]}
                       icon="lock"
                       name="pass"
                       required
@@ -272,10 +273,10 @@ class Signin extends Component {
                   </div>
                   <div className="text-center py-4 mt-3">
                     <MDBBtn style={{display:'block', margin:'auto'}}color="cyan" type="submit">
-                      Login
+                    {LANG.signin[localStorage.getItem('lang')]}
                     </MDBBtn>
                     <hr style={{backgroundColor:'#eeffee',marginTop:'30px'}}/>
-                  <span style={{padding:'10px',display:'inline-block',width:'auto',height:'auto',backgroundColor:'transparent',boxShadow:'unset',color: '#9e9e9e',fontSize: '16px'}} className='btn'>Or use social media:</span>
+                  <span style={{padding:'10px',display:'inline-block',width:'auto',height:'auto',backgroundColor:'transparent',boxShadow:'unset',color: '#9e9e9e',fontSize: '16px'}} >{LANG.usesocial[localStorage.getItem('lang')]}:</span>
                     <a href={this.urla} style={vkStyleA}><img style={vkStyle}src="./assets/vk.svg" alt="vk"/></a>
                     <a href={this.urlb} style={vkStyleA}><img style={vkStyle}src="./assets/goo.svg" alt="google"/></a>
                   </div>

@@ -17,6 +17,7 @@ import * as $ from 'jquery'
 import 'bootstrap'
 import SocketIOFileUpload from 'socketio-file-upload'
 import {MDBBtn} from 'mdbreact'
+import LANG from '../lang'
 import {Image, Video, Transformation, CloudinaryContext} from 'cloudinary-react'
 const socket = io()
 class ItemCreator extends React.Component {
@@ -425,7 +426,7 @@ render(){
                         color: rgb(135, 134, 197);
                     }
                     .createItem-link{
-                        position: absolute;
+                        position: static;
                         top: 100px;
                         font-size:1em;
                         right: 20px;
@@ -481,7 +482,7 @@ render(){
                             text-align:center;
                         }
                         .createItem-link{
-                            position: absolute;
+                            position: static;
                             top: 100px;
                             font-size:.8em;
                             right: 20px;
@@ -496,17 +497,17 @@ render(){
              <section style={this.style.section} className="addCollectSect">
                 <form onSubmit={this.subFormColl} className="formCreateItem" >
                     <div className='createitem-reducer'>
-                        <Link className="createItem-link" to={`/users/${this.props.id}`}>Back</Link>
-                        <h1 className="createItem-h1">Add new Collection</h1>
-                        <Text name="col_name" required nm="Name of collection*" />
-                        <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
+                        <Link className="createItem-link" to={`/users/${this.props.id}`}>{LANG.back[localStorage.getItem('lang')]}</Link>
+                        <h1 className="createItem-h1">{LANG.addcoll[localStorage.getItem('lang')]}</h1>
+                        <Text name="col_name" required nm={`${LANG.nameofcoll[localStorage.getItem('lang')]}*`} />
+                        <TextareaPage2 name="col_descript" required style={this.style.description2} nm={`${LANG.desc[localStorage.getItem('lang')]}*`} />
                         <ImageUpload func={this.returnMeVar.bind(this)} name="col_img" />
-                        <Text name="col_comment" nm="Author comment" />
-                        <span className="createItem-dbtitle">Choose collection type:</span>
-                        <DropboxInput name="col_type" disabled arr={this.state.types}  named='Collection type' className="createItem-db2"/>
+                        <Text name="col_comment" nm={LANG.authnote[localStorage.getItem('lang')]} />
+                        <span className="createItem-dbtitle">{LANG.chcolltype[localStorage.getItem('lang')]}</span>
+                        <DropboxInput name="col_type" disabled arr={this.state.types}  named={LANG.colltype[localStorage.getItem('lang')]} className="createItem-db2"/>
                         <DropdownBtn name="col_adds" color=""/>
                         <hr style={this.style.hr}/>
-                        <MDBBtn style={this.style.submit}color="" type="submit">OK</MDBBtn>
+                        <MDBBtn style={this.style.submit}color="" type="submit">Oк</MDBBtn>
                     </div>
                 </form>
              </section>
@@ -514,21 +515,21 @@ render(){
             { this.props.sub === 'editc' && (this.props.user._id === this.props.id || this.props.user.isAdmin === true) &&
              <section style={this.style.section} className="addCollectSect">
                 <form onSubmit={this.subEditCol} className="formCreateItem">
-                    <Link className="createItem-link" to={`/collections/${this.state.editcol._id}`}>Back</Link>
-                    <h1 className="createItem-h1">Edit Collection</h1>
-                    {this.state.editcol.name && <Text default={this.state.editcol.name} name="col_name" required nm="Name of collection*" />}
-                    <TextareaPage2 name="col_descript" required style={this.style.description2} nm="Description*" />
+                    <Link className="createItem-link" to={`/collections/${this.state.editcol._id}`}>{LANG.back[localStorage.getItem('lang')]}</Link>
+                    <h1 className="createItem-h1">{LANG.editcoll[localStorage.getItem('lang')]}</h1>
+                    {this.state.editcol.name && <Text default={this.state.editcol.name} name="col_name" required nm={`${LANG.nameofcoll[localStorage.getItem('lang')]}*`} />}
+                    <TextareaPage2 name="col_descript" required style={this.style.description2} nm={`${LANG.desc[localStorage.getItem('lang')]}*`} />
                     {typeof this.state.editcol.img == 'string' &&<ImageUpload default={this.state.editcol.img} func={this.returnMeVar.bind(this)} name="col_img" />}
-                    {typeof this.state.editcol.comment == 'string' && <Text default={this.state.editcol.comment} name="col_comment" nm="Author comment" />}
-                    <span className="createItem-dbtitle">Type of your collection:</span>
-                    <DropboxInput name="col_type" disabled arr={this.state.types} init={this.state.editcol}  named='Collection type' className="createItem-db2" />
+                    {typeof this.state.editcol.comment == 'string' && <Text default={this.state.editcol.comment} name="col_comment" nm={LANG.authnote[localStorage.getItem('lang')]} />}
+                    <span className="createItem-dbtitle">{LANG.typeofucoll[localStorage.getItem('lang')]}:</span>
+                    <DropboxInput name="col_type" disabled arr={this.state.types} init={this.state.editcol}  named={LANG.colltype[localStorage.getItem('lang')]} className="createItem-db2" />
                     <div className="alreadyInUse">
                     {typeof this.state.editcol.adds === 'string' && JSON.parse(this.state.editcol.adds).map((v,i,a)=>{
                         return <div style={{width:"100%",margin: "30px 0% 0px"}} className="input-group mb-3">
                                     <div className="input-group-prepend">
                                         <button style={{width:'100%',color:'white',backgroundColor:'gray'}} className="btn  btn-md m-0 px-3 py-2 z-depth-0" type="button" aria-haspopup="true" aria-expanded="false">{Object.keys(a[i])[0]}</button>
                                     </div>
-                                    <input type="text" defaultValue={v[Object.keys(a[i])[0]]} className="form-control" placeholder="Enter the name for your new Checkbox" ariaLabel="Checkbox"/>
+                                    <input type="text" defaultValue={v[Object.keys(a[i])[0]]} className="form-control" placeholder={`${LANG.pholderaddadds[localStorage.getItem('lang')]} field`} ariaLabel="Not for edit"/>
                                 </div>
                     })}
                     </div>
@@ -541,23 +542,23 @@ render(){
             { this.props.sub === 'addi' && (this.props.user._id === this.props.id || this.props.user.isAdmin === true) &&
             (this.props.grabby.collections.filter(f=>f.email===this.props.owner.email).length > 0)?<section style={this.style.section} className="addItemSect">
                 <form onSubmit={this.subFormItems} className="formCreateItem">
-                    <Link className="createItem-link" to={(this.props.location.addcoll)?`/collections/${this.props.location.addcoll._id}`:`/users/${this.props.id}`}>Back</Link>
-                    <h1 className="createItem-h1">Add new Item to Collection</h1>
-                    <Text name="item_name" required nm="Name of Item*" />
-                    <TextareaPage2 name="item_descript" required style={this.style.description2} nm="Description*" />
+                    <Link className="createItem-link" to={(this.props.location.addcoll)?`/collections/${this.props.location.addcoll._id}`:`/users/${this.props.id}`}>{LANG.back[localStorage.getItem('lang')]}</Link>
+                    <h1 className="createItem-h1">{LANG.additocoll[localStorage.getItem('lang')]}</h1>
+                    <Text name="item_name" required nm={`${LANG.nameofitem[localStorage.getItem('lang')]}*`} />
+                    <TextareaPage2 name="item_descript" required style={this.style.description2} nm={`${LANG.desc[localStorage.getItem('lang')]}*`} />
                     <ImageUpload func={this.returnMeVar.bind(this)} name="item_img" />
-                    <Text name='addTegPlsIWanna'nm="Add teg" />   
+                    <Text name='addTegPlsIWanna'nm={LANG.addtag[localStorage.getItem('lang')]} />   
                     <div style={{marginBottom:'30px'}} name="МАССИВ ТЕГОВ">
-                        <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`)}} className="teg add">Add</div> 
+                        <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`)}} className="teg add">{LANG.add[localStorage.getItem('lang')]}</div> 
                         <div className='tegCont'></div>
                     </div>
-                    <span className="createItem-dbtitle">Choose collection type for an Item</span><span className="createItem-dbtitle dva">List of available collection</span>
-                    {(this.props.location.addcoll)?<DropboxInput forced={this.props.location.addcoll.type} className='createItem-db2' class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type' />:<DropboxInput  className='createItem-db2' class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type'  />}
-                    <span className="createItem-dbtitle tri">List of available collection</span>
-                    {(this.props.location.addcoll)?<DropboxInput forced={this.props.location.addcoll.name} className='createItem-db2' class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection' />:<DropboxInput className='createItem-db2' class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection' />}
+                    <span className="createItem-dbtitle">{LANG.chcolltype[localStorage.getItem('lang')]}</span><span className="createItem-dbtitle dva">{LANG.collslist[localStorage.getItem('lang')]}</span>
+                    {(this.props.location.addcoll)?<DropboxInput forced={this.props.location.addcoll.type} className='createItem-db2' class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named={LANG.colltype[localStorage.getItem('lang')]} />:<DropboxInput  className='createItem-db2' class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named={LANG.colltype[localStorage.getItem('lang')]}  />}
+                    <span className="createItem-dbtitle tri">{LANG.collslist[localStorage.getItem('lang')]}</span>
+                    {(this.props.location.addcoll)?<DropboxInput forced={this.props.location.addcoll.name} className='createItem-db2' class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named={LANG.coll[localStorage.getItem('lang')]} />:<DropboxInput className='createItem-db2' class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named={LANG.coll[localStorage.getItem('lang')]} />}
                     <div>
                                     {(this.state.addsForItemCreation.length)?<hr style={this.style.hr} />:''}
-                                    <h1 className="createItem-h1">{(this.state.addsForItemCreation.length)?'Set additional properties':''}</h1>
+                                    <h1 className="createItem-h1">{(this.state.addsForItemCreation.length)?`${LANG.setadds[localStorage.getItem('lang')]}`:''}</h1>
                                 <div className='addsOutCont' style={{
                                     backgroundColor: '#e9ecef',
                                     padding: '0 20px',
@@ -609,10 +610,10 @@ render(){
                 this.state.link=='addi' && <section className="addItemSect">
                             <form onSubmit={this.subFormItems} className="formCreateItem">
                                 <div style={{position:'relative',width:'100%',minHeight:'400px'}}>
-                                    <Link className="createItem-link" to={`/users/${this.props.id}`}>Back</Link>
+                                    <Link className="createItem-link" to={`/users/${this.props.id}`}>{LANG.back[localStorage.getItem('lang')]}</Link>
                                     <div style={{position:'absolute',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>
-                                        <h2 style={{marginBottom:'25px',textAlign:'center'}}>Add collection first!</h2>
-                                        <Link style={{color:'black'}} to={{pathname:`/users/${this.props.owner._id}/addc`}}><MDBBtn style={{position:'relative',left:'50%',transform: 'translateX(-50%)'}}color=''>Add</MDBBtn></Link>
+                                        <h2 style={{marginBottom:'25px',textAlign:'center'}}>{LANG.addcollsfirst[localStorage.getItem('lang')]}</h2>
+                                        <Link style={{color:'black'}} to={{pathname:`/users/${this.props.owner._id}/addc`}}><MDBBtn style={{position:'relative',left:'50%',transform: 'translateX(-50%)'}}color=''>{LANG.add[localStorage.getItem('lang')]}</MDBBtn></Link>
                                     </div>
                                 </div>
                             </form>
@@ -621,14 +622,14 @@ render(){
             { this.props.sub === 'editi' && (this.props.user._id === this.props.id || this.props.user.isAdmin === true) &&
             (this.props.grabby.collections.filter(f=>f.email===this.props.owner.email).length > 0) && <section style={this.style.section} className="addItemSect">
                 <form onSubmit={this.subEditItem} className="formCreateItem">
-                    <Link className="createItem-link" to={(this.props.location.edititem)?`/items/${this.props.location.edititem}`:`/users/${this.props.id}`}>Back</Link>
-                    <h1 className="createItem-h1">Edit Item</h1>
-                    {typeof this.state.edititem.name === 'string' && <Text name="item_name" default={this.state.edititem.name} required nm="Name of Item*" />}
-                    <TextareaPage2 name="item_descript" required style={this.style.description2} nm="Description*" />
+                    <Link className="createItem-link" to={(this.props.location.edititem)?`/items/${this.props.location.edititem}`:`/users/${this.props.id}`}>{LANG.back[localStorage.getItem('lang')]}</Link>
+                    <h1 className="createItem-h1">{LANG.edititem[localStorage.getItem('lang')]}</h1>
+                    {typeof this.state.edititem.name === 'string' && <Text name="item_name" default={this.state.edititem.name} required nm={`${LANG.nameofitem[localStorage.getItem('lang')]}*`} />}
+                    <TextareaPage2 name="item_descript" required style={this.style.description2} nm={`${LANG.desc[localStorage.getItem('lang')]}*`} />
                     {typeof this.state.edititem.img === 'string' && <ImageUpload default={this.state.edititem.img} func={this.returnMeVar.bind(this)} name="item_img" />}
-                    <Text name='addTegPlsIWanna'nm="Add teg" />   
+                    <Text name='addTegPlsIWanna'nm={LANG.addtag[localStorage.getItem('lang')]} />   
                     <div style={{marginBottom:'30px'}} name="МАССИВ ТЕГОВ">
-                        <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`)}} className="teg add">Add</div> 
+                        <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`)}} className="teg add">{LANG.add[localStorage.getItem('lang')]}</div> 
                         <div className='tegCont'>
                         {typeof this.state.edititem.tags === 'string' && 
                             JSON.parse(this.state.edititem.tags).map(t=>{
@@ -637,13 +638,13 @@ render(){
                         }
                         </div>
                     </div>
-                    <span className="createItem-dbtitle">Collection type</span><span className="createItem-dbtitle dva">Collection</span>
-                    {typeof this.state.edititem.type === 'string' && <DropboxInput forced={this.state.edititem.type} className="createItem-db" class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named='Collection type'  />}
-                    <span className="createItem-dbtitle tri">Collection</span>
-                    {typeof this.state.edititem.collect === 'string' && <DropboxInput forced={this.state.edititem.collect} className="createItem-db" class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named='Collection'  />}
+                    <span className="createItem-dbtitle">{LANG.colltype[localStorage.getItem('lang')]}</span><span className="createItem-dbtitle dva">Collection</span>
+                    {typeof this.state.edititem.type === 'string' && <DropboxInput forced={this.state.edititem.type} className="createItem-db2" class="addinpdropiq" ref={this.refItemDropbox1} disabled arr={this.state.availbleTypes} named={LANG.colltype[localStorage.getItem('lang')]}  />}
+                    <span className="createItem-dbtitle tri">{LANG.coll[localStorage.getItem('lang')]}</span>
+                    {typeof this.state.edititem.collect === 'string' && <DropboxInput forced={this.state.edititem.collect} className="createItem-db2" class="addinpdropiq2" ref={this.refItemDropbox2} disabled arr={this.state.availbleNames} named={LANG.coll[localStorage.getItem('lang')]}  />}
                     <div>
                                     {(this.state.addsForItemCreation.length)?<hr style={this.style.hr} />:''}
-                                    <h1 className="createItem-h1">{(typeof this.state.edititem.add === 'string' && JSON.parse(this.state.edititem.add).length!==0)?'Set additional properties':''}</h1>
+                                    <h1 className="createItem-h1">{(typeof this.state.edititem.add === 'string' && JSON.parse(this.state.edititem.add).length!==0)?`${LANG.setadds[localStorage.getItem('lang')]}`:''}</h1>
                                 <div className='addsOutCont' style={{
                                     backgroundColor: '#e9ecef',
                                     padding: '0 20px',

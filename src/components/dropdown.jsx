@@ -4,6 +4,7 @@ import { MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from
 import AdditionalElem from '../components/inputs/textwithname'
 import ItemCreator from './createitem'
 import * as $ from 'jquery'
+import LANG from '../lang'
 
 class DropdownBtn extends Component{
   constructor(props){
@@ -28,10 +29,10 @@ class DropdownBtn extends Component{
                                     <button style="background-color:rgb(122, 176, 180) !important"  class="btn btn-primary btn-md m-0 px-3 py-2 z-depth-0 dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${name}</button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" onclick='$("#${id}").remove()'>Delete</a>
+                                        <a class="dropdown-item" onclick='$("#${id}").remove()'>${LANG.delete[localStorage.getItem('lang')]}</a>
                                     </div>
                                 </div>
-                                <input type="text" value='' class="form-control" placeholder='Enter the name for your new ${name}'  aria-label='${name}'/>
+                                <input type="text" value='' class="form-control" placeholder='${LANG.pholderaddadds[localStorage.getItem('lang')]} ${name}'  aria-label='${name}'/>
                       </div>`
           elem.innerHTML = str
     }
@@ -51,7 +52,7 @@ render(){
         <div style={{display:'flex',justifyContent:'center'}}>
             <MDBDropdown placement='right' >
             <MDBDropdownToggle caret color='' style={{color:'white',backgroundColor:'rgb(135, 134, 197)'}}>
-                Click to add some new property for your collection
+            {LANG.clickaddadds[localStorage.getItem('lang')]}
             </MDBDropdownToggle>
             <MDBDropdownMenu  basic>
                 <MDBDropdownItem onClick={this.createAdd}>Checkbox</MDBDropdownItem>
@@ -63,7 +64,7 @@ render(){
             </MDBDropdown>
         </div>
         <div id='targ'className="additionalInputs">
-        {/*возможные строки\була\даты\текста\числа */}
+        {/*возможные строки\була\даты\тексты\числа */}
         </div>
       </div>
     )

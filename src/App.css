@@ -47,20 +47,58 @@
 html.darkMode{
     background-color: #0c0c0c;;
 }
+.darkMode table .linkToUser{
+    filter:unset;
+}
+.darkMode .btn:not(.__ico_nqa){
+    background: gray;
+}
+.darkMode .sign-page span,
+.darkMode .contrastHx,
+.darkMode .linkToUser,
 .darkMode .modal-content,
+.darkMode .modal-content img,
 .darkMode .sign-page .card,
 .darkMode .formCreateItem,
 .darkMode .adminWrapForTheme,
 .darkMode .prof_ile__contain,
 .darkMode .profile-photo,
 .darkMode .formCreateItem .fileInput,
-.darkMode .card.__cont_ainer_ button,
 .darkMode .contOfItemMain,
 .darkMode .contOfItemMain img{
     filter:invert(1);
 }
+.contrastHx{
+    color:black;
+}
+.langBtn:hover{
+    box-shadow: 0 0 10px black;
+}
+.langBtn{
+    transition:.3s;
+    margin-left: 15px;
+    border-radius: 15px;
+    background-color: transparent;
+    color: black;
+    line-height: 1;
+    border: none;
+}
+
 .darkMode #mainGrabbyNavbar *:hover{
     color:black !important;
+}
+.darkMode .card.__cont_ainer_ button:hover,
+.darkMode .btn:hover{
+    box-shadow: 0 0 10px #fff;
+}
+.darkMode .card.__cont_ainer_ button,
+.darkMode .btn{
+    color:black !important;
+    filter: invert();
+    box-shadow: 0 0 5px #fffa;
+}
+.darkMode .card.__cont_ainer_ button{
+    filter: unset;
 }
 .darkMode .collectionsBox{
     filter:grayscale(1);
@@ -71,6 +109,9 @@ html.darkMode{
     box-shadow: 0 0 30px #fff3;
 }
 
+.btn{
+    font-size: .7rem;
+}
 
 body,html{
     height: auto;
@@ -156,7 +197,7 @@ h1,h2,h3,h4,h5,h6{
     background-color: transparent;
 }
 .darkMode .wrapperDiv{
-    filter: blur(3px) invert() opacity(.15);
+    filter: blur(6px) invert() opacity(.15);
 }
 .wrapperDiv{
     z-index: -1;

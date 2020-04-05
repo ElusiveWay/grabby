@@ -1,6 +1,7 @@
 import React, {Component, useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import * as $ from 'jquery'
+import LANG from '../lang'
 
 const TegCloud = (props) => {
     let [tegs, setTegs] = useState([])
@@ -13,7 +14,7 @@ const TegCloud = (props) => {
     const clicker = (e) => {
         let teg = e.target.innerText
         global.__modalok = <div>
-                              <h3 style={{marginBottom:'20px'}}>Items with teg : #<i>{teg}</i></h3>
+                              <h3 style={{marginBottom:'20px'}}>{LANG.itemswithtag[localStorage.getItem('lang')]} : #<i>{teg}</i></h3>
                               <ul>
                                 {global.__mainData.items.filter(v=>JSON.parse(v.tags).some(q=>q==teg)).map(v=><Link  onClick={(e)=>{e.stopPropagation();global.document.querySelectorAll('.activeSearchList').forEach(v=>v.classList.remove('activeSearchList'));e.target.classList.add('activeSearchList')}} to={`/items/${v._id}`}><li onClick={()=>$('#collPageModal').modal('hide')}><h5>{v.name}</h5></li></Link>)}
                               </ul>
@@ -52,7 +53,7 @@ const TegCloud = (props) => {
                         box-shadow: 0 0 5px #00000099;
                     }   
                     `}}/>
-            {tegs.length>0 && 'Popular tegs : '}{tegs.map(v=><div data-target="#collPageModal" data-toggle="modal" onClick={clicker} className="teg">{v}</div>)}
+            {tegs.length>0 && `${LANG.poptags[localStorage.getItem('lang')]} : `}{tegs.map(v=><div data-target="#collPageModal" data-toggle="modal" onClick={clicker} className="teg">{v}</div>)}
         </div>
     )
 }

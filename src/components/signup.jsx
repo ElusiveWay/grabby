@@ -6,6 +6,7 @@ import { BrowserRouter as Router,
   Redirect } from "react-router-dom";
 import Message from './peref/message'
 import * as $ from 'jquery'
+import LANG from '../lang'
 
 class Signup extends Component {
   constructor(props){
@@ -44,11 +45,11 @@ class Signup extends Component {
       if (r.data.out == "neok"){
         let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
         $('.message-cont').append('<div id='+id+'></div>')
-        ReactDOM.render(<Message text1="Oops!" text2="Something went wrong. Try again!" color="danger" id={id}/>, $('#'+id)[0])
+        ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.somewrong[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
       }else if(r.data.out == "ok"){
         let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
         $('.message-cont').append('<div id='+id+'></div>')
-        ReactDOM.render(<Message text1="Yahooo!" text2="Now you are our member!" color="success" id={id}/>, $('#'+id)[0])
+        ReactDOM.render(<Message text1={LANG.yeah[localStorage.getItem('lang')]} text2={LANG.urmember[localStorage.getItem('lang')]} color="success" id={id}/>, $('#'+id)[0])
         this.setState({redirect : 'home'})
         global.__signed = r.data.signed
         global.__user = r.data.user
@@ -68,10 +69,10 @@ class Signup extends Component {
             <MDBCard style={{margin:'20px', width : '400px', height : 'auto', minHeigth : "300px"}}>
               <MDBCardBody>
               <form style={{color:'#2196f3'}} onSubmit={ this.subme }>
-                  <p className="h4 text-center py-4">Sign up</p>
+                  <p className="h4 text-center py-4">{LANG.signup[localStorage.getItem('lang')]}</p>
                   <div className="grey-text">
                     <MDBInput
-                      label="Your name"
+                      label={LANG.uname[localStorage.getItem('lang')]}
                       icon="user"
                       group
                       type="text"
@@ -84,7 +85,7 @@ class Signup extends Component {
                       success="right"
                     />
                     <MDBInput
-                      label="Your email"
+                      label={LANG.uemail[localStorage.getItem('lang')]}
                       icon="envelope"
                       group
                       type="email"
@@ -97,7 +98,7 @@ class Signup extends Component {
                       success="right"
                     />
                     <MDBInput
-                      label="Your password"
+                      label={LANG.upass[localStorage.getItem('lang')]}
                       icon="lock"
                       name="pass"
                       required
@@ -115,7 +116,7 @@ class Signup extends Component {
                   </div>
                   <div className="text-center py-4 mt-3">
                     <MDBBtn color="cyan" type="submit">
-                      Register
+                    {LANG.signup[localStorage.getItem('lang')]}
                     </MDBBtn>
                   </div>
                   {this.checkRedirect()}

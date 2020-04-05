@@ -10,8 +10,10 @@ import Types from '../types'
 import 'tablesorter'
 import  * as $ from 'jquery'
 import makeMessage from './peref/mess';
+import LANG from '../lang'
+
 const AmazingTable = (props) => {
-    let [modalInner, setModal] = useStateWithCallback(<div>Loading...</div>, ()=>{global.__modalok = modalInner})
+    let [modalInner, setModal] = useStateWithCallback(<div>{LANG.loading[localStorage.getItem('lang')]}</div>, ()=>{global.__modalok = modalInner})
     let [contStyle, setContStyle] = useState({})
     let [colItems, setCol] = useState([])
     let [delItems, setDelItems] = useState({items:[]})
@@ -31,7 +33,7 @@ const AmazingTable = (props) => {
     }
     const filtrator = (e)=>{
         const filterKeyb = (that)=>($(that).text().toLowerCase().indexOf(value) > -1)
-        const selector = (that)=>(global.document.getElementById('inlineFormCustomSelect').value == $(that)[0].dataset.type || global.document.getElementById('inlineFormCustomSelect').value == 'All types')
+        const selector = (that)=>(global.document.getElementById('inlineFormCustomSelect').value == $(that)[0].dataset.type || global.document.getElementById('inlineFormCustomSelect').value == 'All types' || global.document.getElementById('inlineFormCustomSelect').value == 'Все типы')
         const tager = (that)=>($(that)[0].dataset.tags > 0 || $('#havetegcheckbox').prop('checked') == false)
         const commenter = (that)=>($(that)[0].dataset.comments > 0 || $('#havecommentscheckbox').prop('checked') == false)
         var value = $('[name="tablecontrol"]').val().toLowerCase()
@@ -69,7 +71,7 @@ const AmazingTable = (props) => {
         if (type == 'comments'){
         setModal(
             <div className="modalInnerator">
-                <h2>Comments:</h2>
+                <h2>{LANG.comments[localStorage.getItem('lang')]}:</h2>
                 {JSON.parse(str).map(v=>{
                         return (<div><h4 style={{color:'#49586c'}}>{v.likerName}:</h4>
                                     <p>{v.tex}</p>
@@ -82,7 +84,7 @@ const AmazingTable = (props) => {
         if (type == 'tags'){
         setModal(
             <div className="modalInnerator">
-                <h2>Full list of tags:</h2>
+                <h2>{LANG.taglist[localStorage.getItem('lang')]}:</h2>
                 {JSON.parse(str).map(v=>{
                         return (<div><h4 className="tagpre"style={{color:'#49586c'}}>{v}</h4></div>
                             )
@@ -93,7 +95,7 @@ const AmazingTable = (props) => {
         if (type == 'adds'){
         setModal(
             <div className="modalInnerator">
-                <h2>List of additional properties:</h2>
+                <h2>{LANG.addlist[localStorage.getItem('lang')]}:</h2>
                 {JSON.parse(str).map((v,i)=>{
                         let coll = global.__mainData.collections.filter(f=>(f.name==data.collect && f.email == data.email))[0]
                         return (<div><h4 style={{color:'#49586c'}}>{JSON.parse(coll.adds)[i][Object.keys(JSON.parse(coll.adds)[i])[0]]+' = '+v.value}</h4></div>
@@ -105,7 +107,7 @@ const AmazingTable = (props) => {
         if (type == 'desc'){
         setModal(
             <div className="modalInnerator">
-                <h2>Full description:</h2>
+                <h2>{LANG.fulldesc[localStorage.getItem('lang')]}:</h2>
                 <p>{str}</p>
             </div>
             )
@@ -113,7 +115,7 @@ const AmazingTable = (props) => {
         if (type == 'img'){
         setModal(
             <div class="modalInnerator">
-                <h2>Full url:</h2>
+                <h2>{LANG.fullurl[localStorage.getItem('lang')]}:</h2>
                 <p>{str}</p>
                 <img style={{width:'100%'}}src={str} alt="image"/>
             </div>
@@ -123,10 +125,10 @@ const AmazingTable = (props) => {
     const parseBeauty = (str,type,data={},dataItaration=0) => {
         switch (type){
             case 'likes': return <span>{JSON.parse(str).length}</span>
-            case 'comments': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser">Click to show</span>
+            case 'comments': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser">{LANG.show[localStorage.getItem('lang')]}</span>
             case 'tags': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser" >{JSON.parse(str).join(', ')}</span>
             case 'desc': return <span  data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser" >{str}</span>
-            case 'adds': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type,data)} className="linkToUser" >{adds.length!==0 && (adds[dataItaration].length !== 0)?(adds[dataItaration].every(v=>v!==''))?'Click to open':'':'Open'}</span>
+            case 'adds': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type,data)} className="linkToUser" >{adds.length!==0 && (adds[dataItaration].length !== 0)?(adds[dataItaration].every(v=>v!==''))?LANG.open[localStorage.getItem('lang')]:'':LANG.open[localStorage.getItem('lang')]}</span>
             case 'img': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type,data)} className="linkToUser" >{str.split('/').pop()}</span>
             default: return 'field is not defined'
         }
@@ -134,20 +136,20 @@ const AmazingTable = (props) => {
     return colItems.length!==0 && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItems[0].name && f.email==colItems[0].email)).length!==0)?(<div>
         <div className="mainAmazingTableCont" style={{minHeight:'400px'}}>
         <div className="filtrator">
-            {access && <i onClick={()=>{if(delItems.items.length==0)makeMessage('danger', 'Stop!','You didn\'t select any item!')}} data-toggle={delItems.items.length!==0?'modal':''} data-target="#itemDeleteModal" className="far deleteIcon fa-trash-alt" style={{marginRight:'15px'}}></i>}
-            <input  type="text" onKeyUp={filtrator} className="filterelem form-control" placeholder="Filter" name="tablecontrol"/>
+            {access && <i onClick={()=>{if(delItems.items.length==0)makeMessage('danger', LANG.stop[localStorage.getItem('lang')],`${LANG.itemnotselect[localStorage.getItem('lang')]}`)}} data-toggle={delItems.items.length!==0?'modal':''} data-target="#itemDeleteModal" className="far deleteIcon fa-trash-alt" style={{marginRight:'15px'}}></i>}
+            <input  type="text" onKeyUp={filtrator} className="filterelem form-control" placeholder={LANG.filter[localStorage.getItem('lang')]} name="tablecontrol"/>
             <select onChange={filtrator} class="custom-select mr-sm-2 filterelem" id="inlineFormCustomSelect">
-                <option value="All types" selected>All types</option>
-                {Types.map(v=><option value={v}>{v}</option>)}
+                <option value="All types" selected>{LANG.alltypes[localStorage.getItem('lang')]}</option>
+                {Types.map(v=><option value={v}>{LANG[v][localStorage.getItem('lang')]}</option>)}
             </select>
             <div>
                 <div class="custom-control custom-checkbox mr-sm-2">
                     <input onChange={filtrator} type="checkbox" class="custom-control-input" id="havetegcheckbox"/>
-                    <label class="custom-control-label" for="havetegcheckbox">Have tag(s)</label>
+                    <label class="custom-control-label" for="havetegcheckbox">{LANG['haveTags'][localStorage.getItem('lang')]}</label>
                 </div>
                 <div class="custom-control custom-checkbox mr-sm-2">
                     <input onChange={filtrator} type="checkbox" class="custom-control-input" id="havecommentscheckbox"/>
-                    <label class="custom-control-label" for="havecommentscheckbox">Have comment(s)</label>
+                    <label class="custom-control-label" for="havecommentscheckbox">{LANG['haveСomments'][localStorage.getItem('lang')]}</label>
                 </div>
             </div>
         </div>
@@ -273,13 +275,13 @@ const AmazingTable = (props) => {
         <table style={{fontSize:`calc(${contStyle} / 10) !important`,width: 'calc(100%)'}} class="tablesorter itemsTable table table-striped">
             <thead> 
                 <tr className="headerrowtable">
-                <th><input style={{display:(access==true)?'inline':'none',marginRight:'5px'}} type="checkbox"  name='checkAllItems'/>Title <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
-                <th>Description <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
-                <th>Image url <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
-                <th>Properties <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
-                <th>Likes <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
-                <th>Tags <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
-                <th>Comments <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th><input style={{display:(access==true)?'inline':'none',marginRight:'5px'}} type="checkbox"  name='checkAllItems'/>{LANG.title[localStorage.getItem('lang')]} <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>{LANG.desc[localStorage.getItem('lang')]} <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>{LANG.imageurl[localStorage.getItem('lang')]} <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>{LANG.propp[localStorage.getItem('lang')]} <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>{LANG.likes[localStorage.getItem('lang')].slice(0,-1)} <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>{LANG.tags[localStorage.getItem('lang')]} <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
+                <th>{LANG.comments[localStorage.getItem('lang')]} <i style={{fontSize:'.7em',color:'#999'}} class="fas fa-sort"></i></th>
                 </tr>
             </thead>
             <tbody>
@@ -289,11 +291,11 @@ const AmazingTable = (props) => {
                     return  <tr data-comments={k.comments && (JSON.parse(k.comments) instanceof Array)?JSON.parse(k.comments).length:0} data-tags={k.tags && (JSON.parse(k.tags) instanceof Array)?JSON.parse(k.tags).length:0} data-type={k.type}>
                                 <td>{access &&<input style={{marginRight:'5px'}} type="checkbox" data-type="chosenItem" name={k._id}/>}<Link className="linkToUser" to={`/items/${k._id}`}>{k.name}</Link></td>
                                 <td>{(k.description)?parseBeauty(k.description,'desc'):''}</td>
-                                <td>{(k.img)?parseBeauty(k.img,'img'):'No image'}</td>
-                                <td>{(k.add)?parseBeauty(k.add,'adds',k,ci):'No additional fields'}</td>
+                                <td>{(k.img)?parseBeauty(k.img,'img'):`${LANG.noimg[localStorage.getItem('lang')]}`}</td>
+                                <td>{(k.add)?parseBeauty(k.add,'adds',k,ci):`${LANG.noadds[localStorage.getItem('lang')]}`}</td>
                                 <td>{(k.likes)?parseBeauty(k.likes,'likes'):'0'}</td>
-                                <td>{(k.tags)?parseBeauty(k.tags,'tags'):'No tags'}</td>
-                                <td>{(k.comments)?(JSON.parse(k.comments).length!==0)?parseBeauty(k.comments,'comments'):'No comments':'No comments'}</td>
+                                <td>{(k.tags)?parseBeauty(k.tags,'tags'):`${LANG.notags[localStorage.getItem('lang')]}`}</td>
+                                <td>{(k.comments)?(JSON.parse(k.comments).length!==0)?parseBeauty(k.comments,'comments'):LANG.nocomms[localStorage.getItem('lang')]:LANG.nocomms[localStorage.getItem('lang')]}</td>
                             </tr>
                     })
                 })
@@ -302,8 +304,8 @@ const AmazingTable = (props) => {
         </table>
         </div>
         </div>
-        <Modal user={user} owner={owner} deleteItems={delItems} title='Item deleting' target="itemDeleteModal" text={`Are you sure to delete (${delItems.items.length}) items?`}></Modal>
-        </div>):<h2>Collection(s) have no elements!</h2>
+        <Modal user={user} owner={owner} deleteItems={delItems} title={LANG.delItem[localStorage.getItem('lang')]} target="itemDeleteModal" text={LANG.sure[localStorage.getItem('lang')]}></Modal>
+        </div>):<h2 className="contrastHx">{LANG.havenocolls[localStorage.getItem('lang')]}</h2>
 }
 
 export default AmazingTable

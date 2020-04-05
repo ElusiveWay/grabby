@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Collection from './collection'
 import { findByLabelText } from '@testing-library/react'
-
+import LANG from '../../lang'
 class Collections extends Component {
     constructor(props){
       super(props)
@@ -70,7 +70,7 @@ class Collections extends Component {
               <style dangerouslySetInnerHTML={{__html:COMPONENT_STYLE}}/>
               <img src='' onError={()=>window.scrollTo(0,0)}/>
               {this.drawFlexItem()}
-              {!global.__mainData && <h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>Loading...</h1>}
+              {!global.__mainData && <h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>{LANG.loading[localStorage.getItem('lang')]}</h1>}
           </div>
       )
     }

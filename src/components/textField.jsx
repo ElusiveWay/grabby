@@ -1,9 +1,10 @@
 import React,{Component, useState, useEffect} from 'react'
 import Anno from './announcements'
 import Guide from './guide'
+import LANG from '../lang'
 
 const TextField = (props) => {
-    const {grabby} = props
+    const {grabby,lang} = props
     useEffect(()=>{
         let raf = () => {
             try{
@@ -82,11 +83,11 @@ const TextField = (props) => {
             <ul style={{marginTop:'1%',marginLeft:'3%'}}className="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
                     <a className="nav-link active" id="home-tab" data-toggle="tab" href="#announcements" role="tab" aria-controls="home"
-                    aria-selected="true">Announcement</a>
+                    aria-selected="true">{LANG.announcement[lang]}</a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link" id="profile-tab" data-toggle="tab" href="#chat" role="tab" aria-controls="profile"
-                    aria-selected="false">Guide</a>
+                    aria-selected="false">{LANG.guide[lang]}</a>
                 </li>
             </ul>
             <hr style={{width:'90%',padding:'0px'}}/>

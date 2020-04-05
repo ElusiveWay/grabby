@@ -1,4 +1,5 @@
 import React from 'react'
+import LANG from '../../lang'
 
 class ImageUpload extends React.Component {
   constructor(props) {
@@ -81,7 +82,7 @@ class ImageUpload extends React.Component {
         }
           `}}></style>
           <div className="input-group-prepend">
-                <span style={this.text} class="input-group-text" id="basic-addon">Click or drop an image to the area to add one</span>
+                <span style={this.text} class="input-group-text" id="basic-addon">{LANG.clickdrop[localStorage.getItem('lang')]}</span>
           </div>
           <input className="fileInput" 
             type="file" 

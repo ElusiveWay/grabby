@@ -15,7 +15,6 @@ class ProfileBox extends Component {
     }
     componentDidMount(){
         this.inter2 = setInterval(()=>{
-            console.log(this.state!==undefined && this.state.data!==undefined)
             this.setState( {data : this.props.data})
     }, 50)
     }

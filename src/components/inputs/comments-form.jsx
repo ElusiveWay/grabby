@@ -1,6 +1,7 @@
 import React from "react";
 import {useState} from 'react'
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon, MDBInput } from 'mdbreact';
+import LANG from '../../lang'
 
 const CommentsForm = (props) => {
 let [inpCom, setInpComm] = useState('')
@@ -40,14 +41,14 @@ return (
       }
       `}}/>
       <form method="post" onSubmit={reset}>
-        <p className="h5 mytextcomm text-center mb-4">Comment the item</p>
+        <p className="h5 mytextcomm text-center mb-4">{LANG.commitem[localStorage.getItem('lang')]}</p>
         <div className="grey-text">
-          <MDBInput onChange={setInpCom} value={inpCom} name="titla" label="Subject" icon="tag" type="text" />
-          <MDBInput onChange={setInpCom2} value={inpCom2} name="texta" style={{minHeight:'50px',maxHeight:'400px'}}type="textarea" required rows="2" label="Your message" icon="pencil-alt" />
+          <MDBInput onChange={setInpCom} value={inpCom} name="titla" label={LANG.subject[localStorage.getItem('lang')]} icon="tag" type="text" />
+          <MDBInput onChange={setInpCom2} value={inpCom2} name="texta" style={{minHeight:'50px',maxHeight:'400px'}}type="textarea" required rows="2" label={LANG.yourmess[localStorage.getItem('lang')]} icon="pencil-alt" />
         </div>
         <div className="text-center">
           <MDBBtn outline type="submit"  color="" className="outlineButtonOfSh">
-            Send
+            {LANG.send[localStorage.getItem('lang')]}
             <MDBIcon far icon="paper-plane" className="ml-1" />
           </MDBBtn>
         </div>

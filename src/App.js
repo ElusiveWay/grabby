@@ -22,6 +22,7 @@ import UsersPages from './components/userpage'
 import CollectionPage from './components/collectionpage'
 import io from 'socket.io-client' 
 import * as $ from 'jquery'
+import LANG from './lang'
 import {
   BrowserRouter as Router,
   Switch,
@@ -48,8 +49,9 @@ class App extends Component {
       greeting: '',
       user:{},
       online2:false,
-      modalok: <div>Loading...</div>
+      modalok: <div>{LANG.loading[localStorage.getItem('lang')]}</div>
     };
+    this.defaultLang = "en"
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -61,6 +63,10 @@ class App extends Component {
         else{
           if (Array.prototype.every.call(global.document.querySelector('html').classList,v=>v!=='darkMode'))global.document.querySelector('html').classList.add('darkMode')
         }
+        if (localStorage.getItem('lang') === null){
+            localStorage.setItem('lang', this.defaultLang)
+        }
+
     },20)
   }
   componentDidMount() {
@@ -71,6 +77,9 @@ class App extends Component {
       let user = msg.users.filter(v=>v._id === global.__user._id)
       if (user.length !== 0 && this.state.user && JSON.stringify(user[0])!==JSON.stringify(this.state.user) && typeof user[0].theme === 'string' && localStorage.getItem('dark')!==user[0].theme){
           localStorage.setItem('dark',user[0].theme)
+      }
+      if (user.length !== 0 && this.state.user && JSON.stringify(user[0])!==JSON.stringify(this.state.user) && typeof user[0].lang === 'string' && localStorage.getItem('lang')!==user[0].lang){
+          localStorage.setItem('lang',user[0].lang)
       }
       if (user.length !== 0 ) this.setState({user : user[0]})
       if (Object.keys(global.__user).length===0) this.setState({user : {}})
@@ -88,6 +97,9 @@ class App extends Component {
      this.int2 = setInterval(()=>{
       if (this.state.user && typeof this.state.user.theme === 'string') {
         if (localStorage.getItem('dark') === null) localStorage.setItem('dark',this.state.user.theme)
+      }
+      if (this.state.user && typeof this.state.user.lang === 'string') {
+        if (localStorage.getItem('lang') === null) localStorage.setItem('lang',this.state.user.lang)
       }
       if (global.__modalok!==this.state.modalok){
         this.setState({modalok : global.__modalok},()=>global.document.querySelectorAll('.activeSearchList').forEach(v=>v.classList.remove('activeSearchList')))
@@ -118,9 +130,8 @@ class App extends Component {
     return (
       <div className="App">
         <div className="wrapperDiv"/>
-        <div dangerouslySetInnerHTML={{__html:CANVAS_INIT}}></div>
         <Router>
-            <Mainbar grabby={this.state.grabby} user={this.state.user}></Mainbar>
+            <Mainbar lang={localStorage.getItem('lang')} grabby={this.state.grabby} user={this.state.user}></Mainbar>
             <div className="message-cont"></div>
             <Switch>
             <Route path="/signin">
@@ -132,14 +143,14 @@ class App extends Component {
             <Route exact path="/" >
               <div className='mane-page'>
                 {this.state.online2===true  && <div style={{position:'relative'}}>
-                  <h1 className="logoH1">If you were looking for a place where you can collect anything you want, then you already came to</h1>
-                  <h1 className="logoH1 dva">Welcome to the Grabby!<br/> It's collections time!</h1>
+                  <h1 className="logoH1">{LANG.title1[localStorage.getItem('lang')]}</h1>
+                  <h1 className="logoH1 dva">{LANG.title2[localStorage.getItem('lang')]}<br/> {LANG.title3[localStorage.getItem('lang')]}</h1>
                     <div className="advancedFields">
                       <div className="textField">
-                          <TextField grabby={this.state.grabby}/>
+                          <TextField lang={localStorage.getItem('lang')} grabby={this.state.grabby}/>
                         </div>
                       <div className="carusel">
-                        <Carusel/>
+                        <Carusel lang={localStorage.getItem('lang')} />
                       </div>
                     </div>
                 </div>
@@ -162,12 +173,9 @@ class App extends Component {
         <ModalOk title='Info' target="collPageModal" text={this.state.modalok}></ModalOk>
         </Router>
         <Footbar user={this.state.user}></Footbar>
-        <Modal action={global.__modalAction} title='Comment deleting' target="commentDeleterModal" text='Are you sure about this?'></Modal>
+        <Modal action={global.__modalAction} title={LANG.delComments[localStorage.getItem('lang')]} target="commentDeleterModal" text={LANG.sure[localStorage.getItem('lang')]}></Modal>
       </div>
     );
   }
 }
 export default App;
-
-
-const CANVAS_INIT = `<div class="content content--canvas"><script>document.documentElement.className="js";var supportsCssVars=function(){var e,t=document.createElement("style");return t.innerHTML="root: { --tmp-var: bold; }",document.head.appendChild(t),e=!!(window.CSS&&window.CSS.supports&&window.CSS.supports("font-weight","var(--tmp-var)")),t.parentNode.removeChild(t),e};supportsCssVars()||console.log('unsupported')</script></div>`

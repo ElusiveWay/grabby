@@ -10,6 +10,7 @@ import { Link, Redirect } from 'react-router-dom'
 import Message from './peref/message'
 import ModalOk from './modalok'
 import * as $ from 'jquery'
+import LANG from '../lang'
 class Mainbar extends Component {
   constructor(props){
     super(props)
@@ -42,13 +43,13 @@ Logout = () => {
     if (r.data.out == "neok"){
       let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
       $('.message-cont').append('<div id='+id+'></div>')
-      ReactDOM.render(<Message text1="Wow!" text2="You are already loged out!" color="danger" id={id}/>, $('#'+id)[0])
+      ReactDOM.render(<Message text1={LANG.nice[this.props.lang]} text2={LANG.alrLogout[this.props.lang]} color="danger" id={id}/>, $('#'+id)[0])
       window.location.reload()
     }else if(r.data.out == "ok"){
       global.__user = {}
       let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
       $('.message-cont').append('<div id='+id+'></div>')
-      ReactDOM.render(<Message text1="Bye Bye!" text2="See you!" color="success" id={id}/>, $('#'+id)[0])
+      ReactDOM.render(<Message text1={LANG.bye[this.props.lang]} text2={LANG.seeyou[this.props.lang]} color="success" id={id}/>, $('#'+id)[0])
       this.setState({redirect : 'home'})
     }
   })
@@ -58,7 +59,7 @@ ShowProfile = () =>{
     return (
       <MDBNavItem>  
       <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
-        <Link className="linkerNav" style={(this.state.user.id)} to="/profile">Profile</Link>    
+        <Link className="linkerNav" style={(this.state.user.id)} to="/profile">{LANG.profile[this.props.lang]}</Link>    
         </div>      
       </MDBNavItem> 
         ) 
@@ -69,7 +70,7 @@ ShowLogout = () =>{
     return (
       <MDBNavItem style={{margin:'auto 0'}}>
         <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
-          <Link className="linkerNav" color="transparent" onClick={this.Logout}><strong>Log out</strong></Link>  
+          <Link className="linkerNav" color="transparent" onClick={this.Logout}><strong>{LANG.logout[this.props.lang]}</strong></Link>  
         </div>
       </MDBNavItem>
         ) 
@@ -107,14 +108,14 @@ onch = (e) =>{
     //from users
     this.setState({modalok : <div>
       <br/>
-      <h3>Items as searching result:</h3>
+      <h3>{LANG.searchRes[this.props.lang]}</h3>
       <ul>
       {itemsArr.map(v=>{
         return <Link to={`/items/${v._id}`}><li onClick={()=>$('#searchModal').modal('hide')}>{v.name}</li></Link>
       })}
-      {itemsArr.length==0 && <li>There are no matches: {this.state.search}</li>}
+      {itemsArr.length==0 && <li>{LANG.noMatches[this.props.lang]} {this.state.search}</li>}
       </ul>
-      { collItemsArr.length!==0 && <h3>Items from collections search matching:</h3> }
+      { collItemsArr.length!==0 && <h3>{LANG.collSearch[this.props.lang]}</h3> }
         <ul> 
         {collItemsArr.map(v=>{
           return <Link to={`/items/${v._id}`}><li onClick={()=>$('#searchModal').modal('hide')}>{v.name}</li></Link>
@@ -131,7 +132,7 @@ ShowSignin = () =>{
     return (
       <MDBNavItem>
       <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
-        <Link className="linkerNav" exact to="/signin">Sign</Link>       
+        <Link className="linkerNav" exact to="/signin">{LANG.sign[this.props.lang]}</Link>       
       </div>   
       </MDBNavItem>
         ) 
@@ -172,7 +173,7 @@ render() {
         <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
           <MDBNavbarNav left>
           <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
-            <Link className="linkerNav" to="/">Main</Link>
+            <Link className="linkerNav" to="/">{LANG.main[this.props.lang]}</Link>
           </div> 
            { this.ShowProfile() }
            { this.ShowSignin() }
@@ -181,20 +182,20 @@ render() {
           {this.state.user.isAdmin &&
           <MDBNavItem style={{margin:'auto 0'}}>  
           <div onClick={()=>{if(global.document.body.offsetWidth<768)global.document.getElementsByClassName('navbar-toggler')[0].click()}}>
-              <Link className="linkerNav" to="/admin"><strong>Admin panel</strong></Link>    
+              <Link className="linkerNav" to="/admin"><strong>{LANG.adminPanel[this.props.lang]}</strong></Link>    
             </div>      
           </MDBNavItem>}
             <MDBNavItem>
               <MDBFormInline>
                 <div className="md-form my-0">
-                  <input onKeyPress={e=>{if(e.key=='Enter'){e.preventDefault()}}}onChange={this.onch.bind(this)} value={this.state.search} style={{boxShadow:'0 0 transparent',borderColor:'transparent',float:'right'}}className="searchinp form-control mr-sm-2" type="text" placeholder="    Search" aria-label="Search" />
+                  <input onKeyPress={e=>{if(e.key=='Enter'){e.preventDefault()}}}onChange={this.onch.bind(this)} value={this.state.search} style={{boxShadow:'0 0 transparent',borderColor:'transparent',float:'right'}}className="searchinp form-control mr-sm-2" type="text" placeholder={`    ${LANG.search[this.props.lang]}`} aria-label={LANG.search[this.props.lang]} />
                 </div>
               </MDBFormInline>
             </MDBNavItem>
             { this.ShowLogout() }
           </MDBNavbarNav>
         </MDBCollapse>
-        <ModalOk title='Search'  target="searchModal" text={<div><div style={{display:'flex'}}><input style={{flex:'1'}} id="searcherid" onChange={this.onch.bind(this)} value={this.state.search}type="text"></input><i style={{cursor: 'pointer',fontSize:'32px',padding:'5px 10px 5px 20px'}} onClick={()=>{this.setState({search: ''});global.document.getElementById('searcherid').focus()}} className="fas fa-eraser"></i></div>{this.state.modalok}</div>}></ModalOk>
+        <ModalOk title={LANG.search[this.props.lang]}  target="searchModal" text={<div><div style={{display:'flex'}}><input style={{flex:'1'}} id="searcherid" onChange={this.onch.bind(this)} value={this.state.search}type="text"></input><i style={{cursor: 'pointer',fontSize:'32px',padding:'5px 10px 5px 20px'}} onClick={()=>{this.setState({search: ''});global.document.getElementById('searcherid').focus()}} className="fas fa-eraser"></i></div>{this.state.modalok}</div>}></ModalOk>
       </MDBNavbar>
     );
   }

@@ -14,10 +14,22 @@ class Footbar extends Component {
 constructor(props){
   super(props)
   this.changeTheme = this.changeTheme.bind(this)
+  this.changeLanguage = this.changeLanguage.bind(this)
 }
 state = {
   isOpen: false
 };
+changeLanguage(){
+  localStorage.setItem('lang',(localStorage.getItem('lang')==='ru')?'en':'ru')
+  if (this.props.user && Object.keys(this.props.user).length!==0) axios({
+    method:'post',
+    url: '/changeLang',
+    data: {
+      user: this.props.user._id,
+      lang: localStorage.getItem('lang')
+    }
+  }).then(r=>console.log(r))
+}
 changeTheme(){
   localStorage.setItem('dark',(localStorage.getItem('dark')==='dark')?'light':'dark')
   if (this.props.user && Object.keys(this.props.user).length!==0) axios({
@@ -45,6 +57,7 @@ render() {
         <MDBNavbarToggler onClick={this.toggleCollapse} />
           <MDBNavbarNav left>
               <i  onClick={this.changeTheme} className="changeThemeBtn fas fa-adjust"></i> 
+              <button  onClick={this.changeLanguage} className="langBtn">RU/EN</button> 
           </MDBNavbarNav>
       </MDBNavbar>
     );

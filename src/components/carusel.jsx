@@ -1,11 +1,12 @@
 import React,{Component, useState,useEffect} from 'react'
 import Collection from './CollectionElement'
 import {Link} from 'react-router-dom'
+import LANG from '../lang'
 
-const Carusel = () => {
+const Carusel = (props) => {
     let [isLoaded, setLoaded] = useState(false)
     let [colls, setColls] = useState([])
-
+    const {lang} = props
     useEffect(()=>{
         let interval = setInterval(()=>{
             if (global.__mainData){
@@ -97,7 +98,7 @@ const Carusel = () => {
             <div className="carousel-inner">
             {colls.length === 0 && <div className="carousel-item active">
                                         <div style={{width:'100%',height:'350px'}}>
-                                            <h2 style={{textAlign:'center',position:'absolute',left:'50%',top:'50%',transform:'translate(-50%,-50%)'}}>There are no collections on the site</h2>
+                                            <h2 style={{textAlign:'center',position:'absolute',left:'50%',top:'50%',transform:'translate(-50%,-50%)'}}> {LANG.noCollections[lang]} </h2>
                                         </div>
                                 </div>}
             {colls.length > 0 && <div className="carousel-item active">
@@ -105,12 +106,12 @@ const Carusel = () => {
                     <div style={{backgroundColor:'#fff8',border:'2px solid white',padding:'5px',overflow:'hidden',paddingBottom:'1rem',color:'#000',textAlign:'center',fontSize:'10px',transform:'translateX(0px) scale(0.95)',float:'right',width:'100%'}}>
                         <div className="ash">
                             <div className="ash-cont">
-                                <Link to={`/collections/${colls[0]._id}`}><h2 style={{color:'black',position:'relative',marginTop:'20px',float:'left'}}>Top 1 collection: {colls[0].name}</h2></Link>
-                                <h4 style={{top:'5px',position:'relative',clear:'left',float:'left'}}>Author: <Link style={{color:'#000'}} to={`/users/${JSON.parse(colls[0].author)._id}`}>{JSON.parse(colls[0].author).name}</Link> </h4>
+                                <Link to={`/collections/${colls[0]._id}`}><h2 style={{color:'black',position:'relative',marginTop:'20px',float:'left'}}>{LANG.top1coll[lang]} {colls[0].name}</h2></Link>
+                                <h4 style={{top:'5px',position:'relative',clear:'left',float:'left'}}>{LANG.author[lang]} <Link style={{color:'#000'}} to={`/users/${JSON.parse(colls[0].author)._id}`}>{JSON.parse(colls[0].author).name}</Link> </h4>
                             </div>
                             <div className="ash2-cont">
-                                <h4 style={{position:'relative',marginTop:'20px',clear:'right',float:'right'}}>Items : {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[0].name && v.email == colls[0].email)).length}</h4>
-                                <h4 style={{position:'relative',clear:'right',float:'right'}}>Likes : {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[0].name && v.email == colls[0].email)).reduce((t,c,i)=>(c.likes)?t+=JSON.parse(c.likes).length:t,0)} </h4>
+                                <h4 style={{position:'relative',marginTop:'20px',clear:'right',float:'right'}}>{LANG.items[lang]} {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[0].name && v.email == colls[0].email)).length}</h4>
+                                <h4 style={{position:'relative',clear:'right',float:'right'}}>{LANG.likes[lang]} {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[0].name && v.email == colls[0].email)).reduce((t,c,i)=>(c.likes)?t+=JSON.parse(c.likes).length:t,0)} </h4>
                             </div>
                         </div>
                         <hr style={{position:'relative',top:'5px',bottom:'5px',clear:'both'}}/>
@@ -122,12 +123,12 @@ const Carusel = () => {
                     <div style={{backgroundColor:'#fff8',border:'2px solid white',padding:'5px',overflow:'hidden',paddingBottom:'1rem',color:'#000',textAlign:'center',fontSize:'10px',transform:'translateX(0px) scale(0.95)',float:'right',width:'100%'}}>
                         <div className="ash">
                             <div className="ash-cont">
-                                <Link to={`/collections/${colls[1]._id}`}><h2 style={{color:'black',position:'relative',marginTop:'20px',float:'left'}}>Top 2 collection: {colls[1].name}</h2></Link>
-                                <h4 style={{top:'5px',position:'relative',clear:'left',float:'left'}}>Author: <Link style={{color:'#000'}} to={`/users/${JSON.parse(colls[1].author)._id}`}>{JSON.parse(colls[1].author).name}</Link> </h4>
+                                <Link to={`/collections/${colls[1]._id}`}><h2 style={{color:'black',position:'relative',marginTop:'20px',float:'left'}}>{LANG.top2coll[lang]} {colls[1].name}</h2></Link>
+                                <h4 style={{top:'5px',position:'relative',clear:'left',float:'left'}}>{LANG.author[lang]} <Link style={{color:'#000'}} to={`/users/${JSON.parse(colls[1].author)._id}`}>{JSON.parse(colls[1].author).name}</Link> </h4>
                             </div>
                             <div className="ash2-cont">
-                                <h4 style={{position:'relative',marginTop:'20px',clear:'right',float:'right'}}>Items : {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[1].name && v.email == colls[1].email)).length}</h4>
-                                <h4 style={{position:'relative',clear:'right',float:'right'}}>Likes : {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[1].name && v.email == colls[1].email)).reduce((t,c,i)=>(c.likes)?t+=JSON.parse(c.likes).length:t,0)} </h4>
+                                <h4 style={{position:'relative',marginTop:'20px',clear:'right',float:'right'}}>{LANG.items[lang]} {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[1].name && v.email == colls[1].email)).length}</h4>
+                                <h4 style={{position:'relative',clear:'right',float:'right'}}>{LANG.likes[lang]} {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[1].name && v.email == colls[1].email)).reduce((t,c,i)=>(c.likes)?t+=JSON.parse(c.likes).length:t,0)} </h4>
                             </div>
                         </div>
                         <hr style={{position:'relative',top:'5px',bottom:'5px',clear:'both'}}/>
@@ -139,12 +140,12 @@ const Carusel = () => {
                     <div style={{backgroundColor:'#fff8',border:'2px solid white',padding:'5px',overflow:'hidden',paddingBottom:'1rem',color:'#000',textAlign:'center',fontSize:'10px',transform:'translateX(0px) scale(0.95)',float:'right',width:'100%'}}>
                         <div className="ash">
                             <div className="ash-cont">
-                                <Link to={`/collections/${colls[2]._id}`}><h2 style={{color:'black',position:'relative',marginTop:'20px',float:'left'}}>Top 3 collection: {colls[2].name}</h2></Link>
-                                <h4 style={{top:'5px',position:'relative',clear:'left',float:'left'}}>Author: <Link style={{color:'#000'}} to={`/users/${JSON.parse(colls[2].author)._id}`}>{JSON.parse(colls[2].author).name}</Link> </h4>
+                                <Link to={`/collections/${colls[2]._id}`}><h2 style={{color:'black',position:'relative',marginTop:'20px',float:'left'}}>{LANG.top3coll[lang]} {colls[2].name}</h2></Link>
+                                <h4 style={{top:'5px',position:'relative',clear:'left',float:'left'}}>{LANG.author[lang]} <Link style={{color:'#000'}} to={`/users/${JSON.parse(colls[2].author)._id}`}>{JSON.parse(colls[2].author).name}</Link> </h4>
                             </div>
                             <div className="ash2-cont">
-                                <h4 style={{position:'relative',marginTop:'20px',clear:'right',float:'right'}}>Items : {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[2].name && v.email == colls[2].email)).length}</h4>
-                                <h4 style={{position:'relative',clear:'right',float:'right'}}>Likes : {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[2].name && v.email == colls[2].email)).reduce((t,c,i)=>(c.likes)?t+=JSON.parse(c.likes).length:t,0)} </h4>
+                                <h4 style={{position:'relative',marginTop:'20px',clear:'right',float:'right'}}>{LANG.items[lang]} {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[2].name && v.email == colls[2].email)).length}</h4>
+                                <h4 style={{position:'relative',clear:'right',float:'right'}}>{LANG.likes[lang]} {global.__mainData.items.map(v=>v).filter(v=>(v.collect == colls[2].name && v.email == colls[2].email)).reduce((t,c,i)=>(c.likes)?t+=JSON.parse(c.likes).length:t,0)} </h4>
                             </div>
                         </div>
                         <hr style={{position:'relative',top:'5px',bottom:'5px',clear:'both'}}/>

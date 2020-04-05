@@ -29,6 +29,9 @@ const schema = new Schema({
         },
         theme: {
             type: String
+        },
+        lang: {
+            type: String
         }
     }
 )

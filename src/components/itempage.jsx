@@ -10,7 +10,7 @@ import Message from './peref/message'
 import ModalOk from './modalok'
 import CommentsForm from './inputs/comments-form'
 import makeMessage from './peref/mess'
-
+import LANG from '../lang'
 
 
 const ItemPage = (props) => {
@@ -33,13 +33,13 @@ const ItemPage = (props) => {
         if (!global.__mainData){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Oops!" text2="Login first!" color="danger" id={id}/>, $('#'+id)[0])
+            ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.loginfirst[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
             return
         }
         if (global.__user._id != commens[index].likerId){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Oops!" text2="Its not yours comment!" color="danger" id={id}/>, $('#'+id)[0])
+            ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.notyourscomment[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
             return
         }
         let newComments = commens.map(v=>v)
@@ -93,7 +93,7 @@ const ItemPage = (props) => {
         if (Object.keys(global.__user).length == 0) {
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Oops!" text2="Login first!" color="danger" id={id}/>, $('#'+id)[0])
+            ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.loginfirst[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
             return
         }
         if(myItem && global.__user.email){
@@ -117,7 +117,7 @@ const ItemPage = (props) => {
         if (Object.keys(global.__user).length == 0) {
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
-            ReactDOM.render(<Message text1="Oops!" text2="Login first!" color="danger" id={id}/>, $('#'+id)[0])
+            ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.loginfirst[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
             return
         }
         if(myItem && global.__user.email){
@@ -421,8 +421,8 @@ const ItemPage = (props) => {
                 </h1>
                 <img src={myItem.img} className="__ima_ge__ dva"/>
                 <hr className="__h_r_"/>
-                {colItem && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">Go to the collection</MDBBtn></Link>}
-            <MDBBtn onClick={clicker} className="__ico_nqa" color="" ><i className="fas fa-heart iconqa"></i><span style={{whiteSpace:'pre'}}> Likes : </span><span className="likes __darova_v1_">{likes.length}</span></MDBBtn>
+                {colItem && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">{LANG.gotocolls[localStorage.getItem('lang')]}</MDBBtn></Link>}
+            <MDBBtn onClick={clicker} className="__ico_nqa" color="" ><i className="fas fa-heart iconqa"></i><span style={{whiteSpace:'pre'}}> {LANG.likes[localStorage.getItem('lang')]} </span><span className="likes __darova_v1_">{likes.length}</span></MDBBtn>
                 <p className="__descr_iption">{myItem.description}</p>
                 <p style={{clear:'both'}} className="__comm_ention">{tags.map(v=><div  data-target="#collPageModal" data-toggle="modal" onClick={tegclicker} className="teger">{v}</div>)}</p>  
 
@@ -430,7 +430,7 @@ const ItemPage = (props) => {
 
                 {myItem.add && JSON.parse(myItem.add).length && 
                 <div>
-                    <h1 className="__ads_ads_">Some properties:</h1> 
+                    <h1 className="__ads_ads_">{LANG.propps[localStorage.getItem('lang')]}</h1> 
                     {JSON.parse(myItem.add).map((v,i)=>{
                         switch (v.type){
                         case 'checkbox': return <p className="__ads_ads_ listed">{(adds)?(adds[i])?adds[i][v.type]+': ':'':''}{(v.value == true)?<i className="far fa-check-circle"></i>:<i className="far fa-times-circle"></i>}</p>
@@ -442,12 +442,12 @@ const ItemPage = (props) => {
                 </div>}
                 <div className="comments-wrapper">{isUser && <CommentsForm onSubmit={addComment} className="comments-form"/>}</div>
                 <div className="comments-container">
-                      {(commens.length !== 0) && <h2 style={{marginBottom:'20px'}}>Comments:</h2>}
+                      {(commens.length !== 0) && <h2 style={{marginBottom:'20px'}}>{LANG.comments[localStorage.getItem('lang')]}:</h2>}
                       {returnTamplate(commens)}
                 </div>
                 <p style={{visibility:'hidden'}}className="__ads_ads_ listed">FAKE P FOR MARGIN IN THE BOTTOM OF CARD</p>
             </MDBCard> 
-            {author && user && id && <Modal user={user} owner={author} deleteItems={{items:[id]}} title='Item deleting' target="itemDeleteModal" text={`Are you sure to delete this item?`}></Modal>}
+            {author && user && id && <Modal user={user} owner={author} deleteItems={{items:[id]}} title={LANG.delItem[localStorage.getItem('lang')]} target="itemDeleteModal" text={LANG.sure[localStorage.getItem('lang')]}></Modal>}
             </div>
             
         ):(<h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>Loading...</h1>)

@@ -2,6 +2,7 @@ import React,{Component} from 'react'
 import axios from 'axios'
 import makeMessage from './peref/mess'
 import * as $ from 'jquery'
+import LANG from '../lang'
 
 export default class Modal extends Component{
     constructor(props){
@@ -78,7 +79,7 @@ export default class Modal extends Component{
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel"> {this.props.title} </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label={LANG.close[localStorage.getItem('lang')]}>
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -86,8 +87,8 @@ export default class Modal extends Component{
                         {this.props.text}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" style={{color:'white',backgroundColor:'#7ab0b4'}} class="btn" data-dismiss="modal">Close</button>
-                        <button type="button" style={{color:'white',backgroundColor:'#7e7ab4'}} onClick={(this.props.deleteItems)?this.deleteItems:(this.props.deleteCollections)?this.deleteCollections:this.modalAction} data-dismiss="modal" class="btn">Delete</button>
+                        <button type="button" style={{color:'white',backgroundColor:'#7ab0b4'}} class="btn" data-dismiss="modal">{LANG.close[localStorage.getItem('lang')]}</button>
+                        <button type="button" style={{color:'white',backgroundColor:'#7e7ab4'}} onClick={(this.props.deleteItems)?this.deleteItems:(this.props.deleteCollections)?this.deleteCollections:this.modalAction} data-dismiss="modal" class="btn">{LANG.delete[localStorage.getItem('lang')]}</button>
                     </div>
                     </div>
                 </div>
