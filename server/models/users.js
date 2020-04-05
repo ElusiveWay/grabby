@@ -10,6 +10,9 @@ const schema = new Schema({
             type: String,
             required: false
         },
+        status: {
+            type: String
+        },
         email: {
             type: String,
             required: true

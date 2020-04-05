@@ -507,6 +507,10 @@ const LANG = {
         en: "Close",
         ru: "Закрыть"
     },
+    editProfile: {
+        en: "Edit profile",
+        ru: "Редактировать профиль"
+    },
     
 }
 

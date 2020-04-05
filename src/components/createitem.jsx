@@ -492,7 +492,7 @@ render(){
                     }
                 
             `}}/>
-             <ProfileBox data={this.props.ProfileData} />
+             <ProfileBox owner={this.props.owner} user={this.props.user} data={this.props.ProfileData} />
             { this.props.sub === 'addc' && (this.props.user._id === this.props.id || this.props.user.isAdmin === true) &&
              <section style={this.style.section} className="addCollectSect">
                 <form onSubmit={this.subFormColl} className="formCreateItem" >

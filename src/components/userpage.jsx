@@ -28,7 +28,6 @@ const UsersPages = (props) => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            
             setItems(global.__mainData?global.__mainData.items.map(v=>v).filter(v=>JSON.parse(v.author)._id == id):[])
             setColls(global.__mainData?global.__mainData.collections.map(v=>v).filter(v=>JSON.parse(v.author)._id == id):[])
             setUser(global.__mainData?global.__mainData.users.map(v=>v).filter(v=>v._id == id)[0]:{})
@@ -47,9 +46,12 @@ const UsersPages = (props) => {
     return (user && Object.keys(user).length!==0)?(
             <div> 
                 <img src='' onError={()=>window.scrollTo(0,0)}/>
-                <ProfileBox data={profileData}></ProfileBox>
+                <ProfileBox owner={user} user={guser} data={profileData}></ProfileBox>
                 <section className="sectionsPage">
                     <style dangerouslySetInnerHTML={{__html:`
+                        .card .card-body.newrevis{
+                            min-height: 200px;
+                        }
                         .darkMode .card .card-body.newrevis{
                             transform: scale(1);
                             background-color: #ffffffdb;

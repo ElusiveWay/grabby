@@ -72,14 +72,14 @@ html.darkMode{
     color:black;
 }
 .langBtn:hover{
-    box-shadow: 0 0 10px black;
+    box-shadow: 0 0 10px white;
 }
 .langBtn{
     transition:.3s;
     margin-left: 15px;
     border-radius: 15px;
     background-color: transparent;
-    color: black;
+    color: white;
     line-height: 1;
     border: none;
 }

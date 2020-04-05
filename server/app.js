@@ -21,7 +21,9 @@ const textfields = require('./models/textfield')
 const collection = require('./models/collection')
 const cookieEncrypter  = require('cookie-encrypter')
 const request = require('request');
-var cloudinary = require('cloudinary').v2;
+var cloudinary = require('cloudinary').v2
+const formidable = require('formidable')
+
 
 //                      PRESETTINGS
 
@@ -38,6 +40,14 @@ function uploadToCloudinary(image) {
       if (err) return reject(err)
       return resolve(url)
     }).end(image)
+  });
+} 
+function upploadFile(image) {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(image,(err, result) => {
+      if (err) return reject(err)
+      return resolve(result)
+    })
   });
 } 
 //React view engine
@@ -79,6 +89,41 @@ app.post('/changeColor', async(req,res)=>{
   else{
     res.send('neok')
   }
+})
+app.post('/editProfile', async(req,res)=>{
+  new formidable.IncomingForm().parse(req, async (err, fields, files) => {
+    if (err) {
+      req.send('Parser error')
+    }
+    let user ,error = false
+    await users.find({_id : JSON.parse(fields.user)._id}).then(r=>{
+      if (r.length>0) {user=r[0]}
+      else {error = true}
+    }).catch(e=>error=true)
+    if (error === true) {
+      res.send('Database problems')
+      return
+    }
+    if (req.cookies.key === JSON.parse(fields.owner)._id || user.isAdmin == true) {
+    let img5 = ''
+            if(fields.img.indexOf('data:image') === 0){
+              await uploadToCloudinary(new Buffer(fields.img)).then(r=> img5=r.url).catch(e=>{
+                console.log('cant download:'+ e)
+                img5 = JSON.parse(fields.owner).img
+              })
+            }
+            else{
+              img5 = JSON.parse(fields.owner).img
+            }
+      await users.updateOne({_id : JSON.parse(fields.owner)._id}, {name: fields.name, status : fields.status, img : img5}, e=>e)
+      res.send(img5)
+      return
+    }
+    else{
+      res.send('You have no access')
+      return
+    }
+  })
 })
 app.post('/changeLang', async(req,res)=>{
   if (req.cookies.key === req.body.user) {
@@ -288,7 +333,9 @@ app.get('/api/home', (req, res) => {
   let usr
   if (req.cookies.key && session.signed.some(v=>v==req.cookies.key)){
       users.find({_id : req.cookies.key}).then(p=>{
-      usr = p[0]
+      let obj = Object.assign(p[0])
+      if (typeof obj.pass === 'string') obj.pass = undefined
+      usr = obj
       res.json({ user: usr || {}, signed : session.signed , key : req.cookies.key });
     })
   }
@@ -319,7 +366,11 @@ io.on('connection', function(socket){
   socket.on ('getAllData', ()=>{
     collection.find({}).then(r=>{
       users.find({}).then(r3=>{
-        let ar = r3.map(v=>v)
+        let ar = r3.map(v=>{
+          let obj = Object.assign(v)
+          if (typeof obj.pass === 'string') obj.pass = undefined
+          return obj
+        })
         items.find({}).then(r2=>
           textfields.find({}).then(r5=>socket.emit('getAllData',{collections: r, items : r2, signed : session.signed, users : ar, textfields: r5})))
       })

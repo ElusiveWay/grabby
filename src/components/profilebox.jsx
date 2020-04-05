@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import ReactDOM from 'react-dom'
 import * as $ from 'jquery'
+import ModalSub from './modalSub'
 
 class ProfileBox extends Component {
     constructor(props){
@@ -85,8 +86,16 @@ class ProfileBox extends Component {
                     max-width: 250px;
                     margin:auto;
                 }
+                .profileSet:hover{
+                    opacity:1;
+                }
                 .profileSet{
-                    display:none;
+                    opacity:.35;
+                    transition:.2s;
+                    position: absolute;
+                    left: 15px;
+                    color: #425f53;
+                    cursor: pointer;
                 }
                 @media all and (max-width:769px){
                     .prof_ile__contain{
@@ -146,19 +155,23 @@ class ProfileBox extends Component {
                         max-width:100vw;
                     }
                     .profileSet{
+                        opacity:1;
                         padding-left:12px;
                         margin:auto;
                         display: inline;
                         width:0px;
+                        position: unset;
+                        left: unset;
+                        color: white;
+                        cursor: pointer;
                     }
                     .profileSet:hover{
                         color:#5d7da3;
-                        cursor:pointer;
                     }
                 }
                 `}}/>
                 <div onClick={()=>$('.prof_ile__contain').toggleClass('activirovan')} className="profile-photo"></div>
-                <i  class="profileSet fas fa-cog"></i>
+                {(this.props.user.isAdmin === true || this.props.user._id === this.props.owner._id) && <i data-toggle="modal" data-target="#modalEditProfile" class="profileSet fas fa-cog"></i>}
                 <div className="profile-textTable">
                     <div className="profile-textElem profile-name"><span>{(this.state.data)?this.state.data.name:''}</span></div>
                     <div className="profile-textElem profile-likes"><span >{(this.state.data)?this.state.data.likes:''}</span></div>
@@ -166,6 +179,7 @@ class ProfileBox extends Component {
                     <div className="profile-textElem profile-views"><span >{(this.state.data)?this.state.data.views:''}</span></div>
                 </div>
                 <div  className="profile-status"><i>{(this.state.data)?this.state.data.status:''}</i></div>
+                <ModalSub target="modalEditProfile" owner={this.props.owner} user={this.props.user}/>
             </div>
         )
     }

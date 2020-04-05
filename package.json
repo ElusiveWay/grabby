@@ -22,6 +22,7 @@
     "express-pino-logger": "^4.0.0",
     "express-react-views": "^0.11.0",
     "express-session": "^1.17.0",
+    "formidable": "^1.2.2",
     "googleapis": "^48.0.0",
     "http-proxy-middleware": "^1.0.1",
     "jquery": "^3.4.1",

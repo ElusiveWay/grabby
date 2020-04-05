@@ -48,14 +48,14 @@ render() {
         .changeThemeBtn{
           font-size:1.5em;
           cursor:pointer;
-          color: black;
+          color: white;
         }
         .footWrap .navbar-toggler{
           display:none;
         }
         `}}></style>
         <MDBNavbarToggler onClick={this.toggleCollapse} />
-          <MDBNavbarNav left>
+          <MDBNavbarNav style={{display: 'flex',flexDirection: 'row'}} left>
               <i  onClick={this.changeTheme} className="changeThemeBtn fas fa-adjust"></i> 
               <button  onClick={this.changeLanguage} className="langBtn">RU/EN</button> 
           </MDBNavbarNav>

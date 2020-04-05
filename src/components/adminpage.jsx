@@ -238,7 +238,7 @@ const AdminPage = (props) => {
                                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                                     <textarea className="txaa form-controll"></textarea>
                                     <input style={{transform:'translateY(1px)'}}type="checkbox" id="markano" name="markano"/>
-                                    <label style={{color: 'gray'}} for="markano">{LANG.usemark[localStorage.getItem('lang')]}</label>
+                                    <label style={{color: 'gray'}} for="markano">{LANG.usemark[localStorage.getItem('lang')]}</label>
                                     </div>
                                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                                 <textarea className="txag form-controll"></textarea>

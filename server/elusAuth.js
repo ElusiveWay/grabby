@@ -137,7 +137,9 @@ const Login = (req, res, model, okRedir='/', erRedir='/signin')=>{
             res.cookie('key', posts[0]['_id'])
             
             res.cookie('unsigned', '', { expires: new Date(Date.now() + 1200000), httpOnly: true })
-            res.send({out: 'ok', signed : session.signed, user : posts[0]}) // Вытащить мои колекции + к дате
+            let usr = Object.assign(posts[0])
+            if (typeof usr.pass === 'string') usr.pass = undefined
+            res.send({out: 'ok', signed : session.signed, user : usr}) // Вытащить мои колекции + к дате
         }
         else{
             res.cookie('invalid','true')
@@ -246,7 +248,9 @@ const SignUP = (req, res, model, onlineFlag = onlineStr, okRedir='/', erRedir='/
             await Moldel.find({}).then(p=>{
                 us = p[p.length-1]
             })
-            res.send({out: 'ok', action: 'signup' ,signed : session.signed, user : us}) // Вытащить мои колекции + к дате
+            let usr = Object.assign(us)
+            if (typeof usr.pass === 'string') usr.pass = undefined
+            res.send({out: 'ok', action: 'signup' ,signed : session.signed, user : usr}) // Вытащить мои колекции + к дате
         }
     }
     f2(model);
