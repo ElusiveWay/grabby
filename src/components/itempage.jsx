@@ -81,7 +81,7 @@ const ItemPage = (props) => {
                 setCol((global.__mainData && colItem && myItem)?global.__mainData.collections.filter(k=>{return (k.email == myItem.email && myItem.collect == k.name)})[0]:{})
                 setAdds((global.__mainData && colItem)?(typeof colItem.adds == 'string')?JSON.parse(colItem.adds):{}:{})
                 setLikes((global.__mainData && myItem)?(typeof myItem.likes == 'string')?JSON.parse(myItem.likes):[]:[])
-                setAuthor((myItem)?JSON.parse(myItem.author):{})
+                setAuthor((myItem && typeof myItem.author === 'string')?JSON.parse(myItem.author):{})
                 setComs((global.__mainData && myItem)?(typeof myItem.comments == 'string')?JSON.parse(myItem.comments):[]:[])
                 setTags((global.__mainData && myItem)?(typeof myItem.tags == 'string')?JSON.parse(myItem.tags):[]:[])
         }, 50);

@@ -9,6 +9,8 @@ import ImageUpload from './inputs/Imageupload'
 import ModalOk from './modalok'
 import Collection from './CollectionElement'
 import DataPicker from './datapicker'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import TextField from '@material-ui/core/TextField'
 import Message from './peref/message'
 import AmazingTable from './amazingTable'
 import DropdownBtn from './dropdown'
@@ -41,6 +43,7 @@ class ItemCreator extends React.Component {
         }
         this.refItemDropbox2 = React.createRef()
         this.refItemDropbox1 = React.createRef()
+        this.refComment = React.createRef()
         this.style = {
             submit:{
                 zIndex:'0',
@@ -230,9 +233,7 @@ componentDidMount(){
          }
          if (this.state.edititem && (Object.keys(this.state.edititem).length===0 && this.props.location.edititem) || (this.state.edititem && this.props.location.edititem && this.state.edititem._id!==this.props.location.edititem)){
              this.setState({edititem : this.props.grabby.items.filter(f=>f._id==this.props.location.edititem)[0]},()=>{
-                 console.log(this.state.edititem)
                  if (Object.keys(this.state.edititem).length !== 0) {
-                     console.log('init edititem')
                     $(`[name='item_descript']`).val(this.state.edititem.description)
                  }
              })
@@ -258,7 +259,6 @@ componentDidMount(){
     try{
          this.setState({collections : global.__mainData.collections.map(v=>v).filter(v=>v.email==this.state.owner.email)}) 
          if (JSON.stringify(this.state.availbleTypes) != JSON.stringify(this.state.types.filter(v=>this.state.collections.map(r=>r.type).some(q=>q==v)))){
-            console.log('types changed')
              this.setState({availbleTypes : this.state.types.filter(v=>this.state.collections.map(r=>r.type).some(q=>q==v))}, ()=>{
                 try {this.refItemDropbox1.current.changeState({drop : this.state.availbleTypes[0]})}catch(e){}
              })
@@ -266,7 +266,6 @@ componentDidMount(){
          this.setState({availbleNames : this.state.collections.filter(v=>v.type==this.state.chosenForItem).map(v=>v.name)})
          let prev = global.document.getElementsByClassName('addinpdropiq')[0].value
          if (prev != this.state.chosenForItem){
-            console.log('changed')
             this.setState({chosenForItem: global.document.getElementsByClassName('addinpdropiq')[0].value},()=>{
                 try {this.refItemDropbox2.current.changeState({drop : this.state.collections.filter(v=>v.type==this.state.chosenForItem)[0].name})}catch(e){}
             })
@@ -547,9 +546,20 @@ render(){
                     <Text name="item_name" required nm={`${LANG.nameofitem[localStorage.getItem('lang')]}*`} />
                     <TextareaPage2 name="item_descript" required style={this.style.description2} nm={`${LANG.desc[localStorage.getItem('lang')]}*`} />
                     <ImageUpload func={this.returnMeVar.bind(this)} name="item_img" />
-                    <Text name='addTegPlsIWanna'nm={LANG.addtag[localStorage.getItem('lang')]} />   
+                    <Autocomplete
+                        id="combo-box-demo"
+                        options={this.props.grabby.items.map(v=>v).reduce((t,c,i,a)=>t.concat(JSON.parse(c.tags)),[]).filter((v,i,a)=>a.indexOf(v) === i)}
+                        getOptionLabel={(option) => option}
+                        getOptionSelected={(o)=>o}
+                        freeSolo={true}
+                        style={{ margin:'20px 2vw',width: 'calc(100% - 4vw)' }}
+                        renderInput={(params) => <TextField {...params} name='addTegPlsIWanna' label={LANG.addtag[localStorage.getItem('lang')]} variant="outlined" />}
+                        />
                     <div style={{marginBottom:'30px'}} name="МАССИВ ТЕГОВ">
-                        <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`)}} className="teg add">{LANG.add[localStorage.getItem('lang')]}</div> 
+                        <div onClick={e=>{
+                            if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};
+                            if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}
+                            $(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`);$('button[aria-label="Clear"]')[0].click()}} className="teg add">{LANG.add[localStorage.getItem('lang')]}</div> 
                         <div className='tegCont'></div>
                     </div>
                     <span className="createItem-dbtitle">{LANG.chcolltype[localStorage.getItem('lang')]}</span><span className="createItem-dbtitle dva">{LANG.collslist[localStorage.getItem('lang')]}</span>
@@ -627,9 +637,17 @@ render(){
                     {typeof this.state.edititem.name === 'string' && <Text name="item_name" default={this.state.edititem.name} required nm={`${LANG.nameofitem[localStorage.getItem('lang')]}*`} />}
                     <TextareaPage2 name="item_descript" required style={this.style.description2} nm={`${LANG.desc[localStorage.getItem('lang')]}*`} />
                     {typeof this.state.edititem.img === 'string' && <ImageUpload default={this.state.edititem.img} func={this.returnMeVar.bind(this)} name="item_img" />}
-                    <Text name='addTegPlsIWanna'nm={LANG.addtag[localStorage.getItem('lang')]} />   
+                    <Autocomplete
+                        id="combo-box-demo"
+                        options={this.props.grabby.items.map(v=>v).reduce((t,c,i,a)=>t.concat(JSON.parse(c.tags)),[]).filter((v,i,a)=>a.indexOf(v) === i)}
+                        getOptionLabel={(option) => option}
+                        getOptionSelected={(o)=>o}
+                        freeSolo={true}
+                        style={{ margin:'20px 2vw',width: 'calc(100% - 4vw)' }}
+                        renderInput={(params) => <TextField {...params} name='addTegPlsIWanna' label={LANG.addtag[localStorage.getItem('lang')]} variant="outlined" />}
+                        /> 
                     <div style={{marginBottom:'30px'}} name="МАССИВ ТЕГОВ">
-                        <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`)}} className="teg add">{LANG.add[localStorage.getItem('lang')]}</div> 
+                        <div onClick={e=>{if(ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value==''){return false};if(Array.prototype.some.call($(ReactDOM.findDOMNode(this).querySelectorAll('.teg')),v=>v.innerText==ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value)){return false}$(e.target.parentNode.getElementsByClassName('tegCont')[0]).append(`<div class="teg" onclick={$(this).remove()}className="teg">${ReactDOM.findDOMNode(this).querySelectorAll('[name = addTegPlsIWanna]')[0].value}</div>`);;$('button[aria-label="Clear"]')[0].click()}} className="teg add">{LANG.add[localStorage.getItem('lang')]}</div> 
                         <div className='tegCont'>
                         {typeof this.state.edititem.tags === 'string' && 
                             JSON.parse(this.state.edititem.tags).map(t=>{

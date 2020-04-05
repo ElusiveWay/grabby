@@ -67,9 +67,21 @@ class Signup extends Component {
     return (
 
             <MDBCard style={{margin:'20px', width : '400px', height : 'auto', minHeigth : "300px"}}>
+              <style dangerouslySetInnerHTML={{__html:`
+                input[type=date]:focus:not([readonly]), input[type=datetime-local]:focus:not([readonly]), input[type=email]:focus:not([readonly]), input[type=number]:focus:not([readonly]), input[type=password]:focus:not([readonly]), input[type=search-md]:focus:not([readonly]), input[type=search]:focus:not([readonly]), input[type=tel]:focus:not([readonly]), input[type=text]:focus:not([readonly]), input[type=time]:focus:not([readonly]), input[type=url]:focus:not([readonly]), textarea.md-textarea:focus:not([readonly]) {
+                  border-bottom: 1px solid #7e7ab4 !important;
+                  box-shadow: 0 1px 0 0 #7e7ab4 !important;
+                } 
+                label.active{
+                  color: #7e7ab4 !important;
+                }
+                i.active{
+                  color: #7e7ab4 !important;
+                }
+              `}}></style>
               <MDBCardBody>
               <form style={{color:'#2196f3'}} onSubmit={ this.subme }>
-                  <p className="h4 text-center py-4">{LANG.signup[localStorage.getItem('lang')]}</p>
+                  <p style={{color:'rgb(135, 134, 197)'}} className="inverted h4 text-center py-4">{LANG.signup[localStorage.getItem('lang')]}</p>
                   <div className="grey-text">
                     <MDBInput
                       label={LANG.uname[localStorage.getItem('lang')]}
@@ -77,6 +89,7 @@ class Signup extends Component {
                       group
                       type="text"
                       validate
+                      pattern="[A-Za-z ]{1,20}"
                       required
                       onChange= { this.handleChange }
                       value= { this.state.value }
@@ -91,6 +104,7 @@ class Signup extends Component {
                       type="email"
                       validate
                       required
+                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                       onChange= { this.handleChange }
                       value= { this.state.value }
                       name="email"
@@ -106,6 +120,7 @@ class Signup extends Component {
                       value= { this.state.value }
                       group
                       type="password"
+                      pattern="[A-Za-z0-9_]{3,10}$"
                       validate
                     />
                     <MDBInput
@@ -115,7 +130,7 @@ class Signup extends Component {
                     />
                   </div>
                   <div className="text-center py-4 mt-3">
-                    <MDBBtn color="cyan" type="submit">
+                    <MDBBtn  style={{color:'white',backgroundColor:'rgb(135, 134, 197)'}} color="" type="submit">
                     {LANG.signup[localStorage.getItem('lang')]}
                     </MDBBtn>
                   </div>

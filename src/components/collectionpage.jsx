@@ -27,9 +27,9 @@ const CollectionPage = (props) => {
         //
         const interval = setInterval(() => {
                 setUser(Object.keys(global.__user).length!==0 && global.__user!==undefined)
-                setCol((global.__mainData)?global.__mainData.collections.filter(k=>k._id==id)[0]:{})
-                setAdds((colItem)?JSON.parse(colItem.adds):[])
-                setAuthor((colItem)?JSON.parse(colItem.author):{})
+                setCol((global.__mainData && Object.keys(global.__mainData).length > 0)?global.__mainData.collections.filter(k=>k._id==id)[0]:{})
+                setAdds((colItem && typeof colItem.adds === 'string')?JSON.parse(colItem.adds):[])
+                setAuthor((colItem  && typeof colItem.author === 'string')?JSON.parse(colItem.author):{})
                 setContStyle((global.document && global.document.querySelectorAll('.__cont_ainer_').length!==0)?window.getComputedStyle(global.document.querySelector('.__cont_ainer_')):{})
         }, 50);
     

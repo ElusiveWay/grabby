@@ -128,7 +128,7 @@ const AmazingTable = (props) => {
             case 'comments': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser">{LANG.show[localStorage.getItem('lang')]}</span>
             case 'tags': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser" >{JSON.parse(str).join(', ')}</span>
             case 'desc': return <span  data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type)} className="linkToUser" >{str}</span>
-            case 'adds': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type,data)} className="linkToUser" >{adds.length!==0 && (adds[dataItaration].length !== 0)?(adds[dataItaration].every(v=>v!==''))?LANG.open[localStorage.getItem('lang')]:'':LANG.open[localStorage.getItem('lang')]}</span>
+            case 'adds': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type,data)} className="linkToUser" >{adds && adds.length!==0 && (adds[dataItaration].length !== 0)?(adds[dataItaration].every(v=>v!==''))?LANG.open[localStorage.getItem('lang')]:'':LANG.open[localStorage.getItem('lang')]}</span>
             case 'img': return <span data-target="#collPageModal" data-toggle="modal" onClick={(e)=>makeModal(e,str,type,data)} className="linkToUser" >{str.split('/').pop()}</span>
             default: return 'field is not defined'
         }

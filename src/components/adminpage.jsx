@@ -44,7 +44,7 @@ const AdminPage = (props) => {
     }
     
     const tableAction = (e) => {
-        const action = e.target.innerText.toLowerCase()
+        const action = (e.target.innerText.toLowerCase() === 'админ')?'admin':(e.target.innerText.toLowerCase() === 'заблокировать')?'block':(e.target.innerText.toLowerCase() === 'удалить')?'delete':e.target.innerText.toLowerCase()
         const users = Array.prototype.filter.call(document.querySelectorAll('[data-name=user-check]'),v=>v.checked==true).map(v=>v.name)
         if (users.length === 0){
             makeMessage('danger',`${LANG.stop[localStorage.getItem('lang')]}`,`${LANG.usernotselect[localStorage.getItem('lang')]}`)

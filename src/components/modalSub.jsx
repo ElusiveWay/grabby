@@ -69,11 +69,11 @@ export default class ModalSub extends Component{
                     z-index: 10002;
                 }
                 .modal-body{
-                    max-height: 50vw;
+                    max-height: 60vh;
                     overflow-y: scroll;
                 }
                 `}}></style>
-                <div style={{ maxHeight:'90%', position: 'fixed',left: '50%', top: '50%', transform: 'translate(-50%,-50%)',width: '90%',margin:'0'}} class="modal-dialog" role="document">
+                <div style={{  position: 'fixed',left: '50%', top: '50%', transform: 'translate(-50%,-50%)',width: '90%',margin:'0'}} class="modal-dialog" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 className="contrastHx modal-title" id="exampleModalLabel"> {LANG.editProfile[localStorage.getItem('lang')]} </h5>

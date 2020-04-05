@@ -10,9 +10,11 @@ import Modal from './components/modal'
 import ModalOk from './components/modalok'
 import TegCloud from './components/tegscloud'
 import Message from './components/peref/message'
+import makeMessage from './components/peref/mess'
 import TextField from './components/textField'
 import {Redirect} from  'react-router-dom'
 import 'bootstrap'
+import axios from 'axios'
 import AdminPage from './components/adminpage'
 import Collections from './components/collections/collectionsBox'
 import Footbar from './components/footbar'
@@ -95,6 +97,25 @@ class App extends Component {
        global.__key = res.key
      });
      this.int2 = setInterval(()=>{
+      if (this.state.user && typeof this.state.user.isBlocked !== 'undefined' && this.state.user.isBlocked == true) {
+          axios({
+            method: 'POST',
+            url: '/signin',
+            data: {
+              email: this.state.user.email,
+              action: 'logout'
+            }
+          }).then(r=>{
+            if (r.data.out == "neok"){
+              makeMessage("danger", LANG.bye[this.props.lang], LANG.blocked[this.props.lang])
+              window.location.reload()
+            }else if(r.data.out == "ok"){
+              global.__user = {}
+              this.setState({user : {}})
+              makeMessage("danger", LANG.bye[this.props.lang], LANG.blocked[this.props.lang])
+            }
+          })
+      }
       if (this.state.user && typeof this.state.user.theme === 'string') {
         if (localStorage.getItem('dark') === null) localStorage.setItem('dark',this.state.user.theme)
       }
@@ -143,8 +164,6 @@ class App extends Component {
             <Route exact path="/" >
               <div className='mane-page'>
                 {this.state.online2===true  && <div style={{position:'relative'}}>
-                  <h1 className="logoH1">{LANG.title1[localStorage.getItem('lang')]}</h1>
-                  <h1 className="logoH1 dva">{LANG.title2[localStorage.getItem('lang')]}<br/> {LANG.title3[localStorage.getItem('lang')]}</h1>
                     <div className="advancedFields">
                       <div className="textField">
                           <TextField lang={localStorage.getItem('lang')} grabby={this.state.grabby}/>

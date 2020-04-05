@@ -171,12 +171,12 @@ class ProfileBox extends Component {
                 }
                 `}}/>
                 <div onClick={()=>$('.prof_ile__contain').toggleClass('activirovan')} className="profile-photo"></div>
-                {(this.props.user.isAdmin === true || this.props.user._id === this.props.owner._id) && <i data-toggle="modal" data-target="#modalEditProfile" class="profileSet fas fa-cog"></i>}
+                {(this.props.user.isAdmin === true || this.props.user._id === this.props.owner._id) && <i onClick={(e)=>$('#modalEditProfile .fileInput')[0].style.backgroundImage=(typeof this.props.owner.img === 'string')?`url(${this.props.owner.img})`:''} data-toggle="modal" data-target="#modalEditProfile" class="profileSet fas fa-cog"></i>}
                 <div className="profile-textTable">
                     <div className="profile-textElem profile-name"><span>{(this.state.data)?this.state.data.name:''}</span></div>
                     <div className="profile-textElem profile-likes"><span >{(this.state.data)?this.state.data.likes:''}</span></div>
-                    <div className="profile-textElem profile-online"><span >{(this.state.data)?this.state.data.online:''}</span></div>
                     <div className="profile-textElem profile-views"><span >{(this.state.data)?this.state.data.views:''}</span></div>
+                    <div className="profile-textElem profile-online"><span >{(this.state.data)?this.state.data.online:''}</span></div>
                 </div>
                 <div  className="profile-status"><i>{(this.state.data)?this.state.data.status:''}</i></div>
                 <ModalSub target="modalEditProfile" owner={this.props.owner} user={this.props.user}/>

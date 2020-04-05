@@ -5,26 +5,8 @@ import LANG from '../lang'
 
 const TextField = (props) => {
     const {grabby,lang} = props
-    useEffect(()=>{
-        let raf = () => {
-            try{
-                if(document.getElementsByClassName('textField').length && document.getElementsByClassName('mycarysel').length){
-                    if(global.document.body.offsetWidth > 769){
-                        document.getElementsByClassName('textField')[0].style.height = `calc(${window.getComputedStyle(document.getElementsByClassName('mycarysel')[0]).height})`
-                        document.getElementsByClassName('textField-wrapper')[0].style.overflowY = 'scroll'
-                    }
-                    else{
-                        document.getElementsByClassName('textField')[0].style.height = `auto`
-                        document.getElementsByClassName('textField-wrapper')[0].style.overflowY = 'visible'
-                    }
-                }
-            }catch(e){}
-            requestAnimationFrame(raf)
-        }
-        requestAnimationFrame(raf)
-    })
     return (
-        <div style={{overflowY:'scroll', height: '100%'}} className="textField-wrapper">
+        <div style={{height: '100%'}} className="textField-wrapper">
             <style dangerouslySetInnerHTML={{__html:`
             .darkMode .textField img{
                 filter:invert(1);
@@ -77,6 +59,7 @@ const TextField = (props) => {
                     float:unset !important;
                     display: block;
                     margin: auto;
+                    padding:0 !important;
                 }
             }
             `}}/>

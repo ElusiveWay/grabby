@@ -238,7 +238,7 @@ class Signin extends Component {
             <MDBCard style={{margin:'20px',width : '400px', height : '500px', minHeigth : "300px"}}>
               <MDBCardBody>
                 <form style={{color:'#2196f3'}} onSubmit={ this.subme }>
-                  <p className="h4 text-center py-4">{LANG.signin[localStorage.getItem('lang')]}</p>
+                  <p style={{color:'rgb(135, 134, 197)'}} className="inverted h4 text-center py-4">{LANG.signin[localStorage.getItem('lang')]}</p>
                   <div className="grey-text">
                     <MDBInput
                       label={LANG.uemail[localStorage.getItem('lang')]}
@@ -247,38 +247,43 @@ class Signin extends Component {
                       required
                       type="email"
                       validate
+                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                       onChange= { this.handleChange }
                       value= { this.state.value }
                       name="email"
                       error="wrong"
+                      className="inverted"
                       success="right"
                     />
                     <MDBInput
                       label={LANG.upass[localStorage.getItem('lang')]}
                       icon="lock"
                       name="pass"
+                      className="inverted"
                       required
                       onChange= { this.handleChange }
                       value= { this.state.value }
                       group
                       type="password"
+                      pattern="[A-Za-z0-9_]{3,10}$"
                       validate
                     />
                     <MDBInput
                       name="action"
                       value="login"
+                      className="inverted"
                       required
                       type="hidden"
                     />
                   </div>
                   <div className="text-center py-4 mt-3">
-                    <MDBBtn style={{display:'block', margin:'auto'}}color="cyan" type="submit">
+                    <MDBBtn  style={{display:'block', margin:'auto',color:'white',backgroundColor:'rgb(135, 134, 197)'}}color="" type="submit">
                     {LANG.signin[localStorage.getItem('lang')]}
                     </MDBBtn>
                     <hr style={{backgroundColor:'#eeffee',marginTop:'30px'}}/>
                   <span style={{padding:'10px',display:'inline-block',width:'auto',height:'auto',backgroundColor:'transparent',boxShadow:'unset',color: '#9e9e9e',fontSize: '16px'}} >{LANG.usesocial[localStorage.getItem('lang')]}:</span>
-                    <a href={this.urla} style={vkStyleA}><img style={vkStyle}src="./assets/vk.svg" alt="vk"/></a>
-                    <a href={this.urlb} style={vkStyleA}><img style={vkStyle}src="./assets/goo.svg" alt="google"/></a>
+                    <a className="inverted" href={this.urla} style={vkStyleA}><img style={vkStyle}src="./assets/vk.svg" alt="vk"/></a>
+                    <a className="inverted" href={this.urlb} style={vkStyleA}><img style={vkStyle}src="./assets/goo.svg" alt="google"/></a>
                   </div>
                 </form>
                 { this.checkRedirect() }
