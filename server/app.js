@@ -317,7 +317,7 @@ app.post('/addComment', async (req,res)=>{
 app.post('/deleteComment', async (req,res)=>{
     if (session.signed.some(v=>v==req.cookies.key)){
       let commentsField = JSON.stringify(req.body.delete.new)
-      if (req.cookies.key != req.body.delete.comment.likerId) {
+      if (req.cookies.key != req.body.delete.comment.likerId && !(req.cookies.key == req.body.user._id && req.body.user.isAdmin == true)) {
         res.send('not owner')
         return
       }
@@ -433,11 +433,15 @@ io.on('connection', function(socket){
             type : r.type,
             img : img5,
             adds : r.adds
-        }).catch(()=>{
-          socket.emit('add-collection',{respa : 'Database error'})
-          return false
-        })
-        socket.emit('add-collection',{respa : 'ok', data : r})
+        },function(era, item){
+          if (era) {
+            console.log(era)
+            socket.emit('add-collection',{respa : 'Database error'})
+            return
+          }
+          socket.emit('add-collection',{respa : 'ok', data : r, newColl : item})
+          })
+        
 
     });
     socket.on('edit-collection', async (r)=>{
@@ -545,7 +549,8 @@ io.on('connection', function(socket){
         if(r.img instanceof Buffer == true){
           await uploadToCloudinary(r.img).then(r=> img5=r.url).catch(e=>console.log('cant download'))
         }
-        await items.create({
+        let newItem = {}
+        newItem = await items.create({
             author : r.author,
             email : r.email,
             name : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''),
@@ -557,11 +562,14 @@ io.on('connection', function(socket){
             tags : r.tags,
             likes : '[]',
             comments :'[]'
-        }).catch(()=>{
-          socket.emit('add-item',{respa : 'error : database error'})
-          return false
-        })
-        socket.emit('add-item',{respa : 'ok', data : r})
+        },function(era, item){
+          if (era) {
+            console.log(era)
+            socket.emit('add-item',{respa : 'error : database error'})
+            return
+          }
+          socket.emit('add-item',{respa : 'ok', data : r, newItem : item})
+          })
     });
     socket.on('edit-item', async (r)=>{
         let forcer = {}

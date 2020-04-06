@@ -1,5 +1,5 @@
 import React,{Component, useEffect, useState} from 'react'
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
 import ReactDOM from 'react-dom'
 import axios from 'axios'
@@ -29,15 +29,20 @@ const ItemPage = (props) => {
     let { id } = useParams();
     const {grabby, user} = props
 
+    let [redirect, setRed] = useState('')
+    const CheckRed = (v) => {
+        setRed(v)
+    }
+
     const deleteComment = (e) =>{
         let index = Array.prototype.indexOf.call(e.target.parentNode.parentNode.parentNode.children,e.target.parentNode.parentNode)-1
-        if (!global.__mainData){
+        if (!user && typeof user.email !== 'string'){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.loginfirst[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
             return
         }
-        if (global.__user._id != commens[index].likerId){
+        if (user.isAdmin != true && user._id != commens[index].likerId){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1={LANG.oops[localStorage.getItem('lang')]} text2={LANG.notyourscomment[localStorage.getItem('lang')]} color="danger" id={id}/>, $('#'+id)[0])
@@ -53,7 +58,7 @@ const ItemPage = (props) => {
             arr.map((v,i)=>{
             return (
                 <div className={(i%2==0)?'comment right':'comment left'}>
-                            <h5 style={{paddingBottom:'10px',borderBottom:'1px solid #ddd'}}>{global.__user._id==v.likerId && <i data-toggle="modal" data-target="#commentDeleterModal" onClick={deleteComment}className="far deleteIcon fa-trash-alt"></i>}<div style={(v.img=='')?{color:'black'}:{color:'transparent',backgroundImage:`url(${v.img})`}} className="avatarus-commentus">{v.likerName[0].toUpperCase()}</div><Link to={`/users/${v.likerId}`}><i className='comentato__r'>{v.likerName}: {v.titl}</i></Link></h5>
+                            <h5 style={{paddingBottom:'10px',borderBottom:'1px solid #ddd'}}>{user && typeof user.email === 'string' && (user.isAdmin == true || user._id == v.likerId) && <i data-toggle="modal" data-target="#commentDeleterModal" onClick={deleteComment}className="far deleteIcon fa-trash-alt"></i>}<div style={(v.img=='')?{color:'black'}:{color:'transparent',backgroundImage:`url(${v.img})`}} className="avatarus-commentus">{v.likerName[0].toUpperCase()}</div><Link to={`/users/${v.likerId}`}><i className='comentato__r'>{v.likerName}: {v.titl}</i></Link></h5>
                             <p>{v.tex}</p>
                 </div>
                 )
@@ -448,7 +453,8 @@ const ItemPage = (props) => {
                 </div>
                 <p style={{visibility:'hidden'}}className="__ads_ads_ listed">FAKE P FOR MARGIN IN THE BOTTOM OF CARD</p>
             </MDBCard> 
-            {author && user && id && <Modal user={user} owner={author} deleteItems={{items:[id]}} title={LANG.delItem[localStorage.getItem('lang')]} target="itemDeleteModal" text={LANG.sure[localStorage.getItem('lang')]}></Modal>}
+            {redirect !== '' && <Redirect to={redirect}/>}
+            {author && user && id && <Modal CheckRed={CheckRed} grabby={grabby} user={user} owner={author} deleteItems={{items:[id]}} title={LANG.delItem[localStorage.getItem('lang')]} target="itemDeleteModal" text={LANG.sure[localStorage.getItem('lang')]}></Modal>}
             </div>
             
         ):(<h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>Loading...</h1>)

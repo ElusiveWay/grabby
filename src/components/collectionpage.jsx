@@ -1,5 +1,5 @@
 import React,{Component, useEffect, useState} from 'react'
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
 import ModalOk from './modalok'
 import {Link} from 'react-router-dom'
@@ -22,7 +22,10 @@ const CollectionPage = (props) => {
     let stoper = 999
     let { id } = useParams();
 
-    
+    let [redirect, setRed] = useState('')
+    const CheckRed = (v) => {
+        setRed(v)
+    }
 
     useEffect(() => {
         //
@@ -38,7 +41,7 @@ const CollectionPage = (props) => {
       });
 
         return (global.__mainData && colItem)?(
-        <div style={{display:'flex'}}>
+        <div className="colPageWrapRed" style={{display:'flex'}}>
             <img src='' onError={()=>window.scrollTo(0,0)}/>
             <style dangerouslySetInnerHTML={{__html: `
                 .modal.fade.show{
@@ -238,8 +241,8 @@ const CollectionPage = (props) => {
 
                 <p style={{visibility:'hidden'}}className="fakeMargin __ads_ads_ listed">FAKE P FOR MARGIN IN THE BOTTOM OF CARD</p>
             </MDBCard> 
-            
-            {author && user && id && <Modal user={user} owner={author} deleteCollections={[id]} title={LANG.delColl[localStorage.getItem('lang')]} target="collectDeleteModal" text={LANG.sure[localStorage.getItem('lang')]}></Modal>}
+            {redirect !== '' && <Redirect to={redirect}/>}
+            {author && user && id && <Modal CheckRed={CheckRed} user={user} owner={author} deleteCollections={[id]} title={LANG.delColl[localStorage.getItem('lang')]} target="collectDeleteModal" text={LANG.sure[localStorage.getItem('lang')]}></Modal>}
             </div>
             
         ):(<h1 style={{position:'fixed',left:'50%',top:'50%',transform: 'translate(-50%,-50%)'}}>{LANG.loading[localStorage.getItem('lang')]}</h1>)

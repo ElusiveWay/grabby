@@ -25,6 +25,7 @@ import CollectionPage from './components/collectionpage'
 import io from 'socket.io-client' 
 import * as $ from 'jquery'
 import LANG from './lang'
+import {withRouter} from 'react-router-dom'
 import {markdown} from 'markdown'
 import {
   BrowserRouter as Router,
@@ -32,7 +33,6 @@ import {
   Route,
   Link
 } from "react-router-dom";
-
 
 const socket = io();
 global.__signed = []
@@ -152,7 +152,6 @@ class App extends Component {
     return (
       <div className="App">
         <div className="wrapperDiv"/>
-        <Router>
             <Mainbar lang={localStorage.getItem('lang')} grabby={this.state.grabby} user={this.state.user}></Mainbar>
             <div className="message-cont"></div>
             <div className="load-cont"></div>
@@ -192,11 +191,11 @@ class App extends Component {
             </Route>
           </Switch>
         <ModalOk title='Info' target="collPageModal" text={this.state.modalok}></ModalOk>
-        </Router>
+
         <Footbar user={this.state.user}></Footbar>
-        <Modal action={global.__modalAction} title={LANG.delComments[localStorage.getItem('lang')]} target="commentDeleterModal" text={LANG.sure[localStorage.getItem('lang')]}></Modal>
+        <Modal user={this.state.user} grabby={this.state.grabby} action={global.__modalAction} title={LANG.delComments[localStorage.getItem('lang')]} target="commentDeleterModal" text={LANG.sure[localStorage.getItem('lang')]}></Modal>
       </div>
     );
   }
 }
-export default App;
+export default withRouter(App)

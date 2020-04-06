@@ -40,7 +40,9 @@ class ItemCreator extends React.Component {
             owner : {},
             link: '',
             editcol : {},
-            edititem : {}
+            edititem : {},
+            itemid : '',
+            collid: ''
         }
         this.deletecont = makeLoad(false)
         this.refItemDropbox2 = React.createRef()
@@ -178,7 +180,6 @@ componentWillMount(){
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The item is added to collection!" color="success" id={id}/>, $('#'+id)[0])
             this.setState({redirect : 'item'})
-            console.log(r)
             ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
@@ -193,7 +194,7 @@ componentWillMount(){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The collection is added!" color="success" id={id}/>, $('#'+id)[0])
-            this.setState({redirect : 'profile'})
+            this.setState({collid : r.newColl._id, redirect : 'collid'})
             ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
@@ -209,7 +210,6 @@ componentWillMount(){
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The collection is eddited!" color="success" id={id}/>, $('#'+id)[0])
             this.setState({redirect : 'collect'})
-            console.log(r.data)
             ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
@@ -225,7 +225,8 @@ componentWillMount(){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The item is added to collection!" color="success" id={id}/>, $('#'+id)[0])
-            console.log(r)
+            console.log('start:user')
+            this.setState({itemid : r.newItem._id, redirect : 'itemid'})
             ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
@@ -305,6 +306,19 @@ checkRedirect(){
     if (this.state.redirect == 'item'){
         this.setState({redirect : ''})
         return <Redirect to={`/items/${this.state.edititem._id}`}/>
+    }
+    if (this.state.redirect == 'itemid' && this.state.itemid !== ''){
+        this.setState({redirect : ''})
+        return <Redirect to={`/items/${this.state.itemid}`}/>
+    }
+    if (this.state.redirect == 'collid' && this.state.collid !== ''){
+        this.setState({redirect : ''})
+        return <Redirect to={`/collections/${this.state.collid}`}/>
+    }
+    if (this.state.redirect == 'user'){
+        this.setState({redirect : ''})
+        console.log('end:user')
+        return <Redirect to={`/users/${this.props.owner._id}`}/>
     }
 }
 

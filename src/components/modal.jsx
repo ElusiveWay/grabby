@@ -5,6 +5,8 @@ import * as $ from 'jquery'
 import LANG from '../lang'
 import makeLoad from './peref/makeLoad'
 import ReactDOM from 'react-dom'
+import { Redirect } from "react-router"
+import { browserHistory } from 'react-router';
 
 export default class Modal extends Component{
     constructor(props){
@@ -12,11 +14,15 @@ export default class Modal extends Component{
         this.modalAction = this.modalAction.bind(this)
         this.deleteItems = this.deleteItems.bind(this)
         this.deleteCollections = this.deleteCollections.bind(this)
+        this.state = {
+            redirect : undefined
+        }
     }
     deleteCollections(){
         console.log('del')
         const collections = this.props.deleteCollections
         const del2 = makeLoad()
+        const redirect = this.props.owner._id
         axios({
             method: 'post',
             url : '/deletecollections',
@@ -34,11 +40,13 @@ export default class Modal extends Component{
             else{
                 makeMessage('danger', LANG.oops[localStorage.getItem('lang')], r.data.resp || LANG.error[localStorage.getItem('lang')])
             }
+            this.props.CheckRed(`/users/${redirect}`)
         }).catch(e=>{ReactDOM.unmountComponentAtNode($(del2)[0])})
     }
     deleteItems(){
         const itemsIds = this.props.deleteItems.items
         const del2 = makeLoad()
+        const redirect = this.props.owner._id
         axios({
             method: 'post',
             url : '/deleteitems',
@@ -56,16 +64,18 @@ export default class Modal extends Component{
             else{
                 makeMessage('danger', LANG.oops[localStorage.getItem('lang')], r.data.resp || LANG.error[localStorage.getItem('lang')])
             }
+            this.props.CheckRed(`/users/${redirect}`)
         }).catch(e=>{ReactDOM.unmountComponentAtNode($(del2)[0])})
     }
     modalAction(){
-        if(global.__user.email == global.__deleteCommentsData.comment.liker){
+
+        if(this.props.user && typeof this.props.user.email === 'string' && ( this.props.user.email == global.__deleteCommentsData.comment.liker ||  this.props.user.isAdmin == true)){
             axios({
                 method: 'POST',
                 url: '/deleteComment',
                 data: {
                     delete: global.__deleteCommentsData,
-                    user: global.__user
+                    user: this.props.user
                 }
                 }).then(r=>{
                     global.__deleteCommentsData = {}
