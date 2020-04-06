@@ -8,6 +8,7 @@ import Message from './peref/message'
 import "axios-jsonp-pro"
 import * as $ from 'jquery'
 import LANG from '../lang'
+import makeLoad from './peref/makeLoad'
 // import io from 'socket.io-client'
 // const socket = io()
 //da
@@ -31,6 +32,7 @@ class Signin extends Component {
     if (global.__canAjax == true){
     global.__canAjax = false
     setTimeout(()=>{global.__canAjax = true},500)
+    const del = makeLoad()
     axios({
       method: 'POST',
       url: '/signin',
@@ -42,6 +44,7 @@ class Signin extends Component {
       }
     }).then(r=>{
       console.log(r)
+      ReactDOM.unmountComponentAtNode($(del)[0])
       if (r.data.out == "neok-blocked"){
         let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
         $('.message-cont').append('<div id='+id+'></div>')
@@ -98,13 +101,16 @@ class Signin extends Component {
         setTimeout(()=>{global.__canAjax = true},500)
       this.setState({redirect : 'ref'},()=>{
         const url = global.__urla
+        const del2 = makeLoad()
         $.ajax({
           method: 'POST',
           url: `/sigvk`,
           data:{url:global.__urla},
           success:r=>{
+            ReactDOM.unmountComponentAtNode($(del2)[0])
             myfunc(JSON.parse(r))
-          }
+          },
+          error:e=>ReactDOM.unmountComponentAtNode($(del2)[0])
           })
       })
     }
@@ -117,13 +123,16 @@ class Signin extends Component {
         setTimeout(()=>{global.__canAjax = true},500)
       this.setState({redirect : 'ref'},()=>{
         const url = global.__urlgoo
+        const del2 = makeLoad()
         $.ajax({
           method: 'POST',
           url: `/siggoo`,
           data:{url: url},
           success:r=>{
-              myfunc2(JSON.parse(r))
-          }
+            ReactDOM.unmountComponentAtNode($(del2)[0])
+            myfunc2(JSON.parse(r))
+          },
+          error:e=>ReactDOM.unmountComponentAtNode($(del2)[0])
           }) 
       })
     }

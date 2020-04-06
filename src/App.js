@@ -25,6 +25,7 @@ import CollectionPage from './components/collectionpage'
 import io from 'socket.io-client' 
 import * as $ from 'jquery'
 import LANG from './lang'
+import {markdown} from 'markdown'
 import {
   BrowserRouter as Router,
   Switch,
@@ -154,6 +155,7 @@ class App extends Component {
         <Router>
             <Mainbar lang={localStorage.getItem('lang')} grabby={this.state.grabby} user={this.state.user}></Mainbar>
             <div className="message-cont"></div>
+            <div className="load-cont"></div>
             <Switch>
             <Route path="/signin">
               <div className="sign-page">

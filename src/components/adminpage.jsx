@@ -4,6 +4,8 @@ import * as $ from 'jquery'
 import axios from 'axios'
 import makeMessage from './peref/mess'
 import LANG from '../lang'
+import makeLoad from './peref/makeLoad'
+import ReactDOM from 'react-dom'
 
 const AdminPage = (props) => {
     const {user, grabby} = props
@@ -11,10 +13,10 @@ const AdminPage = (props) => {
     useEffect(()=>{
             if (flag==true && grabby && user && user.isAdmin==true){
                 setFlag(false)
-                $('.txaa')[0].innerText = grabby.textfields[0].ano
+                $('.txaa')[0].innerHTML = grabby.textfields[0].ano.replace(/  /g, " &nbsp;")
                 $('#markano')[0].checked = grabby.textfields[0].anomark
                 $('#markgui')[0].checked = grabby.textfields[0].guimark
-                $('.txag')[0].innerText = grabby.textfields[0].gui
+                $('.txag')[0].innerHTML = grabby.textfields[0].gui.replace(/  /g, " &nbsp;")
                 $('[data-toggle="tooltip"]').tooltip({
                     html:true,
                     template: '<div class="tooltip" role="tooltip"><div class="tooltip-inner"></div></div>'
@@ -23,6 +25,7 @@ const AdminPage = (props) => {
     })
     const sub = (e) =>{
         e.preventDefault()
+        let deletecont = makeLoad()
         axios({
             url:'/adminka',
             method:'post',
@@ -38,8 +41,10 @@ const AdminPage = (props) => {
             }
         }).then(r=>{
             makeMessage()
+            ReactDOM.unmountComponentAtNode($(deletecont)[0])
         }).catch(r=>{
             makeMessage('danger',LANG.oops[localStorage.getItem('lang')],LANG.somewrong[localStorage.getItem('lang')])
+            ReactDOM.unmountComponentAtNode($(deletecont)[0])
         })
     }
     
@@ -50,6 +55,7 @@ const AdminPage = (props) => {
             makeMessage('danger',`${LANG.stop[localStorage.getItem('lang')]}`,`${LANG.usernotselect[localStorage.getItem('lang')]}`)
             return
         } 
+        const deletecont = makeLoad()
         axios({
             url:'/adminka',
             method:'post',
@@ -61,8 +67,10 @@ const AdminPage = (props) => {
             console.log(r)
             $('[data-name=user-check]').prop({'checked':false})
             makeMessage()
+            ReactDOM.unmountComponentAtNode($(deletecont)[0])
         }).catch(r=>{
             makeMessage('danger',`${LANG.oops[localStorage.getItem('lang')]}`,`${LANG.somewrong[localStorage.getItem('lang')]}`)
+            ReactDOM.unmountComponentAtNode($(deletecont)[0])
         })
     }
     return (

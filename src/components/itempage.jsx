@@ -11,6 +11,7 @@ import ModalOk from './modalok'
 import CommentsForm from './inputs/comments-form'
 import makeMessage from './peref/mess'
 import LANG from '../lang'
+import {markdown} from 'markdown'
 
 
 const ItemPage = (props) => {
@@ -423,7 +424,7 @@ const ItemPage = (props) => {
                 <hr className="__h_r_"/>
                 {colItem && <Link to={`/collections/${colItem._id}`}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">{LANG.gotocolls[localStorage.getItem('lang')]}</MDBBtn></Link>}
             <MDBBtn onClick={clicker} className="__ico_nqa" color="" ><i className="fas fa-heart iconqa"></i><span style={{whiteSpace:'pre'}}> {LANG.likes[localStorage.getItem('lang')]} </span><span className="likes __darova_v1_">{likes.length}</span></MDBBtn>
-                <p className="__descr_iption">{myItem.description}</p>
+                {myItem && typeof myItem.description === 'string' &&<p className="__descr_iption" dangerouslySetInnerHTML={{__html : markdown.toHTML( myItem.description )}}></p>}
                 <p style={{clear:'both'}} className="__comm_ention">{tags.map(v=><div  data-target="#collPageModal" data-toggle="modal" onClick={tegclicker} className="teger">{v}</div>)}</p>  
 
                 
@@ -436,7 +437,7 @@ const ItemPage = (props) => {
                         case 'checkbox': return <p className="__ads_ads_ listed">{(adds)?(adds[i])?adds[i][v.type]+': ':'':''}{(v.value == true)?<i className="far fa-check-circle"></i>:<i className="far fa-times-circle"></i>}</p>
                         case 'number': return <p className="__ads_ads_ listed">{(adds)?(adds[i])?adds[i][v.type]+': ':'':''}{v.value}</p>
                         case 'text': return <p className="__ads_ads_ listed">{(adds)?(adds[i])?adds[i]['date']?adds[i]['date']+': ':(adds[i]['string'])?adds[i]['string']+': ':'':'':''}{v.value}</p>
-                        case 'textarea': return <div className="__ads_ads_"><h2 style={{marginTop:'2vw'}} className="listed">{(adds)?(adds[i])?adds[i][v.type]:'':''}:</h2><p style={{marginBottom:'2vw'}}>{v.value}</p></div>
+                        case 'textarea': return <div className="__ads_ads_"><h2 style={{marginTop:'2vw'}} className="listed">{(adds)?(adds[i])?adds[i][v.type]:'':''}:</h2><p style={{marginBottom:'2vw'}} dangerouslySetInnerHTML={{__html : markdown.toHTML( v.value )}}></p></div>
                         }
                     })}
                 </div>}

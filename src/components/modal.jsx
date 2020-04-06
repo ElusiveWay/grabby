@@ -3,6 +3,8 @@ import axios from 'axios'
 import makeMessage from './peref/mess'
 import * as $ from 'jquery'
 import LANG from '../lang'
+import makeLoad from './peref/makeLoad'
+import ReactDOM from 'react-dom'
 
 export default class Modal extends Component{
     constructor(props){
@@ -14,6 +16,7 @@ export default class Modal extends Component{
     deleteCollections(){
         console.log('del')
         const collections = this.props.deleteCollections
+        const del2 = makeLoad()
         axios({
             method: 'post',
             url : '/deletecollections',
@@ -23,17 +26,19 @@ export default class Modal extends Component{
                 collections : JSON.stringify(collections)
             }
         }).then(r=>{
+            ReactDOM.unmountComponentAtNode($(del2)[0])
             console.log(r)
             if (r.data.resp=='ok'){
-                makeMessage()
+                makeMessage('success', LANG.nice[localStorage.getItem('lang')], r.data.resp || LANG.actcompl[localStorage.getItem('lang')])
             }
             else{
-                makeMessage('danger','Oops!', r.data.resp || 'Unknown error')
+                makeMessage('danger', LANG.oops[localStorage.getItem('lang')], r.data.resp || LANG.error[localStorage.getItem('lang')])
             }
-        })
+        }).catch(e=>{ReactDOM.unmountComponentAtNode($(del2)[0])})
     }
     deleteItems(){
         const itemsIds = this.props.deleteItems.items
+        const del2 = makeLoad()
         axios({
             method: 'post',
             url : '/deleteitems',
@@ -43,14 +48,15 @@ export default class Modal extends Component{
                 items : JSON.stringify(itemsIds)
             }
         }).then(r=>{
+            ReactDOM.unmountComponentAtNode($(del2)[0])
             if (r.data.resp=='ok'){
-                makeMessage()
+                makeMessage('success', LANG.nice[localStorage.getItem('lang')], r.data.resp || LANG.actcompl[localStorage.getItem('lang')])
                 global.document.querySelectorAll('[data-type="chosenItem"]').forEach(v=>v.checked = false)
             }
             else{
-                makeMessage('danger','Oops!', r.data.resp || 'Unknown error')
+                makeMessage('danger', LANG.oops[localStorage.getItem('lang')], r.data.resp || LANG.error[localStorage.getItem('lang')])
             }
-        })
+        }).catch(e=>{ReactDOM.unmountComponentAtNode($(del2)[0])})
     }
     modalAction(){
         if(global.__user.email == global.__deleteCommentsData.comment.liker){

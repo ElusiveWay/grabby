@@ -4,6 +4,8 @@ import makeMessage from './peref/mess'
 import * as $ from 'jquery'
 import LANG from '../lang'
 import ImageUpload from './inputs/Imageupload'
+import makeLoad from './peref/makeLoad'
+import ReactDOM from 'react-dom'
 
 export default class ModalSub extends Component{
     constructor(props){
@@ -37,6 +39,7 @@ export default class ModalSub extends Component{
         photoFormData.append("name", global.document.querySelector('[name="editProfileName"]').value)
         photoFormData.append("status", global.document.querySelector('[name="editProfileStatus"]').value)
         photoFormData.append("img", ($('[name="profile_img"]')[0].style.backgroundImage.slice(4, -1).replace(/["']/g, "") === this.props.owner.img)?this.props.owner.img:$('[name="profile_img"]')[0].style.backgroundImage.slice(4, -1).replace(/["']/g, ""))
+        const deletecont = makeLoad()
         axios({
             method: 'post',
             url : '/editProfile',
@@ -44,11 +47,13 @@ export default class ModalSub extends Component{
             data: photoFormData
         }).then(r=>{
             if (r.data.indexOf('http')==0){
-                makeMessage()
+                makeMessage('success',LANG.nice[localStorage.getItem('lang')],LANG.actcompl[localStorage.getItem('lang')],)
+                ReactDOM.unmountComponentAtNode($(deletecont)[0])
                 $('[name="profile_img"]')[0].style.backgroundImage = `url(${r.data})`
             }
             else{
-                makeMessage('danger','Oops!', r.data || 'Unknown error')
+                ReactDOM.unmountComponentAtNode($(deletecont)[0])
+                makeMessage('danger',LANG.oops[localStorage.getItem('lang')], r.data || LANG.error[localStorage.getItem('lang')])
             }
         })
     }

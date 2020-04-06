@@ -16,6 +16,7 @@ import AmazingTable from './amazingTable'
 import DropdownBtn from './dropdown'
 import io from 'socket.io-client'
 import * as $ from 'jquery'
+import makeLoad from './peref/makeLoad'
 import 'bootstrap'
 import SocketIOFileUpload from 'socketio-file-upload'
 import {MDBBtn} from 'mdbreact'
@@ -41,6 +42,7 @@ class ItemCreator extends React.Component {
             editcol : {},
             edititem : {}
         }
+        this.deletecont = makeLoad(false)
         this.refItemDropbox2 = React.createRef()
         this.refItemDropbox1 = React.createRef()
         this.refComment = React.createRef()
@@ -170,12 +172,14 @@ componentWillMount(){
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Oops!" text2={r.respa} color="danger" id={id}/>, $('#'+id)[0])
             console.log(r)
+            ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }else if(r.respa == "ok"){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The item is added to collection!" color="success" id={id}/>, $('#'+id)[0])
             this.setState({redirect : 'item'})
             console.log(r)
+            ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
     socket.off('add-collection');
@@ -184,11 +188,13 @@ componentWillMount(){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Error!" text2={r.respa} color="danger" id={id}/>, $('#'+id)[0])
+            ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }else if(r.respa == "ok"){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The collection is added!" color="success" id={id}/>, $('#'+id)[0])
             this.setState({redirect : 'profile'})
+            ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
     socket.off('edit-collection');
@@ -197,12 +203,14 @@ componentWillMount(){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Error!" text2={r.respa} color="danger" id={id}/>, $('#'+id)[0])
+            ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }else if(r.respa == "ok"){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The collection is eddited!" color="success" id={id}/>, $('#'+id)[0])
             this.setState({redirect : 'collect'})
             console.log(r.data)
+            ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
     socket.off('add-item');
@@ -212,17 +220,20 @@ componentWillMount(){
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Oops!" text2="Something went wrong!" color="danger" id={id}/>, $('#'+id)[0])
             console.log(r)
+            ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }else if(r.respa == "ok"){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The item is added to collection!" color="success" id={id}/>, $('#'+id)[0])
             console.log(r)
+            ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
 }
 
 componentDidMount(){
      this.interval = setInterval(()=>{
+         console.log(this.deletecont)
          if ((Object.keys(this.state.editcol).length===0 && this.props.location.editcol) || (this.props.location.editcol && this.state.editcol._id!==this.props.location.editcol)){
              this.setState({editcol : this.props.grabby.collections.filter(f=>f._id==this.props.location.editcol)[0]},()=>{
                  if (Object.keys(this.state.editcol).length !== 0) {
@@ -301,6 +312,7 @@ subFormColl = (e) => {
     e.preventDefault()
     if(this.state.owner.email === undefined) return false;
     let array = Array.prototype.map.call(global.document.getElementsByClassName('additionalInputs')[0].children, v=>{ return{[v.getElementsByTagName('button')[0].innerText.toLowerCase()] : v.getElementsByTagName('input')[0].value.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,'')}})
+        makeLoad()
         socket.emit('add-collection',{
             author : JSON.stringify(this.state.owner),
             email : this.state.owner.email,
@@ -318,6 +330,7 @@ subEditCol = (e) => {
     if(this.state.owner.email === undefined) return false;
     let primaryArray = Array.prototype.map.call(global.document.getElementsByClassName('alreadyInUse')[0].children, v=>{ return{[v.getElementsByTagName('button')[0].innerText.toLowerCase()] : v.getElementsByTagName('input')[0].value.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,'')}})
     let array = Array.prototype.map.call(global.document.getElementsByClassName('additionalInputs')[0].children, v=>{ return{[v.getElementsByTagName('button')[0].innerText.toLowerCase()] : v.getElementsByTagName('input')[0].value.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,'')}})
+        makeLoad()
         socket.emit('edit-collection',{
             author : JSON.stringify(this.state.owner),
             email : this.state.owner.email,
@@ -336,6 +349,7 @@ subEditCol = (e) => {
 subFormItems = (e) => {
     e.preventDefault()
     if(this.state.owner.email === undefined) return false;
+    makeLoad()
     socket.emit('add-item',{
         author : JSON.stringify(this.state.owner),
         email : this.state.owner.email,
@@ -352,6 +366,7 @@ subFormItems = (e) => {
 subEditItem = (e) => {
     e.preventDefault()
     if(this.state.owner.email === undefined) return false;
+    makeLoad()
     socket.emit('edit-item',{
         author : JSON.stringify(this.state.owner),
         email : this.state.owner.email,

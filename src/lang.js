@@ -511,6 +511,10 @@ const LANG = {
         en: "Edit profile",
         ru: "Редактировать профиль"
     },
+    actcompl: {
+        en: "Action complete!",
+        ru: "Сделано!"
+    },
     
 }
 

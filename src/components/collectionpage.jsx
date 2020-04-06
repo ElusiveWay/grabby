@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom'
 import AmazingTable from './amazingTable';
 import Modal from './modal'
 import LANG from '../lang'
+import {markdown} from 'markdown'
 
 const CollectionPage = (props) => {
     let [colItem, setCol] = useState({})
@@ -217,7 +218,7 @@ const CollectionPage = (props) => {
                 {(colItem.img!=='') && <hr className="__h_r_"/>}
                 {author && Object.keys(author).length!==0 && (author._id===user._id || user.isAdmin === true) &&<Link style={{color:'white'}}to={{pathname:`/users/${author._id}/addi`, addcoll: colItem}}><MDBBtn color="" style={{backgroundColor:'rgb(122, 176, 180)',color:'white'}} className="__ico_nqa v2">{LANG.additem[localStorage.getItem('lang')]}</MDBBtn></Link>}
                 {colItem && (global.__mainData.items.map(v=>v).filter(f=>(f.collect==colItem.name && f.email==colItem.email)).length!==0) && <MDBBtn color="" style={{backgroundColor:'#7e7ab4',color:'white'}} onClick={()=>global.document.querySelector('.itemsTable').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})} className="__ico_nqa v2"> {LANG.itemList[localStorage.getItem('lang')]} </MDBBtn>}
-                <p className="__descr_iption">{colItem.descript}</p>
+                {colItem && typeof colItem.descript === 'string' && <p className="__descr_iption" dangerouslySetInnerHTML={{__html : markdown.toHTML( colItem.descript )}} ></p>}
                 {colItem.comment && <p style={{clear:'both'}} className=""><i>{colItem.comment}</i><br/><br/></p>}
                 <p style={{clear:'both'}}>{LANG.author[localStorage.getItem('lang')]} <Link to={`/users/${author._id}`}><i className='linkToUser'>{author.name}</i></Link> </p>
                 <p className="__ty_pe">{LANG.type[localStorage.getItem('lang')]} {(typeof colItem.type === 'string')?LANG[colItem.type][localStorage.getItem('lang')]:colItem.type}</p>

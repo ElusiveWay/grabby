@@ -17,14 +17,11 @@ class ProfileBox extends Component {
     componentDidMount(){
         this.inter2 = setInterval(()=>{
             this.setState( {data : this.props.data})
-    }, 50)
+        }, 50)
     }
     updatera(){
             ReactDOM.findDOMNode(this).style.marginTop = window.scrollY+'px'
     }
-
-
-  
     render(){
         return (
             <div className="prof_ile__contain" >

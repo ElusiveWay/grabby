@@ -41,7 +41,7 @@ const TextField = (props) => {
                 min-height:250px;
             }
             .textField-wrapper img{
-                max-width:50%;
+                max-width:100%;
             }
             @media screen and (max-width: 769px){
                 .textField-wrapper h1,
