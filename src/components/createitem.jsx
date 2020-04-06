@@ -34,15 +34,15 @@ class ItemCreator extends React.Component {
             redirect : '',
             addsForItemCreation : [],
             chosenForItem : '',
-            tegState : [],
-            addsOutState : [],
+            tegState : [],      // tags array
+            addsOutState : [],  // [{type,value},{}]  in item
             file2 : '',
             owner : {},
-            link: '',
-            editcol : {},
-            edititem : {},
-            itemid : '',
-            collid: ''
+            link: '',           //params sub
+            editcol : {},       //collection we edit
+            edititem : {},      //item
+            itemid : '',        //callback from add-item for redirect
+            collid: ''          //from add-colls
         }
         this.deletecont = makeLoad(false)
         this.refItemDropbox2 = React.createRef()
@@ -194,7 +194,7 @@ componentWillMount(){
             let id = [new Date].toLocaleString().replace(/\D/g,"")+Math.floor(Math.random()*10000)
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The collection is added!" color="success" id={id}/>, $('#'+id)[0])
-            this.setState({collid : r.newColl._id, redirect : 'collid'})
+            this.setState({collid : r.newColl, redirect : 'collid'})
             ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
@@ -226,14 +226,14 @@ componentWillMount(){
             $('.message-cont').append('<div id='+id+'></div>')
             ReactDOM.render(<Message text1="Yeah!" text2="The item is added to collection!" color="success" id={id}/>, $('#'+id)[0])
             console.log('start:user')
-            this.setState({itemid : r.newItem._id, redirect : 'itemid'})
+            this.setState({itemid : r.newItem, redirect : 'itemid'})
             ReactDOM.unmountComponentAtNode($(this.deletecont)[0])
           }
     })
 }
 
 componentDidMount(){
-     this.interval = setInterval(()=>{
+    this.interval = setInterval(()=>{
          console.log(this.deletecont)
          if ((Object.keys(this.state.editcol).length===0 && this.props.location.editcol) || (this.props.location.editcol && this.state.editcol._id!==this.props.location.editcol)){
              this.setState({editcol : this.props.grabby.collections.filter(f=>f._id==this.props.location.editcol)[0]},()=>{
@@ -254,7 +254,7 @@ componentDidMount(){
              this.setState({link : this.props.sub})
          }
          if(this.props.grabby && JSON.stringify(this.props.grabby.users.filter(v=>v._id === this.props.id)[0]) !== JSON.stringify(this.state.owner))this.setState({owner : (this.props.grabby)?this.props.grabby.users.filter(v=>v._id === this.props.id)[0]:{}})
-    try{
+    if(global.document.getElementsByClassName('addsOutCont').length > 0){
         let arr = []
         Array.prototype.forEach.call(global.document.getElementsByClassName('addsOutCont')[0].querySelectorAll('input, textarea'),v=>{
             if (v.type == 'checkbox'){
@@ -265,27 +265,26 @@ componentDidMount(){
             }
         })
         this.setState({addsOutState : arr})
-    }catch(e){}
-    try{this.setState({tegState : Array.prototype.map.call(global.document.getElementsByClassName('tegCont')[0].getElementsByClassName('teg'),v=>v.innerText)})}catch(e){}
-    try{this.setState({addsForItemCreation : JSON.parse(this.state.collections.filter(v=>v.name==global.document.getElementsByClassName('addinpdropiq2')[0].value)[0].adds)})}catch(e){}
-    try{
-         this.setState({collections : global.__mainData.collections.map(v=>v).filter(v=>v.email==this.state.owner.email)}) 
-         if (JSON.stringify(this.state.availbleTypes) != JSON.stringify(this.state.types.filter(v=>this.state.collections.map(r=>r.type).some(q=>q==v)))){
-             this.setState({availbleTypes : this.state.types.filter(v=>this.state.collections.map(r=>r.type).some(q=>q==v))}, ()=>{
-                try {this.refItemDropbox1.current.changeState({drop : this.state.availbleTypes[0]})}catch(e){}
-             })
-         }
+    }
+    if (global.document.getElementsByClassName('tegCont').length > 0) this.setState({tegState : Array.prototype.map.call(global.document.getElementsByClassName('tegCont')[0].getElementsByClassName('teg'),v=>v.innerText)})
+    if (this.state.collections && this.state.collections.length > 0 && global.document.getElementsByClassName('addinpdropiq2').length > 0 && this.state.collections.filter(v=>v.name==global.document.getElementsByClassName('addinpdropiq2')[0].value).length>0){
+        this.setState({addsForItemCreation : JSON.parse(this.state.collections.filter(v=>v.name==global.document.getElementsByClassName('addinpdropiq2')[0].value)[0].adds)})
+    }
+    this.setState({collections : global.__mainData.collections.map(v=>v).filter(v=>v.email==this.state.owner.email)}) 
+    if (JSON.stringify(this.state.availbleTypes) != JSON.stringify(this.state.types.filter(v=>this.state.collections.map(r=>r.type).some(q=>q==v)))){
+            this.setState({availbleTypes : this.state.types.filter(v=>this.state.collections.map(r=>r.type).some(q=>q==v))}, ()=>{
+                if(this.state.availbleTypes.length > 0 && this.refItemDropbox1.current) {
+                    this.refItemDropbox1.current.changeState({drop : this.state.availbleTypes[0]})
+                }
+        })
+    }
          this.setState({availbleNames : this.state.collections.filter(v=>v.type==this.state.chosenForItem).map(v=>v.name)})
-         let prev = global.document.getElementsByClassName('addinpdropiq')[0].value
-         if (prev != this.state.chosenForItem){
+         let prev = (global.document.getElementsByClassName('addinpdropiq').length > 0)?global.document.getElementsByClassName('addinpdropiq')[0].value:undefined
+         if (prev != this.state.chosenForItem && prev!==undefined){
             this.setState({chosenForItem: global.document.getElementsByClassName('addinpdropiq')[0].value},()=>{
-                try {this.refItemDropbox2.current.changeState({drop : this.state.collections.filter(v=>v.type==this.state.chosenForItem)[0].name})}catch(e){}
+                if(this.state.collections.filter(v=>v.type==this.state.chosenForItem).length > 0 && this.refItemDropbox2.current) {this.refItemDropbox2.current.changeState({drop : this.state.collections.filter(v=>v.type==this.state.chosenForItem)[0].name})}
             })
          }
-        }
-        catch(e){
-
-        }
      },100)
 }
 returnMeVar(vari){

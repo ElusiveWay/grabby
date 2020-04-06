@@ -434,7 +434,7 @@ const ItemPage = (props) => {
 
                 
 
-                {myItem.add && JSON.parse(myItem.add).length && 
+                {myItem.add && JSON.parse(myItem.add).length > 0 && 
                 <div>
                     <h1 className="__ads_ads_">{LANG.propps[localStorage.getItem('lang')]}</h1> 
                     {JSON.parse(myItem.add).map((v,i)=>{

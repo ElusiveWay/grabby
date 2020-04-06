@@ -439,7 +439,8 @@ io.on('connection', function(socket){
             socket.emit('add-collection',{respa : 'Database error'})
             return
           }
-          socket.emit('add-collection',{respa : 'ok', data : r, newColl : item})
+          let id = item._id.toString()
+          socket.emit('add-collection',{respa : 'ok', data : r, newColl : id})
           })
         
 
@@ -549,8 +550,7 @@ io.on('connection', function(socket){
         if(r.img instanceof Buffer == true){
           await uploadToCloudinary(r.img).then(r=> img5=r.url).catch(e=>console.log('cant download'))
         }
-        let newItem = {}
-        newItem = await items.create({
+        await items.create({
             author : r.author,
             email : r.email,
             name : r.name.replace(/\s+/g, ' ').replace(/(^\s*)|(\s*)$/g,''),
@@ -568,7 +568,7 @@ io.on('connection', function(socket){
             socket.emit('add-item',{respa : 'error : database error'})
             return
           }
-          socket.emit('add-item',{respa : 'ok', data : r, newItem : item})
+          socket.emit('add-item',{respa : 'ok', data : r, newItem : item._id.toString()})
           })
     });
     socket.on('edit-item', async (r)=>{
