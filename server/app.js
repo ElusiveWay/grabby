@@ -24,7 +24,6 @@ const request = require('request');
 var cloudinary = require('cloudinary').v2
 const formidable = require('formidable')
 
-
 //                      PRESETTINGS
 
  //uppload from fileBuffer
@@ -81,6 +80,32 @@ app.use(session({
 //REACT ROUTING
 app.use(cors())
 
+app.post('/download' , async (req, res)=>{
+  let usr, error = false
+  await users.find({_id : req.cookies.key}).then(r=>{
+    if (r.length>0){ usr = r[0]}
+    else{error = true}
+  }).catch(e=>{
+    error=true
+  })
+  if (error==true){
+    res.send('error user')
+    return false
+  }
+  await items.find({email : usr.email}).then(r=>{
+    let obj = []
+    if (r.length > 0){
+      r.forEach(v=>{
+        let a = Object.assign(v)
+        a.email = undefined
+        a.author = undefined
+        obj.push(a)
+      })
+    }
+    res.send(obj)
+
+  }).catch(e=>res.send('error items'))
+})
 app.post('/changeColor', async(req,res)=>{
   if (req.cookies.key === req.body.user) {
     await users.updateOne({_id : req.body.user}, {theme: req.body.theme}, e=>e)
@@ -339,7 +364,6 @@ app.get('/api/home', (req, res) => {
       res.json({ user: usr || {}, signed : session.signed , key : req.cookies.key });
     })
   }
-  
 });
 app.get('/*', (req,res)=>{
   res.sendfile(path.join(__dirname, '../build/index.html'));

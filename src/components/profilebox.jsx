@@ -2,7 +2,10 @@ import React,{Component} from 'react'
 import ReactDOM from 'react-dom'
 import * as $ from 'jquery'
 import ModalSub from './modalSub'
-
+import axios from 'axios'
+import LANG from '../lang'
+import makeMessage from './peref/mess'
+import { Parser }  from 'json2csv'
 class ProfileBox extends Component {
     constructor(props){
         super(props)
@@ -21,6 +24,29 @@ class ProfileBox extends Component {
     }
     updatera(){
             ReactDOM.findDOMNode(this).style.marginTop = window.scrollY+'px'
+    }
+    downloadHandle(){
+        axios({
+            url:'/download',
+            method:'post'
+        }).then(r=>{
+            if (r.data instanceof Array){
+                const fields = ['_id', 'name', 'description','type','collect','img','add','tags','likes']
+                const opts = { fields }
+                const parser = new Parser(opts)
+                const csv = parser.parse(r.data)
+                let csvContent = "data:text/csv;charset=utf-8," + csv
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "my_items.csv");
+                global.document.body.appendChild(link); 
+                link.click()
+            }
+            else{
+                makeMessage('danger',LANG.oops[localStorage.getItem('lang')],LANG.error[localStorage.getItem('lang')])
+            }
+        })
     }
     render(){
         return (
@@ -86,6 +112,9 @@ class ProfileBox extends Component {
                 .profileSet:hover{
                     opacity:1;
                 }
+                .profileSet.dva{
+                    left: 40px;
+                }
                 .profileSet{
                     opacity:.35;
                     transition:.2s;
@@ -139,6 +168,7 @@ class ProfileBox extends Component {
                     }
                     .prof_ile__contain.activirovan .profileSet{
                         width:30px;
+                        padding-left:12px;
                     }
                     .profile-likes,
                     .profile-online,
@@ -153,10 +183,11 @@ class ProfileBox extends Component {
                     }
                     .profileSet{
                         opacity:1;
-                        padding-left:12px;
+                        padding-left:4px;
                         margin:auto;
                         display: inline;
                         width:0px;
+                        overflow:hidden;
                         position: unset;
                         left: unset;
                         color: white;
@@ -169,6 +200,7 @@ class ProfileBox extends Component {
                 `}}/>
                 <div onClick={()=>$('.prof_ile__contain').toggleClass('activirovan')} className="profile-photo"></div>
                 {(this.props.user.isAdmin === true || this.props.user._id === this.props.owner._id) && <i onClick={(e)=>$('#modalEditProfile .fileInput')[0].style.backgroundImage=(typeof this.props.owner.img === 'string')?`url(${this.props.owner.img})`:''} data-toggle="modal" data-target="#modalEditProfile" class="profileSet fas fa-cog"></i>}
+                {(this.props.user.isAdmin === true || this.props.user._id === this.props.owner._id) && <i onClick={this.downloadHandle.bind(this)} class="profileSet dva fas fa-download"></i>}
                 <div className="profile-textTable">
                     <div className="profile-textElem profile-name"><span>{(this.state.data)?this.state.data.name:''}</span></div>
                     <div className="profile-textElem profile-likes"><span >{(this.state.data)?this.state.data.likes:''}</span></div>
